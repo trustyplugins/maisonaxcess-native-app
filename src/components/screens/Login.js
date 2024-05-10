@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import axios from "axios";
+import { useDispatch } from 'react-redux';
 const Login = ({ navigation }) => {
+    const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const handleLogin = async () => {
         const data = {
             email: email,
-            password: 'password@123'
+            password: password
+            // password: 'password@123'
         }
-
         try {
             const response = await axios.post('https://maisonaxcess.com/api/login', data, {
                 headers: {
@@ -18,6 +20,7 @@ const Login = ({ navigation }) => {
                 }
             });
             console.log('Response:', response.data);
+            dispatch({ type: 'LOGIN', payload: response.data });
         } catch (error) {
             console.error('Error:', error);
             if (error.response) {

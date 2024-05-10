@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useSelector } from 'react-redux';
 import Home from '../screens/Home';
 import About from '../screens/About';
 import Signup from '../screens/Signup';
 import Login from '../screens/Login';
-
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const userData=useSelector(state=> state.user.user);
+  console.log('user',userData);
   useEffect(() => {
     AsyncStorage.getItem('userData')
       .then(userData => {
@@ -34,7 +34,7 @@ const Navigation = () => {
 
   return (
     <Stack.Navigator>
-      {isLoggedIn ? (
+      {userData?.status === true ? (
         <>
           <Stack.Screen
             options={{ headerShown: true }}
