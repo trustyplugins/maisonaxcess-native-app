@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 const Header = ({ navigation }) => {
-    const dispatch=useDispatch();
+    const dispatch = useDispatch();
     //   const logoImage = require('../assets/logo.png');
     const isAuthenticated = useSelector(state => state.user);
-    const handleLogout=()=>{
+    // console.log(isAuthenticated.user.token)
+    const handleLogout = () => {
         dispatch({ type: 'LOGIN', payload: null });
         navigation.navigate('Login');
     }
@@ -17,11 +18,11 @@ const Header = ({ navigation }) => {
                 <Text style={styles.logo}>Maisonaxcess</Text>
             </TouchableOpacity>
             <View style={styles.buttonsContainer}>
-                {isAuthenticated ? (<>
+                {isAuthenticated?.user?.token ? (<>
                     {/* <TouchableOpacity onPress={() => { }}>
                         <Text style={styles.button}>Profile</Text>
                     </TouchableOpacity> */}
-                    <TouchableOpacity onPress={() => {handleLogout()}}>
+                    <TouchableOpacity onPress={() => { handleLogout() }}>
                         <Text style={styles.button}>Logout</Text>
                     </TouchableOpacity>
                 </>
@@ -30,6 +31,7 @@ const Header = ({ navigation }) => {
                         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                             <Text style={styles.button}>Login</Text>
                         </TouchableOpacity>
+                        <Text>/</Text>
                         <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
                             <Text style={styles.button}>Signup</Text>
                         </TouchableOpacity>

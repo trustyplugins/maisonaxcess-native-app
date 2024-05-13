@@ -4,7 +4,6 @@ import axios from "axios";
 import Snackbar from '../Snackbar';
 import CustomButton from "../common/CustomButton";
 function Signup({ navigation }) {
-    console.log(navigation.navigate)
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");

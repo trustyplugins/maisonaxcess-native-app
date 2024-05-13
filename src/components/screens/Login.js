@@ -33,7 +33,7 @@ const Login = ({ navigation }) => {
             dispatch({ type: 'LOGIN', payload: response.data });
             showSnackbar();
         } catch (error) {
-            console.error('Error:', error);
+            // console.error('Error:', error);
             if (error.response) {
                 // console.log('Response data:', error.response.data);
                 setShowError(error.response.data.message);
@@ -49,7 +49,7 @@ const Login = ({ navigation }) => {
         setTimeout(() => {
             setSnackbarVisible(false);
             navigation.navigate('Home');
-        }, 3000);
+        }, 2000);
     };
 
     return (
