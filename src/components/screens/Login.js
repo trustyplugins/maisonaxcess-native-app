@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import CustomButton from "../common/CustomButton";
 import axios from "axios";
-import CustomModal from "../CustomModal";
+import Snackbar from '../Snackbar';
 import { useDispatch } from 'react-redux';
 const Login = ({ navigation }) => {
     const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+    const [snackbarVisible, setSnackbarVisible] = useState(false);
+    const [showError, setShowError] = useState('');
     const handleLogin = async () => {
         if (!email || !password) {
             setError(true);
@@ -28,27 +30,34 @@ const Login = ({ navigation }) => {
             });
             console.log('Response:', response.data);
             setModalMessage(response.data.message);
-            setModalVisible(true);
             dispatch({ type: 'LOGIN', payload: response.data });
+            showSnackbar();
         } catch (error) {
-            // console.error('Error:', error);
+            console.error('Error:', error);
             if (error.response) {
                 // console.log('Response data:', error.response.data);
-                setModalMessage(error.response.data.message);
-                setModalVisible(true);
+                setShowError(error.response.data.message);
+                setError(true);
             }
         }
     };
     const resetError = () => {
         setError(false)
     }
+    const showSnackbar = () => {
+        setSnackbarVisible(true);
+        setTimeout(() => {
+            setSnackbarVisible(false);
+            navigation.navigate('Home');
+        }, 3000);
+    };
 
     return (
         <>
-            <CustomModal
-                visible={modalVisible}
+            <Snackbar
+                visible={snackbarVisible}
                 message={modalMessage}
-                onClose={() => setModalVisible(false)}
+                onDismiss={() => setSnackbarVisible(false)}
             />
             <View style={styles.container}>
                 <Text style={styles.heading}>Login</Text>
@@ -68,13 +77,17 @@ const Login = ({ navigation }) => {
                     secureTextEntry
                     onPress={resetError}
                 />
-                {error && <Text style={styles.errorMessage}>Please fill the above details</Text>}
-                <Button title="Login" onPress={handleLogin} />
-                <View>
+                {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+                <View style={styles.buttonContainer}>
+                    <CustomButton title="Login" onPress={handleLogin} />
+                </View>
+                <View style={styles.textContainer}>
                     <Text style={styles.text}>
                         If account is not created then {" "}
-                        <Button onPress={() => navigation.navigate("Signup")} title="Register" />
                     </Text>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <CustomButton title="Register" onPress={() => navigation.navigate("Signup")} />
                 </View>
             </View>
         </>
@@ -103,7 +116,19 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 15
-    }
+    },
+    errorMessage: {
+        color: 'red'
+    },
+    buttonContainer: {
+        width: '100%',
+        marginBottom: 10,
+        backgroundColor: '#11696a',
+    },
+    textContainer: {
+        textAlign:'center',
+        marginBottom: 10,
+    },
 });
 
 export default Login;

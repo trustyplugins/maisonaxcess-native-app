@@ -1,22 +1,33 @@
 import React, { useEffect } from "react";
-import { View, Text, TouchableOpacity, Button } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from "axios";
+import { View, Text, TouchableOpacity, Button,StyleSheet } from "react-native";
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
+import Header from "../Header";
+import { SafeAreaView } from 'react-native';
 const Home = ({ navigation }) => {
+    const userData = useSelector(state => state.user.user);
+    useEffect(() => {
+        if (userData == null || undefined) {
+            navigation.navigate('Login');
+        }
+    }, [])
     const dispatch = useDispatch();
-    const handleClearStorage = () => {
-            dispatch({ type: 'LOGIN', payload: null });
-    };
+
     return (
-        <View>
-            <Text>Home Page</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('About')}>
-                <Text>Go to About</Text>
-            </TouchableOpacity>
-            <Button title="Logout" onPress={handleClearStorage} />
-        </View>
+        <SafeAreaView>
+            <View style={styles.container}>
+                <Header navigation={navigation}/>
+                <Text>Home Page</Text>
+            </View>
+        </SafeAreaView>
     );
 }
 
 export default Home;
+
+const styles = StyleSheet.create({
+    container:{
+        marginTop:40,
+        paddingHorizontal: 10,
+    }
+})
