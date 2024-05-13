@@ -1,3 +1,4 @@
+//testing the commit
 import { NavigationContainer } from '@react-navigation/native'
 import AppNavigator from './src/components/navigation/AppNavigator';
 import { Provider } from 'react-redux';
