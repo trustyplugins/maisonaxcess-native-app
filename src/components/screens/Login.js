@@ -28,7 +28,6 @@ const Login = ({ navigation }) => {
                     "Content-Type": "application/json"
                 }
             });
-            console.log('Response:', response.data);
             setModalMessage(response.data.message);
             dispatch({ type: 'LOGIN', payload: response.data });
             showSnackbar();

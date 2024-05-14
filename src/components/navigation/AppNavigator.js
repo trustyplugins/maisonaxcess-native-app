@@ -1,50 +1,45 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../screens/Home';
 import About from '../screens/About';
 import Signup from '../screens/Signup';
 import Login from '../screens/Login';
-import { SafeAreaView } from 'react-native';
+import ServiceTypes from '../common/ServiceTypes';
+import Header from '../Header';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        header: (props) => <Header {...props} />,
+      }}
+    >
       <Stack.Screen
-        options={{ headerShown: false }}
         name="Home"
         component={Home}
       />
       <Stack.Screen
-        options={{ headerShown: false }}
         name="About"
         component={About}
       />
       <Stack.Screen
-        options={{ headerShown: false }}
+        name="ServiceTypes"
+        component={ServiceTypes}
+      />
+      <Stack.Screen
         name="Signup"
         component={Signup}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Login"
         component={Login}
-        options={{
-          headerShown: false,
-          header: ({ navigation }) => {
-            const goToSignup = () => {
-              navigation.navigate("Signup");
-            };
-            return (
-              <TouchableOpacity onPress={goToSignup} style={styles.headerButton}>
-                <Icon name="arrow-left" size={18} color="black" style={styles.arrowIcon} />
-                <Text style={styles.headerButtonText}> Signup</Text>
-              </TouchableOpacity>
-            );
-          },
-        }}
+        options={{ headerShown: false }}
       />
+
     </Stack.Navigator>
   );
 };

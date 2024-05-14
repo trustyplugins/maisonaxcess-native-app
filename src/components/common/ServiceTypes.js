@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Button, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text,  StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
 import Header from "../Header";
 import { SafeAreaView } from 'react-native';
 import Card from "../common/Card";
 import axios from "axios";
-const Home = ({ navigation }) => {
+import { useRoute } from '@react-navigation/native';
+const ServiceTypes = ({ navigation }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
+    const route = useRoute();
+    const { parentid } = route.params;
     useEffect(() => {
         (async () => {
             setLoading(true);
             try {
-                const response = await axios.get('https://maisonaxcess.com/api/servicetypes', {
+                const response = await axios.get(`https://maisonaxcess.com/api/servicetypes/${parentid}`, {
                     headers: {
-                        Authorization: `Bearer ${userData?.token}`,
+                        Authorization: `Bearer ${userData?.token}`
                     },
                 });
                 setServiceType(response.data.servicetypes);
                 setLoading(false);
             } catch (error) {
-                console.log(error.response.data);
+                console.log(error);
                 setLoading(false);
                 setServiceType([])
             } finally {
@@ -31,7 +33,6 @@ const Home = ({ navigation }) => {
         })()
 
     }, [userData?.token])
-    const dispatch = useDispatch();
     if (loading) {
         return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
     }
@@ -39,7 +40,7 @@ const Home = ({ navigation }) => {
         <SafeAreaView>
             <ScrollView>
                 <View style={styles.container}>
-                    <Text style={styles.heading}>Service Types</Text>
+                    <Text style={styles.heading}>Sub Services</Text>
                     {serviceType?.length > 0 ? serviceType?.map((item, index) => (
                         <View key={index}>
                             <Card data={item} id={index} />
@@ -52,7 +53,7 @@ const Home = ({ navigation }) => {
     );
 }
 
-export default Home;
+export default ServiceTypes;
 
 const styles = StyleSheet.create({
     container: {

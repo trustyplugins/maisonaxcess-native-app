@@ -2,14 +2,15 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const Card = ({ data,id }) => {
+const Card = ({ data }) => {
     const navigation = useNavigation();
 
     const handlePress = () => {
-        // navigation.navigate(detailScreen);
+        
+        navigation.navigate("ServiceTypes", { parentid: data.id });
     };
     return (
-        <TouchableOpacity onPress={handlePress} key={id}>
+        <TouchableOpacity onPress={handlePress}>
             <View style={styles.card}>
                 <View style={styles.imageContainer}>
                     <ImageBackground source={{ uri: 'https://maisonaxcess.com/uploads/Capture d’écran 2024-05-02 à 11.21.11.png' }} style={styles.image} >
