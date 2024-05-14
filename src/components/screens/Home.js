@@ -22,9 +22,11 @@ const Home = ({ navigation }) => {
                 setServiceType(response.data.servicetypes);
                 setLoading(false);
             } catch (error) {
-                console.log(error.response.data);
                 setLoading(false);
                 setServiceType([])
+                if(userData == null){
+                    navigation.navigate('Login');
+                }
             } finally {
                 setLoading(false);
             }
