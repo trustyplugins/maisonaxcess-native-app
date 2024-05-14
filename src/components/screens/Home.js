@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Button, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import Header from "../Header";
 import { SafeAreaView } from 'react-native';
 import Card from "../common/Card";
 import axios from "axios";
+import { API_BASE_URL } from '@env';
 const Home = ({ navigation }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
@@ -14,7 +13,7 @@ const Home = ({ navigation }) => {
         (async () => {
             setLoading(true);
             try {
-                const response = await axios.get('https://maisonaxcess.com/api/servicetypes', {
+                const response = await axios.get(`${API_BASE_URL}/servicetypes`, {
                     headers: {
                         Authorization: `Bearer ${userData?.token}`,
                     },
@@ -24,7 +23,7 @@ const Home = ({ navigation }) => {
             } catch (error) {
                 setLoading(false);
                 setServiceType([])
-                if(userData == null){
+                if (userData == null) {
                     navigation.navigate('Login');
                 }
             } finally {
@@ -33,10 +32,11 @@ const Home = ({ navigation }) => {
         })()
 
     }, [userData?.token])
-    const dispatch = useDispatch();
+
     if (loading) {
         return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
     }
+
     return (
         <SafeAreaView>
             <ScrollView>

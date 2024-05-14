@@ -4,17 +4,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import Snackbar from '../components/Snackbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Menu, Provider } from 'react-native-paper';
+import { API_BASE_URL } from '@env';
 const Header = ({ navigation, back }) => {
     const [modalMessage, setModalMessage] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
+    const [menuVisible, setMenuVisible] = useState(false);
     const dispatch = useDispatch();
     //   const logoImage = require('../assets/logo.png');
     const isAuthenticated = useSelector(state => state.user);
     // console.log(isAuthenticated.user.token)
     const handleLogout = async () => {
-
+        setMenuVisible(false)
         try {
-            const res = await axios.post('https://maisonaxcess.com/api/logout', { ...isAuthenticated.user.email },
+            const res = await axios.post(`${API_BASE_URL}/logout`, { ...isAuthenticated.user.email },
                 {
                     headers: {
                         "Accept": "application/json",
@@ -41,47 +44,64 @@ const Header = ({ navigation, back }) => {
     const showError = () => {
         setSnackbarVisible(true);
     }
-    return (<>
-        <Snackbar
-            visible={snackbarVisible}
-            message={modalMessage}
-            onDismiss={() => setSnackbarVisible(false)}
-        />
-        <View style={styles.container}>
-            <View style={styles.leftHeader}>
-                {back && (
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                        <Icon name="arrow-left" size={20} color="#000" />
-                    </TouchableOpacity>
-                )}
-                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+    const openMenu = () => setMenuVisible(true);
+    const closeMenu = () => setMenuVisible(false);
+    return (
+        <>
+
+            <Snackbar
+                visible={snackbarVisible}
+                message={modalMessage}
+                onDismiss={() => setSnackbarVisible(false)}
+            />
+            <View style={styles.container}>
+                <View style={styles.leftHeader}>
+                    {back && (
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                            <Icon name="arrow-left" size={20} color="#000" />
+                        </TouchableOpacity>
+                    )}
+                    {/* <TouchableOpacity> */}
                     {/* <Image source={logoImage} style={styles.logo} /> */}
                     <Text style={styles.logo}>Maisonaxcess</Text>
-                </TouchableOpacity>
+                    {/* </TouchableOpacity> */}
+                </View>
+                <View style={styles.buttonsContainer}>
+                    <Menu
+                        visible={menuVisible}
+                        onDismiss={closeMenu}
+                        style={styles.menu}
+                        anchor={
+                            <TouchableOpacity onPress={openMenu} style={styles.menuButton}>
+                                <Icon name="bars" size={24} color="#000" />
+                            </TouchableOpacity>
+                        }
+                    >
+                        {isAuthenticated?.user?.token ? <>
+                            <Menu.Item onPress={() => {
+                                navigation.navigate('Profile')
+                                setMenuVisible(false)
+                            }} title="Profile" />
+                            <Menu.Item onPress={handleLogout} title="Logout" />
+                        </> :
+                            <>
+                                <Menu.Item onPress={() => {
+                                    navigation.navigate('Signup')
+                                    setMenuVisible(false)
+                                }} title="SignUp" />
+                                <Menu.Item onPress={() => {
+                                    navigation.navigate('Login')
+                                    setMenuVisible(false)
+                                }} title="Login" />
+                            </>
+                        }
+                    </Menu>
+
+
+                </View>
             </View>
-            <View style={styles.buttonsContainer}>
-                {isAuthenticated?.user?.token ? (<>
-                    {/* <TouchableOpacity onPress={() => { }}>
-                        <Text style={styles.button}>Profile</Text>
-                    </TouchableOpacity> */}
-                    <TouchableOpacity onPress={() => { handleLogout() }}>
-                        <Text style={styles.button}>Logout</Text>
-                    </TouchableOpacity>
-                </>
-                ) : (
-                    <>
-                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                            <Text style={styles.button}>Login</Text>
-                        </TouchableOpacity>
-                        <Text>/</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                            <Text style={styles.button}>Signup</Text>
-                        </TouchableOpacity>
-                    </>
-                )}
-            </View>
-        </View>
-    </>
+
+        </>
     );
 };
 
@@ -95,9 +115,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#f2f2f2',
         marginTop: 30
     },
-    leftHeader:{
+    leftHeader: {
         flexDirection: 'row',
-        gap:8,
+        gap: 8,
         alignItems: 'center',
     },
     logo: {
@@ -108,12 +128,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     button: {
-        marginHorizontal: 10,
-        fontSize: 16,
+        // marginHorizontal: 10,
+        // fontSize: 16,
         color: "#11696a"
     },
     backButton: {
         marginRight: 0,
+    },
+    menu: {
+        // padding: 10,
+        marginTop: 25
+    },
+    menuButton: {
+        padding: 10,
     },
 });
 
