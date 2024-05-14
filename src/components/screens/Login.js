@@ -95,11 +95,6 @@ const Login = ({ navigation }) => {
                             />
                             <Text style={styles.label}>Remember Me</Text>
                         </View>
-                        <View style={styles.textContainer}>
-                            <Text style={styles.text}>
-                                If account is not created then register {" "}
-                            </Text>
-                        </View>
                         <View style={styles.buttonContainer}>
                             <CustomButton title="Login" onPress={handleLogin} />
                             <CustomButton title="Register" onPress={() => navigation.navigate("Signup")} />
@@ -155,10 +150,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         color: '#000'
     },
-    text: {
-        fontSize: 15,
-        color: '#fff'
-    },
     errorMessage: {
         color: 'red'
     },
@@ -167,19 +158,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 10,
     },
-    textContainer: {
-        textAlign: 'center',
-        marginBottom: 10,
-    },
     label: {
         fontSize: 16,
         marginBottom: 5,
-        color: '#fff'
+        color: '#fff',
+        marginBottom:10
     },
     checkboxContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 16,
+        marginBottom: 18,
         gap: 10
     },
 });
