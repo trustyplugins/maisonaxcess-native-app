@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import axios from "axios";
 import Snackbar from '../Snackbar';
 import CustomButton from "../common/CustomButton";
+import { API_BASE_URL } from '@env';
 function Signup({ navigation }) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -25,7 +26,7 @@ function Signup({ navigation }) {
             user_role: '3'
         }
         try {
-            const req = await axios.post('https://maisonaxcess.com/api/register', data);
+            const req = await axios.post(`${API_BASE_URL}/register`, data);
             console.log('Response:', req.data.message);
             setModalMessage(req.data.message);
             showSnackbar();

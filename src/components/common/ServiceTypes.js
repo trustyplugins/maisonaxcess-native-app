@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { View, Text,  StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { useSelector } from 'react-redux';
-import Header from "../Header";
 import { SafeAreaView } from 'react-native';
 import Card from "../common/Card";
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
+import { API_BASE_URL } from '@env';
 const ServiceTypes = ({ navigation }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
@@ -16,7 +16,7 @@ const ServiceTypes = ({ navigation }) => {
         (async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`https://maisonaxcess.com/api/servicetypes/${parentid}`, {
+                const response = await axios.get(`${API_BASE_URL}/servicetypes/${parentid}`, {
                     headers: {
                         Authorization: `Bearer ${userData?.token}`
                     },

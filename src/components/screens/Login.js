@@ -4,6 +4,7 @@ import CustomButton from "../common/CustomButton";
 import axios from "axios";
 import Snackbar from '../Snackbar';
 import { useDispatch } from 'react-redux';
+import { API_BASE_URL } from '@env';
 const Login = ({ navigation }) => {
     const dispatch = useDispatch();
     const [email, setEmail] = useState("");
@@ -23,7 +24,7 @@ const Login = ({ navigation }) => {
             // password: 'password@123'
         }
         try {
-            const response = await axios.post('https://maisonaxcess.com/api/login', data, {
+            const response = await axios.post(`${API_BASE_URL}/login`, data, {
                 headers: {
                     "Content-Type": "application/json"
                 }
