@@ -64,48 +64,48 @@ const Login = ({ navigation }) => {
                 source={require('../../assets/image/bg1.webp')}
                 style={styles.backgroundImage}
             >
-            <View style={styles.container}>
-                <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
-                <View style={styles.formContainer}>
-                    <Text style={styles.heading}>Login</Text>
-                    <Text style={styles.label}>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Email"
-                        value={email}
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                        onPress={resetError}
-                    />
-                    <Text style={styles.label}>Password</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Password"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                        onPress={resetError}
-                    />
-                    <View style={styles.checkboxContainer}>
-                        <CheckBox
-                            value={rememberMe}
-                            onValueChange={setRememberMe}
+                <View style={styles.container}>
+                    <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
+                    <View style={styles.formContainer}>
+                        <Text style={styles.heading}>Login</Text>
+                        <Text style={styles.label}>Email</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Email"
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            onPress={resetError}
                         />
-                        <Text style={styles.label}>Remember Me</Text>
-                    </View>
-                    {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+                        <Text style={styles.label}>Password</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                            onPress={resetError}
+                        />
+                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
 
-                    <View style={styles.textContainer}>
-                        <Text style={styles.text}>
-                            If account is not created then {" "}
-                        </Text>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <CustomButton title="Login" onPress={handleLogin} />
-                        <CustomButton title="Register" onPress={() => navigation.navigate("Signup")} />
+                        <View style={styles.checkboxContainer}>
+                            <CheckBox
+                                value={rememberMe}
+                                onValueChange={setRememberMe}
+                            />
+                            <Text style={styles.label}>Remember Me</Text>
+                        </View>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.text}>
+                                If account is not created then register {" "}
+                            </Text>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <CustomButton title="Login" onPress={handleLogin} />
+                            <CustomButton title="Register" onPress={() => navigation.navigate("Signup")} />
+                        </View>
                     </View>
                 </View>
-            </View>
             </ImageBackground>
         </>
     );
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 16,
-        gap:10
+        gap: 10
     },
 });
 
