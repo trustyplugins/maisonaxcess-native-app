@@ -8,39 +8,47 @@ import Signup from '../screens/Signup';
 import Login from '../screens/Login';
 import ServiceTypes from '../common/ServiceTypes';
 import Header from '../Header';
+import Profile from '../screens/Profile';
+import { PaperProvider } from 'react-native-paper';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        header: (props) => <Header {...props} />,
-      }}
-    >
-      <Stack.Screen
-        name="Home"
-        component={Home}
-      />
-      <Stack.Screen
-        name="About"
-        component={About}
-      />
-      <Stack.Screen
-        name="ServiceTypes"
-        component={ServiceTypes}
-      />
-      <Stack.Screen
-        name="Signup"
-        component={Signup}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{ headerShown: false }}
-      />
+    <PaperProvider>
+      <Stack.Navigator
+        screenOptions={{
+          header: (props) => <Header {...props} />,
+        }}
+      >
+        <Stack.Screen
+          name="Home"
+          component={Home}
+        />
+        <Stack.Screen
+          name="About"
+          component={About}
+        />
+        <Stack.Screen
+          name="ServiceTypes"
+          component={ServiceTypes}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile} 
+        />
+        <Stack.Screen
+          name="Signup"
+          component={Signup}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
 
-    </Stack.Navigator>
+      </Stack.Navigator>
+    </PaperProvider>
   );
 };
 
