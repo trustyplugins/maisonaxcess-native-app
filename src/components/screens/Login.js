@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, ImageBackground, Image } from "react-native";
+import CheckBox from 'expo-checkbox';
 import CustomButton from "../common/CustomButton";
 import axios from "axios";
 import Snackbar from '../Snackbar';
@@ -13,6 +14,7 @@ const Login = ({ navigation }) => {
     const [modalMessage, setModalMessage] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [showError, setShowError] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
     const handleLogin = async () => {
         if (!email || !password) {
             setError(true);
@@ -51,7 +53,6 @@ const Login = ({ navigation }) => {
             navigation.navigate('Home');
         }, 2000);
     };
-
     return (
         <>
             <Snackbar
@@ -59,51 +60,89 @@ const Login = ({ navigation }) => {
                 message={modalMessage}
                 onDismiss={() => setSnackbarVisible(false)}
             />
+            <ImageBackground
+                source={require('../../assets/image/bg1.webp')}
+                style={styles.backgroundImage}
+            >
             <View style={styles.container}>
-                <Text style={styles.heading}>Login</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    onPress={resetError}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                    onPress={resetError}
-                />
-                {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
-                <View style={styles.buttonContainer}>
-                    <CustomButton title="Login" onPress={handleLogin} />
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.text}>
-                        If account is not created then {" "}
-                    </Text>
-                </View>
-                <View style={styles.buttonContainer}>
-                    <CustomButton title="Register" onPress={() => navigation.navigate("Signup")} />
+                <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
+                <View style={styles.formContainer}>
+                    <Text style={styles.heading}>Login</Text>
+                    <Text style={styles.label}>Email</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Email"
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        onPress={resetError}
+                    />
+                    <Text style={styles.label}>Password</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Password"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        onPress={resetError}
+                    />
+                    <View style={styles.checkboxContainer}>
+                        <CheckBox
+                            value={rememberMe}
+                            onValueChange={setRememberMe}
+                        />
+                        <Text style={styles.label}>Remember Me</Text>
+                    </View>
+                    {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+
+                    <View style={styles.textContainer}>
+                        <Text style={styles.text}>
+                            If account is not created then {" "}
+                        </Text>
+                    </View>
+                    <View style={styles.buttonContainer}>
+                        <CustomButton title="Login" onPress={handleLogin} />
+                        <CustomButton title="Register" onPress={() => navigation.navigate("Signup")} />
+                    </View>
                 </View>
             </View>
+            </ImageBackground>
         </>
     );
 };
-
+const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
+    backgroundImage: {
+        flex: 1,
+        resizeMode: 'cover',
+    },
     container: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center",
+        paddingHorizontal: 30,
         padding: 20,
+        height: 30,
+    },
+    headerLogo: {
+        position: 'absolute',
+        top: 50,
+        left: 16,
+        width: '70%',
+        height: 60
+    },
+    formContainer: {
+        marginTop: screenHeight * 0.2,
+        backgroundColor: '#040404',
+        borderRadius: 25,
+        padding: 20,
+        opacity: 0.7
     },
     heading: {
         fontSize: 24,
         marginBottom: 20,
+        textAlign: 'center',
+        color: '#fff',
+        fontWeight: 'bold'
     },
     input: {
         width: "100%",
@@ -113,21 +152,35 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 10,
         padding: 10,
+        backgroundColor: '#fff',
+        color: '#000'
     },
     text: {
-        fontSize: 15
+        fontSize: 15,
+        color: '#fff'
     },
     errorMessage: {
         color: 'red'
     },
     buttonContainer: {
-        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         marginBottom: 10,
-        backgroundColor: '#11696a',
     },
     textContainer: {
-        textAlign:'center',
+        textAlign: 'center',
         marginBottom: 10,
+    },
+    label: {
+        fontSize: 16,
+        marginBottom: 5,
+        color: '#fff'
+    },
+    checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 16,
+        gap:10
     },
 });
 
