@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, Dimensions, ImageBackground, Image } from "react-native";
 import CheckBox from 'expo-checkbox';
 import CustomButton from "../common/CustomButton";
 import axios from "axios";
 import Snackbar from '../Snackbar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 const Login = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -15,6 +15,15 @@ const Login = ({ navigation }) => {
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [showError, setShowError] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+    const userCredential = useSelector(state => state.user.credentials);
+    useEffect(() => {
+        if(userCredential !=null){
+            setEmail(userCredential.email);
+            setPassword(userCredential.password);
+            setRememberMe(true);
+        }
+    }, [userCredential])
+
     const handleLogin = async () => {
         if (!email || !password) {
             setError(true);
@@ -33,6 +42,11 @@ const Login = ({ navigation }) => {
             });
             setModalMessage(response.data.message);
             dispatch({ type: 'LOGIN', payload: response.data });
+            if (rememberMe) {
+                dispatch({ type: 'SAVE_CREDENTIALS', payload: data });
+            }else{
+                dispatch({ type: 'SAVE_CREDENTIALS', payload: null });
+            }
             showSnackbar();
         } catch (error) {
             // console.error('Error:', error);
@@ -162,7 +176,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 5,
         color: '#fff',
-        marginBottom:10
+        marginBottom: 10
     },
     checkboxContainer: {
         flexDirection: 'row',
