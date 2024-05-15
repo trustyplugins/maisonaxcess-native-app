@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, Image, ImageBackground } from "react-native";
 import axios from "axios";
 import Snackbar from '../Snackbar';
 import CustomButton from "../common/CustomButton";
@@ -57,67 +57,93 @@ function Signup({ navigation }) {
                 message={modalMessage}
                 onDismiss={() => setSnackbarVisible(false)}
             />
-            <View style={styles.container}>
-
-                <Text style={styles.heading}>SignUp</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Name"
-                    value={name}
-                    onChangeText={setName}
-                    onPress={resetError}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    onPress={resetError}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Phone"
-                    value={phone}
-                    onChangeText={setPhone}
-                    keyboardType="phone-pad"
-                    onPress={resetError}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                    onPress={resetError}
-                />
-                {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
-                <View style={styles.buttonContainer}>
-                    <CustomButton title="Sign up" onPress={handleSignup} />
+            <ImageBackground
+                source={require('../../assets/image/bg1.webp')}
+                style={styles.backgroundImage}
+            >
+                <View style={styles.container}>
+                    <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
+                    <View style={styles.formContainer}>
+                        <Text style={styles.heading}>SignUp</Text>
+                        <Text style={styles.label}>Name</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Name"
+                            value={name}
+                            onChangeText={setName}
+                            onPress={resetError}
+                        />
+                        <Text style={styles.label}>Email</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Email"
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            onPress={resetError}
+                        />
+                        <Text style={styles.label}>Phone</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Phone"
+                            value={phone}
+                            onChangeText={setPhone}
+                            keyboardType="phone-pad"
+                            onPress={resetError}
+                        />
+                        <Text style={styles.label}>Password</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                            onPress={resetError}
+                        />
+                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+                        <View style={styles.buttonContainer}>
+                            <CustomButton title="SignUp" onPress={handleSignup} />
+                            <CustomButton title="Login" onPress={() => navigation.navigate("Login")} />
+                        </View>
+                    </View>
                 </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.text}>
-                    If you are already Register then {" "}
-                    </Text>
-                </View>
-                <View style={styles.buttonContainer}>
-                <CustomButton onPress={() => navigation.navigate("Login")} title="Login" />
-                </View>
-            </View>
+            </ImageBackground>
         </>
     );
 }
-
+const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
+    backgroundImage: {
+        flex: 1,
+        resizeMode: 'cover',
+    },
     container: {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center",
+        paddingHorizontal: 30,
         padding: 20,
+        height: 30,
+    },
+    headerLogo: {
+        position: 'absolute',
+        top: 50,
+        left: 16,
+        width: '70%',
+        height: 60
+    },
+    formContainer: {
+        marginTop: screenHeight * 0.2,
+        backgroundColor: '#040404',
+        borderRadius: 25,
+        padding: 20,
+        opacity: 0.7
     },
     heading: {
         fontSize: 24,
         marginBottom: 20,
+        textAlign: 'center',
+        color: '#fff',
+        fontWeight: 'bold'
     },
     input: {
         width: "100%",
@@ -127,21 +153,29 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 10,
         padding: 10,
+        backgroundColor: '#fff',
+        color: '#000'
     },
     errorMessage: {
         color: 'red'
     },
     buttonContainer: {
-        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         marginBottom: 10,
-        backgroundColor: '#11696a',
     },
     textContainer: {
         textAlign: 'center',
         marginBottom: 10,
     },
-    text: {
-        fontSize: 15
+    // text: {
+    //     fontSize: 15
+    // },
+    label: {
+        fontSize: 16,
+        marginBottom: 5,
+        color: '#fff',
+        marginBottom: 10
     },
 });
 
