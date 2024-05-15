@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text,  StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native';
 import Card from "../common/Card";
+import UserCategory from "./UserCategory";
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
 import { API_BASE_URL } from '@env';
@@ -11,12 +12,12 @@ const ServiceTypes = ({ navigation }) => {
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
     const route = useRoute();
-    const { parentid } = route.params;
+    const { data } = route.params;
     useEffect(() => {
         (async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${API_BASE_URL}/servicetypes/${parentid}`, {
+                const response = await axios.get(`${API_BASE_URL}/servicetypes/${data.id}`, {
                     headers: {
                         Authorization: `Bearer ${userData?.token}`
                     },
@@ -24,14 +25,14 @@ const ServiceTypes = ({ navigation }) => {
                 setServiceType(response.data.servicetypes);
                 setLoading(false);
             } catch (error) {
-                console.log(error);
                 setLoading(false);
                 setServiceType([])
             } finally {
                 setLoading(false);
             }
         })();
-    }, [parentid])
+    }, [data?.id])
+
     if (loading) {
         return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
     }
@@ -39,13 +40,21 @@ const ServiceTypes = ({ navigation }) => {
         <SafeAreaView>
             <ScrollView>
                 <View style={styles.container}>
-                    <Text style={styles.heading}>Sub Services</Text>
-                    {serviceType?.length > 0 ? serviceType?.map((item, index) => (
-                        <View key={index}>
-                            <Card data={item} id={index} />
-                        </View>
-                    ))
-                        : <Text style={styles.errorMessage}>No Data Found !</Text>}
+                    <Card data={data} />
+                    {
+                        serviceType?.length > 0 ? (
+                            <>
+                                <Text style={styles.heading}>Sub Services</Text>
+                                {
+                                    serviceType.map((item, index) => (
+                                        <View key={index}>
+                                            <Card data={item} />
+                                        </View>
+                                    ))
+                                }
+                            </>
+                        )
+                            : <UserCategory data={data} />}
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -65,10 +74,6 @@ const styles = StyleSheet.create({
         fontWeight: 'semibold',
         textAlign: "center",
         textDecorationLine: 'underline'
-    },
-    errorMessage: {
-        color: 'red',
-        fontSize: 20
     },
     loader: {
         marginTop: 25,

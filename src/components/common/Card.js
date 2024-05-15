@@ -7,7 +7,7 @@ const Card = ({ data }) => {
 
     const handlePress = () => {
         
-        navigation.navigate("ServiceTypes", { parentid: data.id });
+        navigation.navigate("ServiceTypes", { data });
     };
     return (
         <TouchableOpacity onPress={handlePress}>
