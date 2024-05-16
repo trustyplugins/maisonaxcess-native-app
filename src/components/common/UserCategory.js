@@ -53,8 +53,8 @@ const UserCategory = ({ data }) => {
         <Text style={styles.heading}>User details</Text>
         {serviceType?.length > 0 ? serviceType.map((item, index) => {
             return (
-                <View >
-                    <TouchableOpacity onPress={handlePress} key={index}>
+                <View key={index}>
+                    <TouchableOpacity onPress={handlePress} >
                         <View style={styles.card}>
                             <View style={styles.imageContainer}>
                                 <Image source={{ uri: item?.profile_photo_url }} style={styles.image} />
