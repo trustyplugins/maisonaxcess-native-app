@@ -64,7 +64,7 @@ const Login = ({ navigation }) => {
         setSnackbarVisible(true);
         setTimeout(() => {
             setSnackbarVisible(false);
-            navigation.navigate('Home');
+            navigation.navigate('home');
         }, 2000);
     };
     return (
@@ -111,7 +111,7 @@ const Login = ({ navigation }) => {
                         </View>
                         <View style={styles.buttonContainer}>
                             <CustomButton title="Login" onPress={handleLogin} />
-                            <CustomButton title="Register" onPress={() => navigation.navigate("Signup")} />
+                            <CustomButton title="Register" onPress={() => navigation.navigate("signup")} />
                         </View>
                     </View>
                 </View>

@@ -47,7 +47,7 @@ function Signup({ navigation }) {
         setSnackbarVisible(true);
         setTimeout(() => {
             setSnackbarVisible(false);
-            navigation.navigate('Login');
+            navigation.navigate('login');
         }, 3000);
     };
     return (
@@ -103,7 +103,7 @@ function Signup({ navigation }) {
                         {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
                         <View style={styles.buttonContainer}>
                             <CustomButton title="SignUp" onPress={handleSignup} />
-                            <CustomButton title="Login" onPress={() => navigation.navigate("Login")} />
+                            <CustomButton title="Login" onPress={() => navigation.navigate("login")} />
                         </View>
                     </View>
                 </View>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Platform } from "react-native";
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Home from '../screens/Home';
 import About from '../screens/About';
 import Signup from '../screens/Signup';
@@ -21,28 +20,28 @@ const Navigation = () => {
         }}
       >
         <Stack.Screen
-          name="Home"
+          name="home"
           component={Home}
         />
         <Stack.Screen
-          name="About"
+          name="about"
           component={About}
         />
         <Stack.Screen
-          name="ServiceTypes"
+          name="service_types"
           component={ServiceTypes}
         />
         <Stack.Screen
-          name="Profile"
+          name="profile"
           component={Profile} 
         />
         <Stack.Screen
-          name="Signup"
+          name="signup"
           component={Signup}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Login"
+          name="login"
           component={Login}
           options={{ headerShown: false }}
         />

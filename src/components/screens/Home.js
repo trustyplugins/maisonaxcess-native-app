@@ -24,7 +24,7 @@ const Home = ({ navigation }) => {
                 setLoading(false);
                 setServiceType([])
                 if (userData == null) {
-                    navigation.navigate('Login');
+                    navigation.navigate('login');
                 }
             } finally {
                 setLoading(false);

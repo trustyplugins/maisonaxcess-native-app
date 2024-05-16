@@ -43,7 +43,7 @@ const UserCategory = ({ data }) => {
         } catch (error) {
             // console.log(error)
         } 
-        // navigation.navigate("ServiceTypes", { data });
+        // navigation.navigate("service_types", { data });
     };
 
     if (loading) {

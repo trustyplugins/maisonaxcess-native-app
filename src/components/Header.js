@@ -38,7 +38,7 @@ const Header = ({ navigation, back }) => {
         setTimeout(() => {
             setSnackbarVisible(false);
             dispatch({ type: 'LOGIN', payload: null });
-            navigation.navigate('Login');
+            navigation.navigate('login');
         }, 2000);
     };
     const showError = () => {
@@ -79,18 +79,18 @@ const Header = ({ navigation, back }) => {
                     >
                         {isAuthenticated?.user?.token ? <>
                             <Menu.Item onPress={() => {
-                                navigation.navigate('Profile')
+                                navigation.navigate('profile')
                                 setMenuVisible(false)
                             }} title="Profile" />
                             <Menu.Item onPress={handleLogout} title="Logout" />
                         </> :
                             <>
                                 <Menu.Item onPress={() => {
-                                    navigation.navigate('Signup')
+                                    navigation.navigate('signup')
                                     setMenuVisible(false)
                                 }} title="SignUp" />
                                 <Menu.Item onPress={() => {
-                                    navigation.navigate('Login')
+                                    navigation.navigate('login')
                                     setMenuVisible(false)
                                 }} title="Login" />
                             </>
