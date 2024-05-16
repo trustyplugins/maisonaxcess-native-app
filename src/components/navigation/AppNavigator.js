@@ -8,6 +8,7 @@ import Login from '../screens/Login';
 import ServiceTypes from '../common/ServiceTypes';
 import Header from '../Header';
 import Profile from '../screens/Profile';
+import Service from '../screens/Service';
 import { PaperProvider } from 'react-native-paper';
 const Stack = createNativeStackNavigator();
 
@@ -33,7 +34,11 @@ const Navigation = () => {
         />
         <Stack.Screen
           name="profile"
-          component={Profile} 
+          component={Profile}
+        />
+        <Stack.Screen
+          name="service"
+          component={Service}
         />
         <Stack.Screen
           name="signup"

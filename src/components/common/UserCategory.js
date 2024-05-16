@@ -9,7 +9,7 @@ const UserCategory = ({ data }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    // console.log(data.id);
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -39,10 +39,13 @@ const UserCategory = ({ data }) => {
                 },
             });
             // console.log(response.data.services)
-            
+            if (response.data.services?.length > 0) {
+                navigation.navigate("service", { userid: `${data.id}` });
+            }
+
         } catch (error) {
             // console.log(error)
-        } 
+        }
         // navigation.navigate("service_types", { data });
     };
 

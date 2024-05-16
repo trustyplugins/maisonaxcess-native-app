@@ -13,12 +13,12 @@ const Card = ({ data }) => {
         <TouchableOpacity onPress={handlePress}>
             <View style={styles.card}>
                 <View style={styles.imageContainer}>
-                    <ImageBackground source={{ uri: 'https://maisonaxcess.com/uploads/Capture d’écran 2024-05-02 à 11.21.11.png' }} style={styles.image} >
+                    <ImageBackground source={{ uri: `https://maisonaxcess.com/${data.image}` }} style={styles.image} >
                         <View style={styles.overlay} />
                     </ImageBackground>
                 </View>
                 <View style={styles.textContainer}>
-                    <Text style={styles.title}> {data.name}||Les plateaux repas</Text>
+                    <Text style={styles.title}> {data.name}</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
         fontSize: 17,
         fontWeight: 'bold',
         textAlign: 'center',
-
         color: '#ffffff',
     },
 });
