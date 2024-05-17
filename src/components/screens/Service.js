@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Platform, TextInput, ScrollView, Modal } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
+import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Platform, TextInput, ScrollView, Modal, Switch } from 'react-native';
 import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
@@ -10,9 +10,10 @@ import parseFromHtml from '../../utils/parseHtml';
 import { FontAwesome } from '@expo/vector-icons';
 import Snackbar from '../Snackbar';
 import CustomButton from '../common/CustomButton';
+import Icon from 'react-native-vector-icons/Ionicons';
 const Service = () => {
     const route = useRoute();
-    const { userid } = route.params;
+    const { userid, service_provider_id } = route.params;
     const userData = useSelector(state => state.user.user);
     const userCredential = useSelector(state => state.user.credentials);
     const [service, setService] = useState([]);
@@ -26,6 +27,7 @@ const Service = () => {
     const [error, setError] = useState(false);
     const [serviceList, setServiceList] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
+    const [totalPrice, setTotalPrice] = useState(0);
     const [customerAddress, setCustomerAddress] = useState({
         name: '',
         email: userCredential.email || '',
@@ -94,15 +96,59 @@ const Service = () => {
         }
         setSelectedDate(formattedDate);
     };
-    const toggleService = (id) => {
-        if (serviceList.includes(id)) {
-            let aserviceList = serviceList.filter(ele => ele != id);
+    const toggleService = (item) => {
+        let listItem = {
+            title: item.name,
+            price: item.price,
+            quantity: '1'
+        }
+        let isItemPresent = serviceList.some((ele) => ele.title == item.name);
+        if (isItemPresent) {
+            let aserviceList = serviceList.filter(ele => ele.title != item.name);
             setServiceList([...aserviceList]);
         } else {
-            setServiceList([...serviceList, id]);
+            setServiceList([...serviceList, listItem]);
         }
 
     };
+    const bookAppointment = async () => {
+        const bookData = {
+            service_provider_id: service_provider_id,
+            name: customerAddress.name,
+            email: customerAddress.email,
+            phone: customerAddress.phone,
+            state: customerAddress.state,
+            country: customerAddress.country,
+            postalCode: customerAddress.postalCode,
+            address: customerAddress.address,
+            services_detail: serviceList,
+            payment_info: "cod",
+            appointment_date: selectedDate,
+            total_price: totalPrice
+            // card_number: customerAddress.card_number,
+            // expiry: customerAddress.expiry,
+            // cvv_number: customerAddress.cvv_number,
+        }
+        try {
+            const response = await axios.post(`${API_BASE_URL}/orders`, bookData, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${userData?.token}`
+                }
+            });
+            // console.error('response:', response.data);
+            // setModalMessage(response.data.message);
+            // showSnackbar();
+        } catch (error) {
+            // console.error('Error:', error.response);
+            // if (error.response) {
+            //     // console.log('Response data:', error.response.data);
+            //     setShowError(error.response.data.message);
+            //     setError(true);
+            // }
+        }
+        // console.log(customerAddress)
+    }
 
     const showDatepicker = () => {
         setShow(true);
@@ -114,9 +160,7 @@ const Service = () => {
             [field]: value
         });
     };
-    const bookAppointment = () => {
-        console.log(customerAddress)
-    }
+
     const formatCardNumber = (value) => {
         return value.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim();
     };
@@ -134,6 +178,23 @@ const Service = () => {
     const toggleModal = () => {
         setModalVisible(!modalVisible);
     };
+    const incrementQuantity = (title) => {
+        setServiceList(serviceList.map(service =>
+            service.title === title ? { ...service, quantity: `${parseInt(service.quantity) + 1}` } : service
+        ));
+    };
+
+    const decrementQuantity = (title) => {
+        setServiceList(serviceList.map(service =>
+            service.title === title && service.quantity > 0 ? { ...service, quantity: service.quantity === '1' ? '1' : `${parseInt(service.quantity) - 1}` } : service
+        ));
+    };
+    const calTotalOrder = () => {
+        if (serviceList.length > 0) {
+            return serviceList.reduce((total, item) => total + parseFloat(item.price) * parseInt(item.quantity), 0);
+        }
+    };
+    const totalOrderMemoized = useMemo(calTotalOrder, [serviceList]);
 
     if (loading) {
         return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
@@ -157,6 +218,25 @@ const Service = () => {
                         <Text style={styles.contentText}>{parseFromHtml(item.content)}</Text>
                         <TouchableOpacity onPress={toggleModal} style={styles.servicesContainer}>
                             <Text style={styles.servicesText}>Add Services</Text>
+                            {
+                                serviceList?.length > 0 && serviceList.map((serviceItem, id) => (
+                                    <View key={id} style={styles.serviceItem}>
+                                        <View style={styles.serviceItemName}>
+                                            <Text>{serviceItem.title}</Text>
+                                            <Text>${serviceItem.price}</Text>
+                                        </View>
+                                        <View style={styles.quantity}>
+                                            <TouchableOpacity onPress={() => decrementQuantity(serviceItem.title)}>
+                                                <Icon name="remove-circle-outline" size={30} color="#000" />
+                                            </TouchableOpacity>
+                                            <Text style={styles.quantityText}>{serviceItem.quantity}</Text>
+                                            <TouchableOpacity onPress={() => incrementQuantity(serviceItem.title)}>
+                                                <Icon name="add-circle-outline" size={30} color="#000" />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                ))
+                            }
                         </TouchableOpacity>
                         <View style={styles.dateSection}>
                             <View>
@@ -180,7 +260,7 @@ const Service = () => {
                             </View>
                             <View>
                                 <Text style={styles.dateLabelText}>Total Order:</Text>
-                                <Text style={styles.dateLabelText}>$0.0</Text>
+                                <Text style={styles.dateLabelText}>${totalOrderMemoized || 0.0}</Text>
                             </View>
                         </View>
                         <View style={styles.customerFormContainer}>
@@ -295,9 +375,10 @@ const Service = () => {
                                             <Text>{service.name}</Text>
                                             <Text>{service.price}</Text>
                                         </View>
-                                        <TouchableOpacity onPress={(e) => toggleService(id)}>
-                                            <Text style={styles.toggleButton}>{serviceList.includes(id) ? 'ON' : 'OFF'}</Text>
-                                        </TouchableOpacity>
+                                        <Switch
+                                            value={serviceList.some((ele) => ele.title == service?.name)}
+                                            onValueChange={() => toggleService(service)}
+                                        />
                                     </View>
                                 ))}
                                 <TouchableOpacity onPress={toggleModal}>
@@ -430,7 +511,8 @@ const styles = StyleSheet.create({
     },
     serviceItemName: {
         flexDirection: 'row',
-        gap: 2
+        gap: 4,
+        width: '50%'
     },
     toggleButton: {
         borderWidth: 1,
@@ -444,6 +526,26 @@ const styles = StyleSheet.create({
         color: '#007bff',
         textAlign: 'center',
         marginTop: 20,
+    },
+    //quantity
+    quantity: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    quantityButton: {
+        padding: 3,
+        borderWidth: 1,
+        borderColor: '#007bff',
+        borderRadius: 5,
+        color: '#007bff',
+        textAlign: 'center',
+        width: 30,
+        height: 30,
+        lineHeight: 30,
+    },
+    quantityText: {
+        marginHorizontal: 10,
+        fontSize: 16,
     },
 });
 

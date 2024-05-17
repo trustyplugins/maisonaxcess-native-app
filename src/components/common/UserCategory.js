@@ -9,7 +9,7 @@ const UserCategory = ({ data }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
-    // console.log(data.id);
+    
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -31,7 +31,7 @@ const UserCategory = ({ data }) => {
         })();
     }, [data?.id])
 
-    const handlePress = async () => {
+    const handlePress = async (id) => {
         try {
             const response = await axios.get(`${API_BASE_URL}/services/${data.id}`, {
                 headers: {
@@ -40,7 +40,7 @@ const UserCategory = ({ data }) => {
             });
             // console.log(response.data.services)
             if (response.data.services?.length > 0) {
-                navigation.navigate("service", { userid: `${data.id}` });
+                navigation.navigate("service", { userid: `${data.id}`, service_provider_id: `${id}` });
             }
 
         } catch (error) {
@@ -57,7 +57,7 @@ const UserCategory = ({ data }) => {
         {serviceType?.length > 0 ? serviceType.map((item, index) => {
             return (
                 <View key={index}>
-                    <TouchableOpacity onPress={handlePress} >
+                    <TouchableOpacity onPress={() => handlePress(item.id)} >
                         <View style={styles.card}>
                             <View style={styles.imageContainer}>
                                 <Image source={{ uri: item?.profile_photo_url }} style={styles.image} />
