@@ -10,6 +10,7 @@ import Header from '../Header';
 import Profile from '../screens/Profile';
 import Service from '../screens/Service';
 import { PaperProvider } from 'react-native-paper';
+import OrderSuccess from '../screens/OrderSuccess';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
@@ -39,6 +40,10 @@ const Navigation = () => {
         <Stack.Screen
           name="service"
           component={Service}
+        />
+        <Stack.Screen
+          name="order-success"
+          component={OrderSuccess}
         />
         <Stack.Screen
           name="signup"
