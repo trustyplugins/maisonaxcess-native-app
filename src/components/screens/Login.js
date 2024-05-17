@@ -19,7 +19,7 @@ const Login = ({ navigation }) => {
     useEffect(() => {
         if(userCredential !=null){
             setEmail(userCredential.email);
-            setPassword(userCredential.password);
+            setPassword(userCredential.password); 
             setRememberMe(true);
         }
     }, [userCredential])
