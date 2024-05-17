@@ -1,15 +1,31 @@
 // Layout.js
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Keyboard } from 'react-native';
 import Footer from './Footer';
 
 const Layout = ({ children }) => {
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            setKeyboardVisible(true);
+        });
+
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            setKeyboardVisible(false);
+        });
+
+        // Cleanup listeners on component unmount
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
     return (
         <View style={styles.container}>
-            <View style={styles.content}>
+            <View style={[styles.content, isKeyboardVisible && styles.contentKeyboardVisible]}>
                 {children}
             </View>
-            <Footer />
+            {!isKeyboardVisible && <Footer />}
         </View>
     );
 };
@@ -21,6 +37,9 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         marginBottom: 20,
+    },
+    contentKeyboardVisible: {
+        marginBottom: 0,
     },
 });
 
