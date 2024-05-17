@@ -11,7 +11,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import Snackbar from '../Snackbar';
 import CustomButton from '../common/CustomButton';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 const Service = () => {
+    const navigation = useNavigation();
     const route = useRoute();
     const { userid, service_provider_id } = route.params;
     const userData = useSelector(state => state.user.user);
@@ -112,6 +114,9 @@ const Service = () => {
 
     };
     const bookAppointment = async () => {
+        // navigation.navigate('order-success');
+        // return;
+        
         const bookData = {
             service_provider_id: service_provider_id,
             name: customerAddress.name,
