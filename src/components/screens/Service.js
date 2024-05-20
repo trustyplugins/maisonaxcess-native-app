@@ -116,7 +116,7 @@ const Service = () => {
     const bookAppointment = async () => {
         // navigation.navigate('order-success');
         // return;
-        
+
         const bookData = {
             service_provider_id: service_provider_id,
             name: customerAddress.name,
@@ -330,7 +330,7 @@ const Service = () => {
                             />
                             <Text style={styles.customerLabel}>Payment Method</Text>
                             <TextInput
-                                style={styles.customerInput}
+                                style={styles.customerInputCard}
                                 placeholder="Card Number"
                                 value={formatCardNumber(customerAddress.card_number)}
                                 onChangeText={(value) => handleChange('card_number', value)}
@@ -338,26 +338,33 @@ const Service = () => {
                                 maxLength={19}
                                 onPress={resetError}
                             />
-                            <Text style={styles.customerLabel}>Expiry</Text>
-                            <TextInput
-                                style={styles.customerInput}
-                                placeholder="MM/YY"
-                                value={formatExpiry(customerAddress.expiry)}
-                                onChangeText={(value) => handleChange('expiry', value)}
-                                keyboardType="numeric"
-                                maxLength={5}
-                                onPress={resetError}
-                            />
-                            <Text style={styles.customerLabel}>CVV</Text>
-                            <TextInput
-                                style={styles.customerInput}
-                                placeholder="CVV Number"
-                                value={formatCVV(customerAddress.cvv_number)}
-                                onChangeText={(value) => handleChange('cvv_number', value)}
-                                keyboardType="numeric"
-                                maxLength={3}
-                                onPress={resetError}
-                            />
+
+                            <View style={styles.accInfo}>
+                                <View >
+                                    <Text style={styles.customerLabel}>Expiry</Text>
+                                    <TextInput
+                                        style={styles.customerInputCard}
+                                        placeholder="MM/YY"
+                                        value={formatExpiry(customerAddress.expiry)}
+                                        onChangeText={(value) => handleChange('expiry', value)}
+                                        keyboardType="numeric"
+                                        maxLength={5}
+                                        onPress={resetError}
+                                    />
+                                </View>
+                                <View >
+                                    <Text style={styles.customerLabel}>CVV</Text>
+                                    <TextInput
+                                        style={styles.customerInputCard}
+                                        placeholder="CVV Number"
+                                        value={formatCVV(customerAddress.cvv_number)}
+                                        onChangeText={(value) => handleChange('cvv_number', value)}
+                                        keyboardType="numeric"
+                                        maxLength={3}
+                                        onPress={resetError}
+                                    />
+                                </View>
+                            </View>
                         </View>
                         {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
 
@@ -481,6 +488,17 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         paddingHorizontal: 10,
+    },
+    customerInputCard: {
+        height: 40,
+        border: 'none',
+        marginBottom: 10,
+        borderBottomWidth: 2,
+        borderColor: 'gray',
+    },
+    accInfo: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     customerCheckboxContainer: {
         flexDirection: 'row',
