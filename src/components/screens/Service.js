@@ -362,7 +362,7 @@ const Service = () => {
                         {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
 
                         <View >
-                            <CustomButton title="Book Appointment" onPress={bookAppointment} />
+                            <CustomButton title="Pay Now" onPress={bookAppointment} />
                         </View>
                     </View>
                     <Modal
