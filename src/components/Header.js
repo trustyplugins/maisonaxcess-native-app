@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
     },
     backButton: {
         marginRight: 0,
+        paddingLeft:4
     },
     menu: {
         // padding: 10,
