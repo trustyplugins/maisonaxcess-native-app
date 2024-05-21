@@ -62,7 +62,7 @@ const Dashboard = () => {
                                 <View key={index} style={styles.tableRow}>
                                     <Text style={styles.tableCell}>{item.order_number}</Text>
                                     {/* convert string into array*/}
-                                    <Text style={styles.tableCell} ellipsizeMode="tail">{JSON.parse(item.services_with_price).length > 1 ? JSON.parse(item.services_with_price)[0].name + " +" : JSON.parse(item.services_with_price)[0].name}</Text>
+                                    <Text style={styles.tableCell} ellipsizeMode="tail">{JSON.parse(item.services_with_price).length > 1 ? JSON.parse(item.services_with_price)[0].name + ` + ${JSON.parse(item.services_with_price).length - 1}` : JSON.parse(item.services_with_price)[0].name}</Text>
                                     <Text style={styles.tableCell}>${item.total_price}</Text>
                                     <Text style={styles.tableCell}>{item.service_provider_id}</Text>
                                     <Text style={styles.tableCell}>{formatDate(item.appointment_date)}</Text>

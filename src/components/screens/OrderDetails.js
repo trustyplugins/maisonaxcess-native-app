@@ -44,8 +44,9 @@ const OrderDetails = () => {
     }
     return (
         <ScrollView contentContainerStyle={styles.container}>
+
             <View style={styles.detailsContainer}>
-                <Text style={styles.heading}>Order Details:</Text>
+                <Text style={styles.heading}>Order Details</Text>
                 <View style={styles.detailRow}>
                     <Text style={styles.label}>Order Number:</Text>
                     <Text>{orderData?.order_number}</Text>
@@ -120,6 +121,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10,
+        textAlign: 'center'
     },
     detailRow: {
         flexDirection: 'row',
