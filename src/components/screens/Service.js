@@ -28,7 +28,7 @@ const Service = () => {
     const [showError, setShowError] = useState('');
     const [error, setError] = useState(false);
     const [serviceList, setServiceList] = useState([]);
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(true);
     const [totalPrice, setTotalPrice] = useState(0);
     const [customerAddress, setCustomerAddress] = useState({
         name: '',
@@ -81,7 +81,7 @@ const Service = () => {
             }
         })();
     }, [userid])
-    
+
     const ReverseDate = (dateString) => {
         const [year, month, day] = dateString.split(' ')[0].split('-');
         return `${year}-${month}-${day}`;
@@ -121,9 +121,9 @@ const Service = () => {
     const bookAppointment = async () => {
         const bookData = {
             service_provider_id: service_provider_id,
-            name: customerAddress.name,
+            // name: customerAddress.name,
             email: customerAddress.email,
-            phone: customerAddress.phone,
+            // phone: customerAddress.phone,
             state: customerAddress.state,
             country: customerAddress.country,
             postalCode: customerAddress.postalCode,
@@ -273,13 +273,13 @@ const Service = () => {
                         </View>
                         <View style={styles.customerFormContainer}>
                             <Text style={styles.customerHeading}>Customer Address</Text>
-                            <Text style={styles.customerLabel}>Name</Text>
+                            {/* <Text style={styles.customerLabel}>Name</Text>
                             <TextInput
                                 style={styles.customerInput}
                                 placeholder="Name"
                                 value={customerAddress.name}
                                 onChangeText={(value) => handleChange('name', value)}
-                            />
+                            /> */}
                             <Text style={styles.customerLabel}>Email</Text>
                             <TextInput
                                 style={styles.customerInput}
@@ -289,14 +289,14 @@ const Service = () => {
                                 keyboardType="email-address"
                                 editable={false}
                             />
-                            <Text style={styles.customerLabel}>Phone</Text>
+                            {/* <Text style={styles.customerLabel}>Phone</Text>
                             <TextInput
                                 style={styles.customerInput}
                                 placeholder="Phone"
                                 value={customerAddress.phone}
                                 onChangeText={(value) => handleChange('phone', value)}
                                 keyboardType="phone-pad"
-                            />
+                            /> */}
                             <Text style={styles.customerLabel}>State</Text>
                             <TextInput
                                 style={styles.customerInput}
@@ -356,10 +356,10 @@ const Service = () => {
                                     />
                                 </View>
                                 <View >
-                                    <Text style={styles.customerLabel}>CVV</Text>
+                                    <Text style={styles.customerLabel}>CVC</Text>
                                     <TextInput
                                         style={styles.customerInputCard}
-                                        placeholder="CVV Number"
+                                        placeholder="CVC Number"
                                         value={formatCVV(customerAddress.cvv_number)}
                                         onChangeText={(value) => handleChange('cvv_number', value)}
                                         keyboardType="numeric"

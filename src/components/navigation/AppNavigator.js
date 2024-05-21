@@ -11,6 +11,7 @@ import Service from '../screens/Service';
 import { PaperProvider } from 'react-native-paper';
 import OrderSuccess from '../screens/OrderSuccess';
 import Dashboard from '../screens/Dashboard';
+import OrderDetails from '../screens/OrderDetails';
 import Layout from '../common/Layout';
 const Stack = createNativeStackNavigator();
 
@@ -73,6 +74,13 @@ const Navigation = () => {
           {props => (
             <Layout>
               <Dashboard {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="order-details">
+          {props => (
+            <Layout>
+              <OrderDetails {...props} />
             </Layout>
           )}
         </Stack.Screen>
