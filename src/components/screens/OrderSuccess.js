@@ -39,7 +39,9 @@ const OrderSuccess = () => {
         return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
     }
     const formatDate = (dateString) => {
-        return dateString.split(' ')[0];
+        if (dateString) {
+            return dateString.split(' ')[0];
+        }
     };
     return (
         <ScrollView contentContainerStyle={styles.container}>

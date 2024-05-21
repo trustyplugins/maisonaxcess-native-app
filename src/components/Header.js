@@ -61,10 +61,10 @@ const Header = ({ navigation, back }) => {
                             <Icon name="arrow-left" size={20} color="#000" />
                         </TouchableOpacity>
                     )}
-                    {/* <TouchableOpacity> */}
-                    {/* <Image source={logoImage} style={styles.logo} /> */}
-                    <Text style={styles.logo}>Maisonaxcess</Text>
-                    {/* </TouchableOpacity> */}
+                    <TouchableOpacity onPress={() => navigation.navigate('home')}>
+                        {/* <Image source={logoImage} style={styles.logo} /> */}
+                        <Text style={styles.logo}>Maisonaxcess</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.buttonsContainer}>
                     <Menu
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     },
     backButton: {
         marginRight: 0,
-        paddingLeft:4
+        paddingLeft: 4
     },
     menu: {
         // padding: 10,

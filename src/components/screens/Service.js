@@ -83,8 +83,10 @@ const Service = () => {
     }, [userid])
 
     const ReverseDate = (dateString) => {
-        const [year, month, day] = dateString.split(' ')[0].split('-');
-        return `${year}-${month}-${day}`;
+        if (dateString) {
+            const [day, month, year] = dateString.split(' ')[0]?.split('-');
+            return `${year}-${month}-${day}`;
+        }
     };
 
 
@@ -123,7 +125,7 @@ const Service = () => {
             service_provider_id: service_provider_id,
             // name: customerAddress.name,
             email: customerAddress.email,
-            // phone: customerAddress.phone,
+            phone_number: customerAddress.phone,
             state: customerAddress.state,
             country: customerAddress.country,
             postalCode: customerAddress.postalCode,
@@ -136,6 +138,7 @@ const Service = () => {
             // expiry: customerAddress.expiry,
             // cvv_number: customerAddress.cvv_number,
         }
+        
         try {
             const response = await axios.post(`${API_BASE_URL}/orders`, bookData, {
                 headers: {
@@ -150,7 +153,7 @@ const Service = () => {
         } catch (error) {
             // console.error('Error:', error.response);
             if (error.response) {
-                console.log('Response data:', error.response.data);
+                console.log('Response data:', error.response.data.message);
                 // setShowError(error.response.data.message);
                 // setError(true);
             }
@@ -280,7 +283,7 @@ const Service = () => {
                                 value={customerAddress.name}
                                 onChangeText={(value) => handleChange('name', value)}
                             /> */}
-                            <Text style={styles.customerLabel}>Email</Text>
+                            {/* <Text style={styles.customerLabel}>Email</Text>
                             <TextInput
                                 style={styles.customerInput}
                                 placeholder="Email"
@@ -288,15 +291,15 @@ const Service = () => {
                                 onChangeText={(value) => handleChange('email', value)}
                                 keyboardType="email-address"
                                 editable={false}
-                            />
-                            {/* <Text style={styles.customerLabel}>Phone</Text>
+                            /> */}
+                            <Text style={styles.customerLabel}>Phone</Text>
                             <TextInput
                                 style={styles.customerInput}
                                 placeholder="Phone"
                                 value={customerAddress.phone}
                                 onChangeText={(value) => handleChange('phone', value)}
                                 keyboardType="phone-pad"
-                            /> */}
+                            />
                             <Text style={styles.customerLabel}>State</Text>
                             <TextInput
                                 style={styles.customerInput}
