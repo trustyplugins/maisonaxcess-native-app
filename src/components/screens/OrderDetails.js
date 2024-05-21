@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
+import { useRoute } from '@react-navigation/native'
 import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
-const OrderSuccess = () => {
+import formatDate from '../../utils/formatDate';
+const OrderDetails = () => {
     const userData = useSelector(state => state.user.user);
     const route = useRoute();
-    const { orderId } = route.params;
+    const { id } = route.params;
     const [orderData, setOrderData] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         setLoading(true);
         const getOrders = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/orders/${orderId}`, {
+                const response = await axios.get(`${API_BASE_URL}/orders/${id}`, {
                     headers: {
                         Authorization: `Bearer ${userData?.token}`
                     },
@@ -33,18 +34,18 @@ const OrderSuccess = () => {
             }
         }
         getOrders();
-    }, [orderId])
+    }, [id])
+    const formatAppointmentDate = (dateString) => {
+        return dateString?.split(' ')[0];
+    };
 
     if (loading) {
         return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
     }
-    const formatDate = (dateString) => {
-        return dateString.split(' ')[0];
-    };
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.successMessage}>Thank you for confirming your appointment. We will contact you soon!</Text>
             <View style={styles.detailsContainer}>
+                <Text style={styles.heading}>Order Details:</Text>
                 <View style={styles.detailRow}>
                     <Text style={styles.label}>Order Number:</Text>
                     <Text>{orderData?.order_number}</Text>
@@ -55,7 +56,7 @@ const OrderSuccess = () => {
                 </View>
                 <View style={styles.detailRow}>
                     <Text style={styles.label}>Appointment Date:</Text>
-                    <Text>{formatDate(orderData?.appointment_date)}</Text>
+                    <Text>{formatAppointmentDate(orderData?.appointment_date)}</Text>
                 </View>
                 <View style={styles.detailRow}>
                     <Text style={styles.label}>Address:</Text>
@@ -64,6 +65,18 @@ const OrderSuccess = () => {
                 <View style={styles.detailRow}>
                     <Text style={styles.label}>Phone Number:</Text>
                     <Text>{orderData?.phone_number}</Text>
+                </View>
+                <View style={styles.detailRow}>
+                    <Text style={styles.label}>Payment Method:</Text>
+                    <Text>{orderData?.payment_info}</Text>
+                </View>
+                <View style={styles.detailRow}>
+                    <Text style={styles.label}>Order Status:</Text>
+                    <Text>{orderData?.status}</Text>
+                </View>
+                <View style={styles.detailRow}>
+                    <Text style={styles.label}>Booking Date:</Text>
+                    <Text>{formatDate(orderData?.created_at)}</Text>
                 </View>
                 <View >
                     <Text style={styles.tableHeading}>Order Details</Text>
@@ -81,36 +94,23 @@ const OrderSuccess = () => {
                     ))}
                     <View style={styles.tableRow}>
                         <Text style={styles.tableCell}></Text>
-                        <Text style={[styles.tableCell, styles.totalLabel]}>Total Price:</Text>
+                        <Text style={[styles.tableCell, styles.totalLabel]}>Order Total:</Text>
                         <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
-                    </View>
-                    <View style={styles.tableRow}>
-                        <Text style={styles.tableCell}></Text>
-                        <Text style={[styles.tableCell, styles.totalLabel]}>Payment Method:</Text>
-                        <Text style={[styles.tableCell, styles.totalValue]}>{orderData?.payment_info}</Text>
                     </View>
                 </View>
             </View>
         </ScrollView>
-    );
-};
+    )
+}
+
+export default OrderDetails;
 
 const styles = StyleSheet.create({
     container: {
         padding: 20,
         backgroundColor: '#f5f5f5',
-        borderRadius: 10,
-    },
-    successMessage: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 20,
-        color: '#4caf50',
     },
     detailsContainer: {
-        flexDirection: 'column',
-        justifyContent: 'space-between',
         backgroundColor: '#fff',
         padding: 10,
         borderRadius: 10,
@@ -156,5 +156,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-export default OrderSuccess;

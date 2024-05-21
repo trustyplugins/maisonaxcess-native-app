@@ -28,7 +28,7 @@ const Service = () => {
     const [showError, setShowError] = useState('');
     const [error, setError] = useState(false);
     const [serviceList, setServiceList] = useState([]);
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(true);
     const [totalPrice, setTotalPrice] = useState(0);
     const [customerAddress, setCustomerAddress] = useState({
         name: '',

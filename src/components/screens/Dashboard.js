@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Act
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 const Dashboard = () => {
+    const navigation = useNavigation();
     const userData = useSelector(state => state.user.user);
     const [orderData, setOrderData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -61,10 +63,10 @@ const Dashboard = () => {
                                     <Text style={styles.tableCell}>{item.order_number}</Text>
                                     {/* convert string into array*/}
                                     <Text style={styles.tableCell} ellipsizeMode="tail">{JSON.parse(item.services_with_price).length > 1 ? JSON.parse(item.services_with_price)[0].name + " +" : JSON.parse(item.services_with_price)[0].name}</Text>
-                                    <Text style={styles.tableCell}>{item.total_price}</Text>
+                                    <Text style={styles.tableCell}>${item.total_price}</Text>
                                     <Text style={styles.tableCell}>{item.service_provider_id}</Text>
                                     <Text style={styles.tableCell}>{formatDate(item.appointment_date)}</Text>
-                                    <TouchableOpacity style={styles.actionButton}>
+                                    <TouchableOpacity onPress={() => { navigation.navigate("order-details", { id: item.id }) }} style={styles.actionButton}>
                                         <Text style={styles.actionButtonText}>View</Text>
                                     </TouchableOpacity>
                                 </View>
