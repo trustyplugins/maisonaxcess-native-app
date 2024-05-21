@@ -1,17 +1,78 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { API_BASE_URL } from '@env';
+import axios from "axios";
+const OrderSuccess = () => {
+    const userData = useSelector(state => state.user.user);
+    const route = useRoute();
+    const { orderId } = route.params;
+    const [orderData, setOrderData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        setLoading(true);
+        const getOrders = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/orders/${orderId}`, {
+                    headers: {
+                        Authorization: `Bearer ${userData?.token}`
+                    },
+                });
+                if (response.data.orders?.length > 0) {
+                    const order = response.data.orders[0];
+                    order.services_with_price = JSON.parse(order.services_with_price); {/* convert string into array*/ }
+                    setOrderData(order);
+                }
+                setLoading(false);
 
-const OrderSuccess = ({ orderDetails }) => {
+            } catch (error) {
+                setLoading(false);
+                // setLoading(false);
+                // setService([])
+            }
+        }
+        getOrders();
+    }, [orderId])
+
+    if (loading) {
+        return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
+    }
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.successMessage}>Thank you for confirming your appointment. We will contact you soon!</Text>
             <View style={styles.detailsContainer}>
                 <Text style={styles.heading}>Order Details:</Text>
-                <Text style={styles.detail}><Text style={styles.label}>Order Number:</Text> 49</Text>
-                <Text style={styles.detail}><Text style={styles.label}>Appointment Date:</Text> 2024-05-21</Text>
-                <Text style={styles.detail}><Text style={styles.label}>Service Provider:</Text> abcd</Text>
-                <Text style={styles.detail}><Text style={styles.label}>Address:</Text> Frankland-Cranbrook Road,Western Australia,Australia,6321</Text>
-                <Text style={styles.detail}><Text style={styles.label}>Phone Number:</Text> 1234567894</Text>
+                <Text style={styles.detail}><Text style={styles.label}>Order Number:</Text> {orderData?.order_number}</Text>
+                <Text style={styles.detail}><Text style={styles.label}>Appointment Date:</Text>{orderData?.appointment_date}</Text>
+                <Text style={styles.detail}><Text style={styles.label}>Service Provider:</Text> {orderData?.service_provider_id}</Text>
+                <Text style={styles.detail}><Text style={styles.label}>Address:</Text> {orderData?.customer_address}</Text>
+                <Text style={styles.detail}><Text style={styles.label}>Phone Number:</Text> {orderData?.phone_number}</Text>
+                <View >
+                    <Text style={styles.tableHeading}>Order Details</Text>
+                    <View style={styles.tableRow}>
+                        <Text style={[styles.tableCell, styles.tableHeader]}>Item</Text>
+                        <Text style={[styles.tableCell, styles.tableHeader]}>Quantity</Text>
+                        <Text style={[styles.tableCell, styles.tableHeader]}>Price</Text>
+                    </View>
+                    {orderData && orderData?.services_with_price?.map((service, index) => (
+                        <View key={index} style={styles.tableRow}>
+                            <Text style={styles.tableCell}>{service.name}</Text>
+                            <Text style={styles.tableCell}>{service.quantity}</Text>
+                            <Text style={styles.tableCell}>${service.price}</Text>
+                        </View>
+                    ))}
+                    <View style={styles.tableRow}>
+                        <Text style={styles.tableCell}></Text>
+                        <Text style={[styles.tableCell, styles.totalLabel]}>Total Price:</Text>
+                        <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
+                    </View>
+                    <View style={styles.tableRow}>
+                        <Text style={styles.tableCell}></Text>
+                        <Text style={[styles.tableCell, styles.totalLabel]}>Payment Method:</Text>
+                        <Text style={[styles.tableCell, styles.totalValue]}>{orderData?.payment_info}</Text>
+                    </View>
+                </View>
             </View>
         </ScrollView>
     );
@@ -21,6 +82,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         backgroundColor: '#f5f5f5',
+        borderRadius: 10,
     },
     successMessage: {
         fontSize: 18,
@@ -47,6 +109,37 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     label: {
+        fontWeight: 'bold',
+    },
+    // orderDetail: {
+    //     backgroundColor: '#fff',
+    //     padding: 10,
+    //     elevation: 3,
+    // },
+    tableHeading: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    tableRow: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        paddingVertical: 10,
+    },
+    tableCell: {
+        flex: 1,
+        padding: 5,
+        textAlign: 'center',
+    },
+    tableHeader: {
+        fontWeight: 'bold',
+        backgroundColor: '#f5f5f5',
+    },
+    totalLabel: {
+        fontWeight: 'bold',
+    },
+    totalValue: {
         fontWeight: 'bold',
     },
 });

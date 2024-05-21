@@ -81,6 +81,11 @@ const Service = () => {
             }
         })();
     }, [userid])
+    
+    const ReverseDate = (dateString) => {
+        const [year, month, day] = dateString.split(' ')[0].split('-');
+        return `${year}-${month}-${day}`;
+    };
 
 
     const onChange = (event, selectedDate) => {
@@ -114,9 +119,6 @@ const Service = () => {
 
     };
     const bookAppointment = async () => {
-        // navigation.navigate('order-success');
-        // return;
-
         const bookData = {
             service_provider_id: service_provider_id,
             name: customerAddress.name,
@@ -128,7 +130,7 @@ const Service = () => {
             address: customerAddress.address,
             services_detail: serviceList,
             payment_info: "cod",
-            appointment_date: selectedDate,
+            appointment_date: ReverseDate(selectedDate),
             total_price: totalPrice
             // card_number: customerAddress.card_number,
             // expiry: customerAddress.expiry,
@@ -141,16 +143,17 @@ const Service = () => {
                     Authorization: `Bearer ${userData?.token}`
                 }
             });
+            navigation.navigate('order-success', { orderId: response.data.orderid });
             // console.error('response:', response.data);
             // setModalMessage(response.data.message);
             // showSnackbar();
         } catch (error) {
             // console.error('Error:', error.response);
-            // if (error.response) {
-            //     // console.log('Response data:', error.response.data);
-            //     setShowError(error.response.data.message);
-            //     setError(true);
-            // }
+            if (error.response) {
+                console.log('Response data:', error.response.data);
+                // setShowError(error.response.data.message);
+                // setError(true);
+            }
         }
         // console.log(customerAddress)
     }

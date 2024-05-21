@@ -10,6 +10,7 @@ import Profile from '../screens/Profile';
 import Service from '../screens/Service';
 import { PaperProvider } from 'react-native-paper';
 import OrderSuccess from '../screens/OrderSuccess';
+import Dashboard from '../screens/Dashboard';
 import Layout from '../common/Layout';
 const Stack = createNativeStackNavigator();
 
@@ -65,6 +66,13 @@ const Navigation = () => {
           {props => (
             <Layout>
               <OrderSuccess {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="dashboard">
+          {props => (
+            <Layout>
+              <Dashboard {...props} />
             </Layout>
           )}
         </Stack.Screen>
