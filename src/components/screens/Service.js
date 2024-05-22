@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Platform, TextInput, ScrollView, Modal, Switch } from 'react-native';
-import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
@@ -12,11 +11,15 @@ import Snackbar from '../Snackbar';
 import CustomButton from '../common/CustomButton';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 const Service = () => {
+    const dispatch = useDispatch();
     const navigation = useNavigation();
     const route = useRoute();
     const { userid, service_provider_id } = route.params;
     const userData = useSelector(state => state.user.user);
+    const serviceDetail = useSelector(state => state.user.serviceDetail);
+
     const userCredential = useSelector(state => state.user.credentials);
     const [service, setService] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -28,25 +31,54 @@ const Service = () => {
     const [showError, setShowError] = useState('');
     const [error, setError] = useState(false);
     const [serviceList, setServiceList] = useState([]);
-    const [modalVisible, setModalVisible] = useState(true);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [modalVisible, setModalVisible] = useState(serviceDetail?.services?.length > 0 ? false : true);
+    const [totalPrice, setTotalPrice] = useState(serviceDetail.total_price != undefined ? serviceDetail.total_price : 0);
     const [customerAddress, setCustomerAddress] = useState({
-        name: '',
+        // name: '',
         email: userCredential.email || '',
-        phone: '',
-        state: '',
-        country: '',
-        postalCode: '',
-        address: '',
-        card_number: '',
-        expiry: '',
-        cvv_number: ''
+        phone: serviceDetail.phone || '',
+        state: serviceDetail.state || '',
+        country: serviceDetail.country || '',
+        postalCode: serviceDetail.postalCode || '',
+        address: serviceDetail.address || '',
+        card_number: serviceDetail.card_number || '',
+        expiry: serviceDetail.expiry || '',
+        cvv_number: serviceDetail.cvv_number || '',
+        appointment_date: serviceDetail.appointment_date || selectedDate,
+        services: [...serviceDetail.services] || serviceList,
+        total_price: totalPrice
     });
-    useEffect(()=>{
-        if(serviceList?.length >0){
-            setError(false);
+    const calTotalOrder = () => {
+        if (serviceList.length > 0) {
+            return serviceList.reduce((total, item) => total + parseFloat(item.price) * parseInt(item.quantity), 0);
         }
-    },[serviceList])
+    };
+    const totalOrderMemoized = useMemo(calTotalOrder, [customerAddress.services]);
+
+    useEffect(() => {
+        if (totalOrderMemoized) {
+            setTotalPrice(totalOrderMemoized);
+            setCustomerAddress(prevAddress => ({
+                ...prevAddress,
+                ["total_price"]: totalOrderMemoized
+            }));
+        }
+    }, [totalOrderMemoized]);
+
+    useEffect(() => {
+        if (serviceList?.length > 0) {
+            setError(false);
+            setCustomerAddress({
+                ...customerAddress,
+                ['services']: serviceList
+            });
+        }
+    }, [serviceList])
+
+    useEffect(() => {
+        // console.log(customerAddress, totalPrice)
+        dispatch({ type: 'ADD_SERVICE', payload: customerAddress });
+    }, [customerAddress])
 
     useEffect(() => {
         const getAppointments = async () => {
@@ -111,6 +143,10 @@ const Service = () => {
         if (formattedDate != 'dd-mm-yyyy') {
             setError(false);
         }
+        setCustomerAddress({
+            ...customerAddress,
+            ['appointment_date']: formattedDate
+        });
         setSelectedDate(formattedDate);
     };
     const toggleService = (item) => {
@@ -153,9 +189,9 @@ const Service = () => {
             country: customerAddress.country,
             postalCode: customerAddress.postalCode,
             address: customerAddress.address,
-            services_detail: serviceList,
+            services_detail: customerAddress.services,
             payment_info: "cod",
-            appointment_date: ReverseDate(selectedDate),
+            appointment_date: ReverseDate(customerAddress.appointment_date),
             total_price: totalPrice
             // card_number: customerAddress.card_number,
             // expiry: customerAddress.expiry,
@@ -189,6 +225,7 @@ const Service = () => {
             ...customerAddress,
             [field]: value
         });
+
     };
 
     const formatCardNumber = (value) => {
@@ -209,6 +246,7 @@ const Service = () => {
         setModalVisible(!modalVisible);
     };
     const incrementQuantity = (title) => {
+        console.log(title,serviceList)
         setServiceList(serviceList.map(service =>
             service.title === title ? { ...service, quantity: `${parseInt(service.quantity) + 1}` } : service
         ));
@@ -219,12 +257,7 @@ const Service = () => {
             service.title === title && service.quantity > 0 ? { ...service, quantity: service.quantity === '1' ? '1' : `${parseInt(service.quantity) - 1}` } : service
         ));
     };
-    const calTotalOrder = () => {
-        if (serviceList.length > 0) {
-            return serviceList.reduce((total, item) => total + parseFloat(item.price) * parseInt(item.quantity), 0);
-        }
-    };
-    const totalOrderMemoized = useMemo(calTotalOrder, [serviceList]);
+
 
     if (loading) {
         return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
@@ -249,7 +282,7 @@ const Service = () => {
                         <TouchableOpacity onPress={toggleModal} style={styles.servicesContainer}>
                             <Text style={styles.servicesText}>Add Services</Text>
                             {
-                                serviceList?.length > 0 && serviceList.map((serviceItem, id) => (
+                                customerAddress?.services?.length > 0 && customerAddress.services.map((serviceItem, id) => (
                                     <View key={id} style={styles.serviceItem}>
                                         <View style={styles.serviceItemName}>
                                             <Text>{serviceItem.title}</Text>
@@ -272,7 +305,7 @@ const Service = () => {
                             <View>
                                 <Text style={styles.dateLabelText}>Select Appointment Date:</Text>
                                 <View style={styles.dateContainer}>
-                                    <Text style={styles.dateText}>{selectedDate}</Text>
+                                    <Text style={styles.dateText}>{customerAddress.appointment_date}</Text>
                                     <TouchableOpacity onPress={showDatepicker}>
                                         <FontAwesome name="calendar" size={20} color="black" />
                                     </TouchableOpacity>
@@ -290,7 +323,7 @@ const Service = () => {
                             </View>
                             <View>
                                 <Text style={styles.dateLabelText}>Total Order:</Text>
-                                <Text style={styles.dateLabelText}>${totalOrderMemoized || 0.0}</Text>
+                                <Text style={styles.dateLabelText}>${totalPrice || 0.0}</Text>
                             </View>
                         </View>
                         <View style={styles.customerFormContainer}>
@@ -414,7 +447,7 @@ const Service = () => {
                                             <Text>{service.price}</Text>
                                         </View>
                                         <Switch
-                                            value={serviceList.some((ele) => ele.title == service?.name)}
+                                            value={customerAddress.services?.some((ele) => ele.title == service?.name)}
                                             onValueChange={() => toggleService(service)}
                                         />
                                     </View>
@@ -533,8 +566,8 @@ const styles = StyleSheet.create({
     },
     errorMessage: {
         color: 'red',
-        paddingBottom:4,
-        textAlign:'center'
+        paddingBottom: 4,
+        textAlign: 'center'
     },
     //service modal
     modalContainer: {
