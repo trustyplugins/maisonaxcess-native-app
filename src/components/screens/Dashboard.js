@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator, Image } from 'react-native';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import { useSelector } from 'react-redux';
@@ -41,38 +41,41 @@ const Dashboard = () => {
         return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
     }
     return (
-        <SafeAreaView style={styles.mainContainer}>
+        <SafeAreaView style={styles.safeArea}>
             <View style={styles.container}>
                 <Text style={styles.heading}>Your Orders</Text>
-                <ScrollView >
-                    <ScrollView horizontal>
-                        <View>
-                            {/* Table Header */}
-                            <View style={styles.tableRow}>
-                                <Text style={[styles.tableCell, styles.tableHeader]}>Order No.</Text>
-                                <Text style={[styles.tableCell, styles.tableHeader]}>Services</Text>
-                                <Text style={[styles.tableCell, styles.tableHeader]}>Total Price</Text>
-                                <Text style={[styles.tableCell, styles.tableHeader]}>Service Provider</Text>
-                                <Text style={[styles.tableCell, styles.tableHeader]}>Appointment Date</Text>
-                                <Text style={[styles.tableCell, styles.tableHeader]}>Action</Text>
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    {orderData?.length > 0 && orderData.map((item, index) => (
+                        <View style={styles.card} key={index}>
+                            <View style={styles.header}>
+                                <View style={styles.logo}>
+                                    <Image source={require("../../assets/image/logo.jpg")} style={styles.image} />
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.title} ellipsizeMode="tail" numberOfLines={1}>Coordonnerie</Text>
+                                        <Text style={styles.address}>{item.customer_address}</Text>
+                                    </View>
+                                </View>
+                                <TouchableOpacity style={styles.actionButton} onPress={() => { navigation.navigate("order-details", { id: item.id }) }}>
+                                    <Text style={styles.actionButtonText}>View</Text>
+                                </TouchableOpacity>
                             </View>
 
-
-                            {orderData?.length > 0 && orderData.map((item, index) => (
-                                <View key={index} style={styles.tableRow}>
-                                    <Text style={styles.tableCell}>{item.order_number}</Text>
-                                    {/* convert string into array*/}
-                                    <Text style={styles.tableCell} ellipsizeMode="tail">{JSON.parse(item.services_with_price).length > 1 ? JSON.parse(item.services_with_price)[0].name + ` + ${JSON.parse(item.services_with_price).length - 1}` : JSON.parse(item.services_with_price)[0].name}</Text>
-                                    <Text style={styles.tableCell}>${item.total_price}</Text>
-                                    <Text style={styles.tableCell}>{item.service_provider_id}</Text>
-                                    <Text style={styles.tableCell}>{formatDate(item.appointment_date)}</Text>
-                                    <TouchableOpacity onPress={() => { navigation.navigate("order-details", { id: item.id }) }} style={styles.actionButton}>
-                                        <Text style={styles.actionButtonText}>View</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            ))}
+                            <View style={styles.body}>
+                                {JSON.parse(item.services_with_price).map((order, id) => (
+                                    <View style={styles.services} key={id}>
+                                        <Text style={styles.qnty}>{order.quantity}</Text>
+                                        <Text style={styles.qnty}>*</Text>
+                                        <Text style={styles.service}>{order.name}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                            <View style={styles.footer}>
+                                <Text style={styles.footerText}> {formatDate(item.appointment_date)}</Text>
+                                <Text style={styles.footerText}> ${item.total_price}</Text>
+                            </View>
                         </View>
-                    </ScrollView>
+                    ))
+                    }
                 </ScrollView>
             </View>
         </SafeAreaView>
@@ -80,48 +83,105 @@ const Dashboard = () => {
 };
 
 const styles = StyleSheet.create({
-    mainContainer: {
+    safeArea: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#f8f8f8',
     },
     container: {
         flex: 1,
-        padding: 10,
+        padding: 16,
     },
     heading: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 10,
-        textAlign: 'center',
+        marginBottom: 16,
+        textAlign: 'center'
     },
-    tableRow: {
+    scrollViewContent: {
+        paddingBottom: 16,
+    },
+    card: {
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        padding: 16,
+        marginBottom: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    header: {
         flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        paddingVertical: 15,
+        justifyContent: 'space-between',
+        marginBottom: 16,
+    },
+    logo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginRight:10,
+    },
+    image: {
+        width: 70,
+        height: 70,
+        borderRadius: 10,
+    },
+    titleContainer: {
+        justifyContent: 'center',
+        maxWidth: "100%",
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    address: {
+        fontSize: 14,
+        color: '#666',
+        maxWidth: "75%",
+        // backgroundColor:'gray',
 
     },
-    tableCell: {
-        flex: 1,
-        padding: 5,
-        // textAlign: 'center',
-        maxWidth: 100
-    },
-    tableHeader: {
-        fontWeight: 'bold',
-        backgroundColor: '#f5f5f5',
-    },
     actionButton: {
-        // backgroundColor: '#4CAF50',
         paddingVertical: 5,
-        paddingHorizontal: 10,
         borderRadius: 5,
+        paddingRight:12
     },
     actionButtonText: {
         color: 'blue',
         fontWeight: 'bold',
     },
+    body: {
+        borderTopWidth: 1,
+        borderTopColor: '#eee',
+        paddingTop: 16,
+    },
+    services: {
+        flexDirection: 'row',
+        gap: 4,
+        paddingTop: 5
+    },
+    qnty: {
+        fontSize: 16,
+        marginBottom: 8,
+        color: 'gray'
+    },
+    service: {
+        fontWeight: '500'
+    },
+    footer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderTopWidth: 1,
+        borderTopColor: '#eee',
+        paddingTop: 16,
+        marginTop: 12
+    },
+    footerText: {
+        fontSize: 16,
+        marginBottom: 8,
+        fontWeight: '500'
+    },
 });
+
 
 export default Dashboard;

@@ -6,7 +6,7 @@ const Card = ({ data }) => {
     const navigation = useNavigation();
 
     const handlePress = () => {
-        
+
         navigation.navigate("service_types", { data });
     };
     return (
@@ -17,9 +17,9 @@ const Card = ({ data }) => {
                         <View style={styles.overlay} />
                     </ImageBackground>
                 </View>
-                <View style={styles.textContainer}>
+                {/* <View style={styles.textContainer}>
                     <Text style={styles.title}> {data.name}</Text>
-                </View>
+                </View> */}
             </View>
         </TouchableOpacity>
     );
