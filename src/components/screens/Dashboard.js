@@ -119,10 +119,11 @@ const styles = StyleSheet.create({
     logo: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginRight:10,
     },
     image: {
-        width: 60,
-        height: 60,
+        width: 70,
+        height: 70,
         borderRadius: 10,
     },
     titleContainer: {
