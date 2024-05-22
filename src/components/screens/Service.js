@@ -42,6 +42,12 @@ const Service = () => {
         expiry: '',
         cvv_number: ''
     });
+    useEffect(()=>{
+        if(serviceList?.length >0){
+            setError(false);
+        }
+    },[serviceList])
+
     useEffect(() => {
         const getAppointments = async () => {
             try {
@@ -89,7 +95,6 @@ const Service = () => {
         }
     };
 
-
     const onChange = (event, selectedDate) => {
         let currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
@@ -102,6 +107,9 @@ const Service = () => {
                     formattedDate = 'dd-mm-yyyy';
                 }
             })
+        }
+        if (formattedDate != 'dd-mm-yyyy') {
+            setError(false);
         }
         setSelectedDate(formattedDate);
     };
@@ -121,9 +129,24 @@ const Service = () => {
 
     };
     const bookAppointment = async () => {
+        const { phone, state, country, postalCode, address } = customerAddress;
+
+        if (!phone || !state || !country || !postalCode || !address) {
+            setError(true);
+            return;
+        }
+        if (selectedDate == 'dd-mm-yyyy') {
+            setShowError("Please select the Appointment Date!");
+            setError(true);
+            return;
+        }
+        if (serviceList?.length == 0) {
+            setShowError("Please add the services!");
+            setError(true);
+            return;
+        }
         const bookData = {
             service_provider_id: service_provider_id,
-            // name: customerAddress.name,
             email: customerAddress.email,
             phone_number: customerAddress.phone,
             state: customerAddress.state,
@@ -138,7 +161,7 @@ const Service = () => {
             // expiry: customerAddress.expiry,
             // cvv_number: customerAddress.cvv_number,
         }
-        
+
         try {
             const response = await axios.post(`${API_BASE_URL}/orders`, bookData, {
                 headers: {
@@ -147,18 +170,14 @@ const Service = () => {
                 }
             });
             navigation.navigate('order-success', { orderId: response.data.orderid });
-            // console.error('response:', response.data);
-            // setModalMessage(response.data.message);
-            // showSnackbar();
+
         } catch (error) {
-            // console.error('Error:', error.response);
             if (error.response) {
                 console.log('Response data:', error.response.data.message);
-                // setShowError(error.response.data.message);
-                // setError(true);
+                setShowError(error.response.data.message);
+                setError(true);
             }
         }
-        // console.log(customerAddress)
     }
 
     const showDatepicker = () => {
@@ -299,6 +318,7 @@ const Service = () => {
                                 value={customerAddress.phone}
                                 onChangeText={(value) => handleChange('phone', value)}
                                 keyboardType="phone-pad"
+                                onPress={resetError}
                             />
                             <Text style={styles.customerLabel}>State</Text>
                             <TextInput
@@ -512,7 +532,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     errorMessage: {
-        color: 'red'
+        color: 'red',
+        paddingBottom:4,
+        textAlign:'center'
     },
     //service modal
     modalContainer: {
