@@ -1,6 +1,6 @@
 // Layout.js
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Keyboard } from 'react-native';
+import { View, StyleSheet, Keyboard, Platform } from 'react-native';
 import Footer from './Footer';
 
 const Layout = ({ children }) => {
@@ -33,10 +33,11 @@ const Layout = ({ children }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        marginBottom: Platform.OS === 'ios' ? 40 : 0,
     },
     content: {
         flex: 1,
-        marginBottom: 20,
+        marginBottom: 10,
     },
     contentKeyboardVisible: {
         marginBottom: 0,

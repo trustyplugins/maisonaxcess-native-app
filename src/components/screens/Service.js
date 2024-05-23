@@ -43,7 +43,6 @@ const Service = () => {
         services: serviceDetail?.services ? [...serviceDetail.services] : [],
         total_price: serviceDetail?.total_price || 0.0,
     });
-    console.log(customerAddress)
     const calTotalOrder = () => {
         if (customerAddress.services.length > 0) {
             return customerAddress.services.reduce((total, item) => total + parseFloat(item.price) * parseInt(item.quantity), 0);
@@ -270,7 +269,7 @@ const Service = () => {
 
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
+        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
     }
     return (<ScrollView>
         <Snackbar
@@ -286,7 +285,7 @@ const Service = () => {
                             <Image source={{ uri: `https://maisonaxcess.com/${item.image}` }} style={styles.image} />
                         </View>
                         <View style={styles.textContainer}>
-                            <Text style={styles.title}> {item?.title} </Text>
+                            <Text style={styles.title}>{item?.title} </Text>
                         </View>
                         <Text style={styles.contentText}>{parseFromHtml(item.content)}</Text>
                         <TouchableOpacity onPress={toggleModal} style={styles.servicesContainer}>
@@ -331,9 +330,9 @@ const Service = () => {
                                     )}
                                 </View>
                             </View>
-                            <View>
+                            <View style={styles.totalPrice}>
                                 <Text style={styles.dateLabelText}>Total Order:</Text>
-                                <Text style={styles.dateLabelText}>${customerAddress.total_price || 0.0}</Text>
+                                <Text style={styles.price}>${customerAddress.total_price || 0.0}</Text>
                             </View>
                         </View>
                         <View style={styles.customerFormContainer}>
@@ -449,22 +448,24 @@ const Service = () => {
                     >
                         <View style={styles.modalContainer}>
                             <View style={styles.modalContent}>
-                                <Text style={styles.modalHeading}>Services</Text>
-                                {item.services.map((service, id) => (
-                                    <View key={id} style={styles.serviceItem}>
-                                        <View style={styles.serviceItemName}>
-                                            <Text>{service.name}</Text>
-                                            <Text>{service.price}</Text>
-                                        </View>
-                                        <Switch
-                                            value={customerAddress.services?.some((ele) => ele.title == service?.name)}
-                                            onValueChange={() => toggleService(service)}
-                                        />
-                                    </View>
-                                ))}
-                                <TouchableOpacity onPress={toggleModal}>
-                                    <Text style={styles.closeButton}>Close</Text>
+                                <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+                                    <FontAwesome name="close" size={24} color="#11696A" />
                                 </TouchableOpacity>
+                                <Text style={styles.modalHeading}>Services</Text>
+                                <ScrollView style={styles.scrollView}>
+                                    {item.services.map((service, id) => (
+                                        <View key={id} style={styles.serviceItem}>
+                                            <View style={styles.serviceItemName}>
+                                                <Text style={styles.serviceName}>{service.name}</Text>
+                                                <Text style={styles.servicePrice}>{service.price}</Text>
+                                            </View>
+                                            <Switch
+                                                value={customerAddress.services?.some((ele) => ele.title === service?.name)}
+                                                onValueChange={() => toggleService(service)}
+                                            />
+                                        </View>
+                                    ))}
+                                </ScrollView>
                             </View>
                         </View>
                     </Modal>
@@ -499,17 +500,19 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     textContainer: {
-        marginTop: 7
+        marginTop: 7,
+        margin: 0,
+        padding: 0
     },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#116969',
-        marginTop: 5
+        marginTop: 5,
     },
     contentText: {
         fontSize: 16,
-        color: '#333',
+        color: 'gray',
         marginVertical: 10,
     },
     servicesContainer: {
@@ -518,7 +521,7 @@ const styles = StyleSheet.create({
     servicesText: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#007BFF',
+        color: '#11696A',
     },
     dateSection: {
         marginVertical: 10,
@@ -538,10 +541,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginRight: 10,
     },
-    //customer form
-    customerFormContainer: {
-        padding: 10,
+    price: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
+        textAlign: 'right'
     },
+    //customer form
     customerHeading: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -584,42 +590,50 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
     },
     modalContent: {
+        width: '80%',
+        height: '70%', // Adjust the height to leave space for scrolling
         backgroundColor: '#fff',
         borderRadius: 10,
-        padding: 5,
-        width: '90%',
+        padding: 20,
+        position: 'relative',
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
     },
     modalHeading: {
-        fontSize: 18,
+        fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    scrollView: {
+        flex: 1,
     },
     serviceItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 15,
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
     },
     serviceItemName: {
-        flexDirection: 'row',
-        gap: 4,
-        width: '50%'
+        flex: 1, // Ensure this takes up remaining space
+        marginRight: 10, // Add some margin between the text and the switch
     },
-    toggleButton: {
-        borderWidth: 1,
-        borderColor: '#007bff',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 5,
-        color: '#007bff',
+    serviceName: {
+        fontSize: 16,
+        fontWeight: '500',
     },
-    closeButton: {
-        color: '#007bff',
-        textAlign: 'center',
-        marginTop: 20,
+    servicePrice: {
+        fontSize: 14,
+        color: '#888',
     },
     //quantity
     quantity: {
