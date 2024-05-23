@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Platform, TextInput, ScrollView, Modal, Switch } from 'react-native';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
-import { useRoute } from '@react-navigation/native';
+import {  useRoute } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import formatDate from '../../utils/formatDate';
 import parseFromHtml from '../../utils/parseHtml';
@@ -19,22 +19,17 @@ const Service = () => {
     const { userid, service_provider_id } = route.params;
     const userData = useSelector(state => state.user.user);
     const serviceDetail = useSelector(state => state.user.serviceDetail);
-
     const userCredential = useSelector(state => state.user.credentials);
     const [service, setService] = useState([]);
     const [loading, setLoading] = useState(false);
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [selectedDate, setSelectedDate] = useState('dd-mm-yyyy');
     const [appointmentDates, setAppointmentDates] = useState([]);
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [showError, setShowError] = useState('');
     const [error, setError] = useState(false);
-    const [serviceList, setServiceList] = useState([]);
     const [modalVisible, setModalVisible] = useState(serviceDetail?.services?.length > 0 ? false : true);
-    const [totalPrice, setTotalPrice] = useState(serviceDetail.total_price != undefined ? serviceDetail.total_price : 0);
     const [customerAddress, setCustomerAddress] = useState({
-        // name: '',
         email: userCredential.email || '',
         phone: serviceDetail.phone || '',
         state: serviceDetail.state || '',
@@ -44,39 +39,26 @@ const Service = () => {
         card_number: serviceDetail.card_number || '',
         expiry: serviceDetail.expiry || '',
         cvv_number: serviceDetail.cvv_number || '',
-        appointment_date: serviceDetail.appointment_date || selectedDate,
-        services: [...serviceDetail.services] || serviceList,
-        total_price: totalPrice
+        appointment_date: serviceDetail.appointment_date || 'dd-mm-yyyy',
+        services: serviceDetail.services ? [...serviceDetail.services] : [],
+        total_price: serviceDetail.total_price || 0.0,
     });
+    console.log(customerAddress)
     const calTotalOrder = () => {
-        if (serviceList.length > 0) {
-            return serviceList.reduce((total, item) => total + parseFloat(item.price) * parseInt(item.quantity), 0);
+        if (customerAddress.services.length > 0) {
+            return customerAddress.services.reduce((total, item) => total + parseFloat(item.price) * parseInt(item.quantity), 0);
         }
     };
     const totalOrderMemoized = useMemo(calTotalOrder, [customerAddress.services]);
 
     useEffect(() => {
-        if (totalOrderMemoized) {
-            setTotalPrice(totalOrderMemoized);
-            setCustomerAddress(prevAddress => ({
-                ...prevAddress,
-                ["total_price"]: totalOrderMemoized
-            }));
-        }
+        setCustomerAddress(prev => ({
+            ...prev,
+            total_price: totalOrderMemoized == undefined ? 0 : totalOrderMemoized
+        }));
+
     }, [totalOrderMemoized]);
-
     useEffect(() => {
-        if (serviceList?.length > 0) {
-            setError(false);
-            setCustomerAddress({
-                ...customerAddress,
-                ['services']: serviceList
-            });
-        }
-    }, [serviceList])
-
-    useEffect(() => {
-        // console.log(customerAddress, totalPrice)
         dispatch({ type: 'ADD_SERVICE', payload: customerAddress });
     }, [customerAddress])
 
@@ -147,7 +129,6 @@ const Service = () => {
             ...customerAddress,
             ['appointment_date']: formattedDate
         });
-        setSelectedDate(formattedDate);
     };
     const toggleService = (item) => {
         let listItem = {
@@ -155,13 +136,20 @@ const Service = () => {
             price: item.price,
             quantity: '1'
         }
-        let isItemPresent = serviceList.some((ele) => ele.title == item.name);
+        let isItemPresent = customerAddress.services.some((ele) => ele.title == item.name);
         if (isItemPresent) {
-            let aserviceList = serviceList.filter(ele => ele.title != item.name);
-            setServiceList([...aserviceList]);
+            let updateList = customerAddress.services.filter(ele => ele.title != item.name);
+            setCustomerAddress(prev => ({
+                ...prev,
+                services: updateList
+            }))
         } else {
-            setServiceList([...serviceList, listItem]);
+            setCustomerAddress(prev => ({
+                ...prev,
+                services: [...prev.services, listItem]
+            }))
         }
+        setError(false)
 
     };
     const bookAppointment = async () => {
@@ -171,12 +159,12 @@ const Service = () => {
             setError(true);
             return;
         }
-        if (selectedDate == 'dd-mm-yyyy') {
+        if (customerAddress.appointment_date == 'dd-mm-yyyy') {
             setShowError("Please select the Appointment Date!");
             setError(true);
             return;
         }
-        if (serviceList?.length == 0) {
+        if (customerAddress.services?.length == 0) {
             setShowError("Please add the services!");
             setError(true);
             return;
@@ -192,7 +180,7 @@ const Service = () => {
             services_detail: customerAddress.services,
             payment_info: "cod",
             appointment_date: ReverseDate(customerAddress.appointment_date),
-            total_price: totalPrice
+            total_price: customerAddress.total_price
             // card_number: customerAddress.card_number,
             // expiry: customerAddress.expiry,
             // cvv_number: customerAddress.cvv_number,
@@ -204,6 +192,19 @@ const Service = () => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${userData?.token}`
                 }
+            });
+            setCustomerAddress({
+                phone: '',
+                state: '',
+                country: '',
+                postalCode: '',
+                address: '',
+                card_number: '',
+                expiry: '',
+                cvv_number: '',
+                appointment_date: 'dd-mm-yyyy',
+                services: [],
+                total_price: 0.0,
             });
             navigation.navigate('order-success', { orderId: response.data.orderid });
 
@@ -246,16 +247,25 @@ const Service = () => {
         setModalVisible(!modalVisible);
     };
     const incrementQuantity = (title) => {
-        console.log(title,serviceList)
-        setServiceList(serviceList.map(service =>
-            service.title === title ? { ...service, quantity: `${parseInt(service.quantity) + 1}` } : service
-        ));
+        setCustomerAddress(prevState => ({
+            ...prevState,
+            services: prevState.services.map(service =>
+                service.title === title
+                    ? { ...service, quantity: `${parseInt(service.quantity) + 1}` }
+                    : service
+            ),
+        }));
     };
 
     const decrementQuantity = (title) => {
-        setServiceList(serviceList.map(service =>
-            service.title === title && service.quantity > 0 ? { ...service, quantity: service.quantity === '1' ? '1' : `${parseInt(service.quantity) - 1}` } : service
-        ));
+        setCustomerAddress(prevState => ({
+            ...prevState,
+            services: prevState.services.map(service =>
+                service.title === title && parseInt(service.quantity) > 0
+                    ? { ...service, quantity: service.quantity === '1' ? '1' : `${parseInt(service.quantity) - 1}` }
+                    : service
+            ),
+        }));
     };
 
 
@@ -323,7 +333,7 @@ const Service = () => {
                             </View>
                             <View>
                                 <Text style={styles.dateLabelText}>Total Order:</Text>
-                                <Text style={styles.dateLabelText}>${totalPrice || 0.0}</Text>
+                                <Text style={styles.dateLabelText}>${customerAddress.total_price || 0.0}</Text>
                             </View>
                         </View>
                         <View style={styles.customerFormContainer}>
