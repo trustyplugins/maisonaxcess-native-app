@@ -11,12 +11,28 @@
       },
       "ios": {
         "image": "latest"
-      }
+      },
+      "channel": "development"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "preview",
+      "android": {
+        "image": "latest"
+      },
+      "ios": {
+        "image": "latest"
+      }
     },
-    "production": {}
+    "production": {
+      "channel": "production",
+      "android": {
+        "image": "latest"
+      },
+      "ios": {
+        "image": "latest"
+      }
+    }
   },
   "submit": {
     "production": {}
