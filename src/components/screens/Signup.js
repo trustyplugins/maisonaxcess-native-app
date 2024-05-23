@@ -4,7 +4,9 @@ import axios from "axios";
 import Snackbar from '../Snackbar';
 import CustomButton from "../common/CustomButton";
 import { API_BASE_URL } from '@env';
+import { useDispatch } from 'react-redux';
 function Signup({ navigation }) {
+    const dispatch = useDispatch();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
@@ -28,6 +30,7 @@ function Signup({ navigation }) {
         try {
             const req = await axios.post(`${API_BASE_URL}/register`, data);
             console.log('Response:', req.data.message);
+            dispatch({ type: 'SIGNUP', payload: req.data.user });
             setModalMessage(req.data.message);
             showSnackbar();
         } catch (error) {

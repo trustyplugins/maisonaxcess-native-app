@@ -3,6 +3,8 @@ const initialState = {
   user: null,
   isLoggedIn: false,
   credentials: null,
+  userDetails:null,
+  serviceDetail:null
 };
 
 const userReducer = (state = initialState, action) => {
@@ -19,10 +21,20 @@ const userReducer = (state = initialState, action) => {
         user: null,
         isLoggedIn: false,
       };
-    case 'SAVE_CREDENTIALS':
+    case 'SAVE_CREDENTIALS': //remember me
       return {
         ...state,
         credentials: action.payload,
+      };
+    case 'SIGNUP': //remember me
+      return {
+        ...state,
+        userDetails: action.payload,
+      };
+    case 'ADD_SERVICE': 
+      return {
+        ...state,
+        serviceDetail: action.payload,
       };
     default:
       return state;
