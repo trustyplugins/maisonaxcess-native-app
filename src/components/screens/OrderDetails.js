@@ -40,7 +40,7 @@ const OrderDetails = () => {
     };
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
+        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
     }
     return (
         <ScrollView contentContainerStyle={styles.container}>

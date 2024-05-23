@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Platform, TextInput, ScrollView, Modal, Switch } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Platform, TextInput, ScrollView, Modal, Switch, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
@@ -446,28 +446,32 @@ const Service = () => {
                         transparent={true}
                         onRequestClose={toggleModal}
                     >
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
-                                <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-                                    <FontAwesome name="close" size={24} color="#11696A" />
-                                </TouchableOpacity>
-                                <Text style={styles.modalHeading}>Services</Text>
-                                <ScrollView style={styles.scrollView}>
-                                    {item.services.map((service, id) => (
-                                        <View key={id} style={styles.serviceItem}>
-                                            <View style={styles.serviceItemName}>
-                                                <Text style={styles.serviceName}>{service.name}</Text>
-                                                <Text style={styles.servicePrice}>{service.price}</Text>
-                                            </View>
-                                            <Switch
-                                                value={customerAddress.services?.some((ele) => ele.title === service?.name)}
-                                                onValueChange={() => toggleService(service)}
-                                            />
-                                        </View>
-                                    ))}
-                                </ScrollView>
+                        <TouchableWithoutFeedback onPress={toggleModal}>
+                            <View style={styles.modalContainer}>
+                                <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                                    <View style={styles.modalContent}>
+                                        <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+                                            <FontAwesome name="close" size={24} color="#11696A" />
+                                        </TouchableOpacity>
+                                        <Text style={styles.modalHeading}>Services</Text>
+                                        <ScrollView style={styles.scrollView}>
+                                            {item.services.map((service, id) => (
+                                                <View key={id} style={styles.serviceItem}>
+                                                    <View style={styles.serviceItemName}>
+                                                        <Text style={styles.serviceName}>{service.name}</Text>
+                                                        <Text style={styles.servicePrice}>{service.price}</Text>
+                                                    </View>
+                                                    <Switch
+                                                        value={customerAddress.services?.some((ele) => ele.title === service?.name)}
+                                                        onValueChange={() => toggleService(service)}
+                                                    />
+                                                </View>
+                                            ))}
+                                        </ScrollView>
+                                    </View>
+                                </TouchableWithoutFeedback>
                             </View>
-                        </View>
+                        </TouchableWithoutFeedback>
                     </Modal>
                 </View>
             )

@@ -38,7 +38,7 @@ const Dashboard = () => {
     };
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
+        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
     }
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
         paddingRight:12
     },
     actionButtonText: {
-        color: 'blue',
+        color:"#11696A",
         fontWeight: 'bold',
     },
     body: {
