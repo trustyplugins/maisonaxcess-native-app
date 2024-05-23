@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Platform, TextInput, ScrollView, Modal, Switch } from 'react-native';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
-import {  useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import formatDate from '../../utils/formatDate';
 import parseFromHtml from '../../utils/parseHtml';
@@ -30,18 +30,18 @@ const Service = () => {
     const [error, setError] = useState(false);
     const [modalVisible, setModalVisible] = useState(serviceDetail?.services?.length > 0 ? false : true);
     const [customerAddress, setCustomerAddress] = useState({
-        email: userCredential.email || '',
-        phone: serviceDetail.phone || '',
-        state: serviceDetail.state || '',
-        country: serviceDetail.country || '',
-        postalCode: serviceDetail.postalCode || '',
-        address: serviceDetail.address || '',
-        card_number: serviceDetail.card_number || '',
-        expiry: serviceDetail.expiry || '',
-        cvv_number: serviceDetail.cvv_number || '',
-        appointment_date: serviceDetail.appointment_date || 'dd-mm-yyyy',
-        services: serviceDetail.services ? [...serviceDetail.services] : [],
-        total_price: serviceDetail.total_price || 0.0,
+        email: userCredential?.email || '',
+        phone: serviceDetail?.phone || '',
+        state: serviceDetail?.state || '',
+        country: serviceDetail?.country || '',
+        postalCode: serviceDetail?.postalCode || '',
+        address: serviceDetail?.address || '',
+        card_number: serviceDetail?.card_number || '',
+        expiry: serviceDetail?.expiry || '',
+        cvv_number: serviceDetail?.cvv_number || '',
+        appointment_date: serviceDetail?.appointment_date || 'dd-mm-yyyy',
+        services: serviceDetail?.services ? [...serviceDetail.services] : [],
+        total_price: serviceDetail?.total_price || 0.0,
     });
     console.log(customerAddress)
     const calTotalOrder = () => {
