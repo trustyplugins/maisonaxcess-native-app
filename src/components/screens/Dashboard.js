@@ -52,7 +52,7 @@ const Dashboard = () => {
                                     <Image source={require("../../assets/image/logo.jpg")} style={styles.image} />
                                     <View style={styles.titleContainer}>
                                         <Text style={styles.title} ellipsizeMode="tail" numberOfLines={1}>Coordonnerie</Text>
-                                        <Text style={styles.address}>{item.customer_address}</Text>
+                                        {/* <Text style={styles.address}>{item.customer_address}</Text> */}
                                     </View>
                                 </View>
                                 <TouchableOpacity style={styles.actionButton} onPress={() => { navigation.navigate("order-details", { id: item.id }) }}>
@@ -103,13 +103,13 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
         borderRadius: 8,
-        padding: 16,
         marginBottom: 16,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2,
+        paddingVertical:10
     },
     header: {
         flexDirection: 'row',
@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
     logo: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginRight:10,
     },
     image: {
         width: 70,
@@ -154,6 +153,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: '#eee',
         paddingTop: 16,
+        paddingHorizontal:10
     },
     services: {
         flexDirection: 'row',
@@ -174,7 +174,8 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: '#eee',
         paddingTop: 16,
-        marginTop: 12
+        marginTop: 12,
+        paddingHorizontal:10
     },
     footerText: {
         fontSize: 16,
