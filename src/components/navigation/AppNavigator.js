@@ -13,6 +13,7 @@ import OrderSuccess from '../screens/OrderSuccess';
 import Dashboard from '../screens/Dashboard';
 import OrderDetails from '../screens/OrderDetails';
 import Layout from '../common/Layout';
+import CarouselScreen from '../screens/CarouselScreen';
 import { useSelector } from 'react-redux';
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,13 @@ const Navigation = () => {
         }}
       >
         {userData?.token ? <>
+          <Stack.Screen name="carousel">
+            {props => (
+              <Layout>
+                <CarouselScreen {...props} />
+              </Layout>
+            )}
+          </Stack.Screen>
           <Stack.Screen name="home">
             {props => (
               <Layout>
