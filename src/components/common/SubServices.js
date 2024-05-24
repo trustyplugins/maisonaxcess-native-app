@@ -2,11 +2,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const Card = ({ data }) => {
+const SubServices = ({ data }) => {
     const navigation = useNavigation();
 
     const handlePress = () => {
-
         navigation.navigate("service_types", { data });
     };
     return (
@@ -17,9 +16,6 @@ const Card = ({ data }) => {
                         <View style={styles.overlay} />
                     </ImageBackground>
                 </View>
-                {/* <View style={styles.textContainer}>
-                    <Text style={styles.title}> {data.name}</Text>
-                </View> */}
             </View>
         </TouchableOpacity>
     );
@@ -28,11 +24,11 @@ const Card = ({ data }) => {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
-        borderRadius: 10,
+        // borderRadius: 10,
         borderWidth: 1,
         borderColor: '#ddd',
-        margin: 10,
-        padding: 10,
+        // margin: 10,
+        // padding: 10,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -44,7 +40,7 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     imageContainer: {
-        borderRadius: 10,
+        // borderRadius: 10,
         overflow: 'hidden',
     },
     overlay: {
@@ -53,7 +49,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: 150,
+        height: 100,
         borderRadius: 10,
     },
     textContainer: {
@@ -72,4 +68,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Card;
+export default SubServices;
