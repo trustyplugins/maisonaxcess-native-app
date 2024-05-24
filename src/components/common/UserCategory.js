@@ -50,7 +50,7 @@ const UserCategory = ({ data }) => {
     };
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
+        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
     }
     return (<>
         <Text style={styles.heading}>User details</Text>
