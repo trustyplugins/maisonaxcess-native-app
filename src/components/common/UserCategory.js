@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
-import parseFromHtml from '../../utils/parseHtml';
+import HTML from 'react-native-render-html';
 const UserCategory = ({ data }) => {
     const navigation = useNavigation();
     const userData = useSelector(state => state.user.user);
@@ -63,7 +63,7 @@ const UserCategory = ({ data }) => {
                                 <Image source={{ uri: item?.profile_photo_url }} style={styles.image} />
                             </View>
                             <View style={styles.textContainer}>
-                                <Text style={styles.description}> {parseFromHtml(item?.description)} </Text>
+                            <HTML source={{ html: item?.description }} />
                             </View>
                         </View>
                     </TouchableOpacity>
