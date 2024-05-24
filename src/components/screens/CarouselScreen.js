@@ -58,7 +58,7 @@ const CarouselScreen = () => {
                 ))}
             </View>
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('home')}>
-                <Text style={styles.buttonText}>Home Page</Text>
+                <Text style={styles.buttonText}>ACCEDEZ AUX SERVICES</Text>
             </TouchableOpacity>
         </View>
     );

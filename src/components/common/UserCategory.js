@@ -4,12 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
+import parseFromHtml from '../../utils/parseHtml';
 const UserCategory = ({ data }) => {
     const navigation = useNavigation();
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
-    
+
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -38,7 +39,6 @@ const UserCategory = ({ data }) => {
                     Authorization: `Bearer ${userData?.token}`
                 },
             });
-            // console.log(response.data.services)
             if (response.data.services?.length > 0) {
                 navigation.navigate("service", { userid: `${data.id}`, service_provider_id: `${id}` });
             }
@@ -63,7 +63,7 @@ const UserCategory = ({ data }) => {
                                 <Image source={{ uri: item?.profile_photo_url }} style={styles.image} />
                             </View>
                             <View style={styles.textContainer}>
-                                <Text style={styles.description}> {item?.description} </Text>
+                                <Text style={styles.description}> {parseFromHtml(item?.description)} </Text>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -109,10 +109,11 @@ const styles = StyleSheet.create({
         marginTop: 7
     },
     description: {
-        fontSize: 13,
+        fontSize: 15,
         fontWeight: '500',
-        textAlign: 'center',
+        textAlign: 'left',
         color: '#000',
+        paddingLeft:10
     },
     errorMessage: {
         color: 'red',
