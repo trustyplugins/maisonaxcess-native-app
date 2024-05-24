@@ -85,7 +85,7 @@ const Header = ({ navigation, back }) => {
                             <Menu.Item onPress={() => {
                                 navigation.navigate('dashboard')
                                 setMenuVisible(false)
-                            }} title="Dashboard" />
+                            }} title="Orders" />
                             <Menu.Item onPress={handleLogout} title="Logout" />
                         </> :
                             <>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Image } from "react-native";
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native';
-import Card from "../common/Card";
+// import Card from "../common/Card";
+import SubServices from "./SubServices";
 import UserCategory from "./UserCategory";
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
@@ -12,7 +13,7 @@ const ServiceTypes = ({ navigation }) => {
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
     const route = useRoute();
-    const { data } = route.params;
+    const { data, iconData } = route.params;
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -33,22 +34,25 @@ const ServiceTypes = ({ navigation }) => {
         })();
     }, [data?.id])
 
+
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#0000ff" /></View>)
+        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
     }
     return (
         <SafeAreaView>
             <ScrollView>
                 <View style={styles.container}>
-                    <Card data={data} />
+                    {iconData ? <View style={styles.parent}>
+                        <Image source={iconData.image} style={styles.image} />
+                        <Text style={styles.parentHeading}>{data.name}</Text>
+                    </View> : <SubServices data={data} />}
                     {
                         serviceType?.length > 0 ? (
                             <>
-                                <Text style={styles.heading}>Sub Services</Text>
                                 {
                                     serviceType.map((item, index) => (
                                         <View key={index}>
-                                            <Card data={item} />
+                                            <SubServices data={item} />
                                         </View>
                                     ))
                                 }
@@ -65,7 +69,35 @@ export default ServiceTypes;
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 10,
+        // paddingHorizontal: 10,
+    },
+    parent: {
+        flexDirection: 'row',
+        gap: 15,
+        alignItems: 'center',
+        height: 90,
+        backgroundColor: '#D3D3D3',
+        paddingLeft: 20
+    },
+    // parent: {
+    //     flexDirection: 'row',
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     height: 80,
+    //     backgroundColor: '#D3D3D3'
+    // },
+    image: {
+        width: '18%',
+        height: 60,
+        borderRadius: 8,
+    },
+    parentHeading: {
+        fontSize: 20,
+        marginBottom: 12,
+        marginTop: 10,
+        fontWeight: 'bold',
+        textAlign: "center",
+        color: "#11696A"
     },
     heading: {
         fontSize: 20,

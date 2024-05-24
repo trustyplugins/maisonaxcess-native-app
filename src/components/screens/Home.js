@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Button, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, Button, StyleSheet, ScrollView, ActivityIndicator, Image } from "react-native";
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native';
 import Card from "../common/Card";
@@ -9,6 +9,14 @@ const Home = ({ navigation }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
+    const iconData = [
+        { id: 84, title: 'Famille', image: require("../../assets/image/FAMILLE.png") },
+        { id: 98, title: 'ASSISTANT PERSONNEL', image: require("../../assets/image/ASSISTANT PERSONNEL.png") },
+        { id: 108, title: 'AU QUOTIDIEN', image: require("../../assets/image/AU QUOTIDIEN.png") },
+        { id: 118, title: 'BEAUTÉ & BIEN-ÊTRE', image: require("../../assets/image/BEAUTÉ & BIEN-ÊTRE.png") },
+        { id: 107, title: 'INSTANTS GOURMANDS', image: require("../../assets/image/INSTANTS GOURMANDS.png") },
+        { id: 90, title: 'MAISON', image: require("../../assets/image/MAISON.png") },
+    ];
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -33,21 +41,34 @@ const Home = ({ navigation }) => {
 
     }, [userData?.token])
 
+    const handlePress = (item,icon) => {
+        navigation.navigate("service_types", { data: item ,iconData:icon});
+    };
+
     if (loading) {
         return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
     }
 
     return (
-        <SafeAreaView>
-            <ScrollView>
+        <SafeAreaView style={styles.safeArea}>
+            <ScrollView contentContainerStyle={styles.scrollView}>
                 <View style={styles.container}>
-                    <Text style={styles.heading}>Service Types</Text>
-                    {serviceType?.length > 0 ? serviceType?.map((item, index) => (
-                        <View key={index}>
-                            <Card data={item} id={index} />
-                        </View>
-                    ))
-                        : <Text style={styles.errorMessage}>No Data Found !</Text>}
+                    {serviceType?.length > 0 && serviceType.map((item) => {
+                        const matchingData = iconData.find(dataItem => dataItem.id === item.id);
+                        if (item.id !== '70' && item.id !== '69' && matchingData) {
+                            return (
+                                <View key={item.id} style={styles.cardWrapper}>
+                                    <View style={styles.card}>
+                                        <TouchableOpacity onPress={() => handlePress(item,matchingData)}>
+                                            <Image source={matchingData.image} style={styles.image} />
+                                        </TouchableOpacity>
+                                        <Text style={styles.title}>{item.name}</Text>
+                                    </View>
+                                </View>
+                            );
+                        }
+                        return null;
+                    })}
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -57,22 +78,33 @@ const Home = ({ navigation }) => {
 export default Home;
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+    },
+    scrollView: {
+        padding: 10,
+    },
     container: {
-        paddingHorizontal: 10,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
     },
-    heading: {
-        fontSize: 20,
-        marginBottom: 12,
+    cardWrapper: {
+        width: '48%', // Two items per row with space between
+        marginBottom: 6,
+    },
+    card: {
+        padding: 5,
+    },
+    image: {
+        width: '100%',
+        height: 150,
+        borderRadius: 10,
+    },
+    title: {
         marginTop: 10,
-        fontWeight: 'semibold',
-        textAlign: "center",
-        textDecorationLine: 'underline'
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
-    errorMessage: {
-        color: 'red',
-        fontSize: 20
-    },
-    loader: {
-        marginTop: 25,
-    }
-})
+});
