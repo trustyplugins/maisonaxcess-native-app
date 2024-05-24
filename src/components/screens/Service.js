@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Platform, TextInput, ScrollView, Modal, Switch } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, TextInput, ScrollView, Modal, Switch } from 'react-native';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import formatDate from '../../utils/formatDate';
 import parseFromHtml from '../../utils/parseHtml';
 import { FontAwesome } from '@expo/vector-icons';
@@ -12,6 +11,7 @@ import CustomButton from '../common/CustomButton';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 const Service = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -22,13 +22,12 @@ const Service = () => {
     const userCredential = useSelector(state => state.user.credentials);
     const [service, setService] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [date, setDate] = useState(new Date());
-    const [show, setShow] = useState(false);
     const [appointmentDates, setAppointmentDates] = useState([]);
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [showError, setShowError] = useState('');
     const [error, setError] = useState(false);
     const [modalVisible, setModalVisible] = useState(serviceDetail?.services?.length > 0 ? false : true);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [customerAddress, setCustomerAddress] = useState({
         email: userCredential?.email || '',
         phone: serviceDetail?.phone || '',
@@ -43,6 +42,7 @@ const Service = () => {
         services: serviceDetail?.services ? [...serviceDetail.services] : [],
         total_price: serviceDetail?.total_price || 0.0,
     });
+
     const calTotalOrder = () => {
         if (customerAddress.services.length > 0) {
             return customerAddress.services.reduce((total, item) => total + parseFloat(item.price) * parseInt(item.quantity), 0);
@@ -108,27 +108,6 @@ const Service = () => {
         }
     };
 
-    const onChange = (event, selectedDate) => {
-        let currentDate = selectedDate || date;
-        setShow(Platform.OS === 'ios');
-        setDate(currentDate);
-        let formattedDate = formatDate(currentDate);
-        if (appointmentDates?.length > 0) {
-            appointmentDates.forEach(ele => {
-                if (ele.date == formattedDate) {
-                    setSnackbarVisible(true);
-                    formattedDate = 'dd-mm-yyyy';
-                }
-            })
-        }
-        if (formattedDate != 'dd-mm-yyyy') {
-            setError(false);
-        }
-        setCustomerAddress({
-            ...customerAddress,
-            ['appointment_date']: formattedDate
-        });
-    };
     const toggleService = (item) => {
         let listItem = {
             title: item.name,
@@ -216,10 +195,6 @@ const Service = () => {
         }
     }
 
-    const showDatepicker = () => {
-        setShow(true);
-    };
-
     const handleChange = (field, value) => {
         setCustomerAddress({
             ...customerAddress,
@@ -267,6 +242,33 @@ const Service = () => {
         }));
     };
 
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = (date) => {
+        let formattedDate = formatDate(date);
+        if (appointmentDates?.length > 0) {
+            appointmentDates.forEach(ele => {
+                if (ele.date == formattedDate) {
+                    setSnackbarVisible(true);
+                    formattedDate = 'dd-mm-yyyy';
+                }
+            })
+        }
+        if (formattedDate != 'dd-mm-yyyy') {
+            setError(false);
+        }
+        setCustomerAddress({
+            ...customerAddress,
+            ['appointment_date']: formattedDate
+        });
+        hideDatePicker();
+    };
 
     if (loading) {
         return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
@@ -315,19 +317,16 @@ const Service = () => {
                                 <Text style={styles.dateLabelText}>Select Appointment Date:</Text>
                                 <View style={styles.dateContainer}>
                                     <Text style={styles.dateText}>{customerAddress.appointment_date}</Text>
-                                    <TouchableOpacity onPress={showDatepicker}>
+                                    <TouchableOpacity onPress={showDatePicker}>
                                         <FontAwesome name="calendar" size={20} color="black" />
                                     </TouchableOpacity>
-                                    {show && (
-                                        <DateTimePicker
-                                            testID="dateTimePicker"
-                                            value={date}
-                                            mode="date"
-                                            display="default"
-                                            onChange={onChange}
-                                            minimumDate={new Date()}
-                                        />
-                                    )}
+                                    <DateTimePickerModal
+                                        isVisible={isDatePickerVisible}
+                                        mode="date"
+                                        onConfirm={handleConfirm}
+                                        onCancel={hideDatePicker}
+                                        minimumDate={new Date()}
+                                    />
                                 </View>
                             </View>
                             <View style={styles.totalPrice}>
@@ -436,7 +435,7 @@ const Service = () => {
                         </View>
                         {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
 
-                        <View >
+                        <View style={styles.payNow}>
                             <CustomButton title="Pay Now" onPress={bookAppointment} />
                         </View>
                     </View>
@@ -489,6 +488,7 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2,
         },
+        paddingBottom: 25
     },
     imageContainer: {
         borderRadius: 10,
@@ -585,6 +585,10 @@ const styles = StyleSheet.create({
         paddingBottom: 4,
         textAlign: 'center'
     },
+    payNow:{
+        paddingTop:10
+    }
+    ,
     //service modal
     modalContainer: {
         flex: 1,

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Image } from "react-native";
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native';
-// import Card from "../common/Card";
 import SubServices from "./SubServices";
 import UserCategory from "./UserCategory";
 import axios from "axios";

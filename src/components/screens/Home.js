@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Button, StyleSheet, ScrollView, ActivityIndicator, Image } from "react-native";
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native';
-import Card from "../common/Card";
 import axios from "axios";
 import { API_BASE_URL } from '@env';
 const Home = ({ navigation }) => {
