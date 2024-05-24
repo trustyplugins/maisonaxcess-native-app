@@ -13,9 +13,11 @@ import OrderSuccess from '../screens/OrderSuccess';
 import Dashboard from '../screens/Dashboard';
 import OrderDetails from '../screens/OrderDetails';
 import Layout from '../common/Layout';
+import { useSelector } from 'react-redux';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
+  const userData = useSelector(state => state.user.user);
   return (
     <PaperProvider>
       <Stack.Navigator
@@ -23,81 +25,85 @@ const Navigation = () => {
           header: (props) => <Header {...props} />,
         }}
       >
-        <Stack.Screen name="home">
-          {props => (
-            <Layout>
-              <Home {...props} />
-            </Layout>
-          )}
-        </Stack.Screen>
-
-        <Stack.Screen name="about">
-          {
-            props => (
+        {userData?.token ? <>
+          <Stack.Screen name="home">
+            {props => (
               <Layout>
-                <About {...props} />
+                <Home {...props} />
               </Layout>
-            )
-          }
-        </Stack.Screen>
+            )}
+          </Stack.Screen>
 
-        <Stack.Screen name="service_types">
-          {props => (
-            <Layout>
-              <ServiceTypes {...props} />
-            </Layout>
-          )}
-        </Stack.Screen>
+          <Stack.Screen name="about">
+            {
+              props => (
+                <Layout>
+                  <About {...props} />
+                </Layout>
+              )
+            }
+          </Stack.Screen>
 
-        <Stack.Screen name="profile">
-          {props => (
-            <Layout>
-              <Profile {...props} />
-            </Layout>
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="service">
-          {props => (
-            <Layout>
-              <Service {...props} />
-            </Layout>
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="order-success">
-          {props => (
-            <Layout>
-              <OrderSuccess {...props} />
-            </Layout>
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="dashboard">
-          {props => (
-            <Layout>
-              <Dashboard {...props} />
-            </Layout>
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="order-details">
-          {props => (
-            <Layout>
-              <OrderDetails {...props} />
-            </Layout>
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="signup" options={{ headerShown: false }}>
-          {props => (
-            <Layout>
-              <Signup {...props} />
-            </Layout>
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="login" options={{ headerShown: false }}>
-          {props => (
-            <Layout>
-              <Login {...props} />
-            </Layout>
-          )}
-        </Stack.Screen>
+          <Stack.Screen name="service_types">
+            {props => (
+              <Layout>
+                <ServiceTypes {...props} />
+              </Layout>
+            )}
+          </Stack.Screen>
+
+          <Stack.Screen name="profile">
+            {props => (
+              <Layout>
+                <Profile {...props} />
+              </Layout>
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="service">
+            {props => (
+              <Layout>
+                <Service {...props} />
+              </Layout>
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="order-success">
+            {props => (
+              <Layout>
+                <OrderSuccess {...props} />
+              </Layout>
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="dashboard">
+            {props => (
+              <Layout>
+                <Dashboard {...props} />
+              </Layout>
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="order-details">
+            {props => (
+              <Layout>
+                <OrderDetails {...props} />
+              </Layout>
+            )}
+          </Stack.Screen>
+        </> :
+          <>
+            <Stack.Screen name="login" options={{ headerShown: false }}>
+              {props => (
+                <Layout>
+                  <Login {...props} />
+                </Layout>
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="signup" options={{ headerShown: false }}>
+              {props => (
+                <Layout>
+                  <Signup {...props} />
+                </Layout>
+              )}
+            </Stack.Screen>
+          </>}
       </Stack.Navigator>
     </PaperProvider>
   );
