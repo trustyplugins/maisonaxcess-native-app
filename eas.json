@@ -18,7 +18,8 @@
       "distribution": "internal",
       "channel": "preview",
       "android": {
-        "image": "latest"
+        "image": "latest",
+        "buildType": "apk"
       },
       "ios": {
         "image": "latest",
