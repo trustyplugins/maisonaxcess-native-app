@@ -22,10 +22,10 @@ const Layout = ({ children }) => {
     }, []);
     return (
         <View style={styles.container}>
-            <View style={[styles.content, isKeyboardVisible && styles.contentKeyboardVisible]}>
-                {children}
-            </View>
-            {!isKeyboardVisible && <Footer />}
+            {/* <View style={[styles.content, isKeyboardVisible && styles.contentKeyboardVisible]}> */}
+            {children}
+            {/* </View> */}
+            {/* {!isKeyboardVisible && <Footer />} */}
         </View>
     );
 };
@@ -33,7 +33,7 @@ const Layout = ({ children }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginBottom: Platform.OS === 'ios' ? 40 : 0,
+        // marginBottom: Platform.OS === 'ios' ? 40 : 0,
     },
     content: {
         flex: 1,

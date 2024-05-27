@@ -252,14 +252,14 @@ const Service = () => {
 
     const handleConfirm = (date) => {
         let formattedDate = formatDate(date);
-        if (appointmentDates?.length > 0) {
-            appointmentDates.forEach(ele => {
-                if (ele.date == formattedDate) {
-                    setSnackbarVisible(true);
-                    formattedDate = 'dd-mm-yyyy';
-                }
-            })
-        }
+        // if (appointmentDates?.length > 0) {
+        //     appointmentDates.forEach(ele => {
+        //         if (ele.date == formattedDate) {
+        //             setSnackbarVisible(true);
+        //             formattedDate = 'dd-mm-yyyy';
+        //         }
+        //     })
+        // }
         if (formattedDate != 'dd-mm-yyyy') {
             setError(false);
         }
@@ -585,8 +585,8 @@ const styles = StyleSheet.create({
         paddingBottom: 4,
         textAlign: 'center'
     },
-    payNow:{
-        paddingTop:10
+    payNow: {
+        paddingTop: 10
     }
     ,
     //service modal
