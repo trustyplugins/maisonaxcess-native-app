@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
@@ -10,7 +10,7 @@ const UserCategory = ({ data }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    const { width: contentWidth } = useWindowDimensions();
     useEffect(() => {
         (async () => {
             setLoading(true);
@@ -63,7 +63,7 @@ const UserCategory = ({ data }) => {
                                 <Image source={{ uri: item?.profile_photo_url }} style={styles.image} />
                             </View>
                             <View style={styles.textContainer}>
-                            <HTML source={{ html: item?.description }} />
+                                <HTML source={{ html: item?.description }} contentWidth={contentWidth} />
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         textAlign: 'left',
         color: '#000',
-        paddingLeft:10
+        paddingLeft: 10
     },
     errorMessage: {
         color: 'red',
