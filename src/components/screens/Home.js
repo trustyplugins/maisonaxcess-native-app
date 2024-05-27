@@ -10,11 +10,11 @@ const Home = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const iconData = [
         { id: 84, title: 'Famille', image: require("../../assets/image/FAMILLE.png") },
-        { id: 98, title: 'ASSISTANT PERSONNEL', image: require("../../assets/image/ASSISTANT PERSONNEL.png") },
-        { id: 108, title: 'AU QUOTIDIEN', image: require("../../assets/image/AU QUOTIDIEN.png") },
-        { id: 118, title: 'BEAUTÉ & BIEN-ÊTRE', image: require("../../assets/image/BEAUTÉ & BIEN-ÊTRE.png") },
-        { id: 107, title: 'INSTANTS GOURMANDS', image: require("../../assets/image/INSTANTS GOURMANDS.png") },
         { id: 90, title: 'MAISON', image: require("../../assets/image/MAISON.png") },
+        { id: 108, title: 'AU QUOTIDIEN', image: require("../../assets/image/AU QUOTIDIEN.png") },
+        { id: 98, title: 'ASSISTANT PERSONNEL', image: require("../../assets/image/ASSISTANT PERSONNEL.png") },
+        { id: 107, title: 'INSTANTS GOURMANDS', image: require("../../assets/image/INSTANTS GOURMANDS.png") },
+        { id: 118, title: 'BEAUTÉ & BIEN-ÊTRE', image: require("../../assets/image/BEAUTÉ & BIEN-ÊTRE.png") },
     ];
     useEffect(() => {
         (async () => {
@@ -40,8 +40,8 @@ const Home = ({ navigation }) => {
 
     }, [userData?.token])
 
-    const handlePress = (item,icon) => {
-        navigation.navigate("service_types", { data: item ,iconData:icon});
+    const handlePress = (item, icon) => {
+        navigation.navigate("service_types", { data: item, iconData: icon });
     };
 
     if (loading) {
@@ -52,21 +52,21 @@ const Home = ({ navigation }) => {
         <SafeAreaView style={styles.safeArea}>
             <ScrollView contentContainerStyle={styles.scrollView}>
                 <View style={styles.container}>
-                    {serviceType?.length > 0 && serviceType.map((item) => {
-                        const matchingData = iconData.find(dataItem => dataItem.id === item.id);
-                        if (item.id !== '70' && item.id !== '69' && matchingData) {
-                            return (
-                                <View key={item.id} style={styles.cardWrapper}>
-                                    <View style={styles.card}>
-                                        <TouchableOpacity onPress={() => handlePress(item,matchingData)}>
-                                            <Image source={matchingData.image} style={styles.image} />
-                                        </TouchableOpacity>
-                                        <Text style={styles.title}>{item.name}</Text>
-                                    </View>
+                    {serviceType?.length > 0 && iconData.map((item) => {
+                        const matchingData = serviceType.find(dataItem => dataItem.id === item.id);
+                        // if (item.id !== '70' && item.id !== '69' && matchingData) {
+                        return (
+                            <View key={item.id} style={styles.cardWrapper}>
+                                <View style={styles.card}>
+                                    <TouchableOpacity onPress={() => handlePress(matchingData, item)}>
+                                        <Image source={item.image} style={styles.image} />
+                                    </TouchableOpacity>
+                                    <Text style={styles.title}>{matchingData.name}</Text>
                                 </View>
-                            );
-                        }
-                        return null;
+                            </View>
+                        );
+                        // }
+                        // return null;
                     })}
                 </View>
             </ScrollView>
