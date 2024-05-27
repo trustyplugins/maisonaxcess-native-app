@@ -26,92 +26,95 @@ const Navigation = () => {
           header: (props) => <Header {...props} />,
         }}
       >
-        {userData?.token ? <>
-          <Stack.Screen name="carousel">
-            {props => (
-              <Layout>
-                <CarouselScreen {...props} />
-              </Layout>
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="home">
-            {props => (
-              <Layout>
-                <Home {...props} />
-              </Layout>
-            )}
-          </Stack.Screen>
+        {/* {userData?.token ? <> */}
 
-          <Stack.Screen name="about">
-            {
-              props => (
-                <Layout>
-                  <About {...props} />
-                </Layout>
-              )
-            }
-          </Stack.Screen>
+        <Stack.Screen name="carousel">
+          {props => (
+            <Layout>
+              <CarouselScreen {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="home">
+          {props => (
+            <Layout>
+              <Home {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
 
-          <Stack.Screen name="service_types">
-            {props => (
+        <Stack.Screen name="about">
+          {
+            props => (
               <Layout>
-                <ServiceTypes {...props} />
+                <About {...props} />
               </Layout>
-            )}
-          </Stack.Screen>
+            )
+          }
+        </Stack.Screen>
 
-          <Stack.Screen name="profile">
-            {props => (
-              <Layout>
-                <Profile {...props} />
-              </Layout>
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="service">
-            {props => (
-              <Layout>
-                <Service {...props} />
-              </Layout>
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="order-success">
-            {props => (
-              <Layout>
-                <OrderSuccess {...props} />
-              </Layout>
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="dashboard">
-            {props => (
-              <Layout>
-                <Dashboard {...props} />
-              </Layout>
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="order-details">
-            {props => (
-              <Layout>
-                <OrderDetails {...props} />
-              </Layout>
-            )}
-          </Stack.Screen>
-        </> :
-          <>
-            <Stack.Screen name="login" options={{ headerShown: false }}>
-              {props => (
-                <Layout>
-                  <Login {...props} />
-                </Layout>
-              )}
-            </Stack.Screen>
-            <Stack.Screen name="signup" options={{ headerShown: false }}>
-              {props => (
-                <Layout>
-                  <Signup {...props} />
-                </Layout>
-              )}
-            </Stack.Screen>
-          </>}
+        <Stack.Screen name="service_types">
+          {props => (
+            <Layout>
+              <ServiceTypes {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+
+        <Stack.Screen name="profile">
+          {props => (
+            <Layout>
+              <Profile {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="service">
+          {props => (
+            <Layout>
+              <Service {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="order-success">
+          {props => (
+            <Layout>
+              <OrderSuccess {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="dashboard">
+          {props => (
+            <Layout>
+              <Dashboard {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="order-details">
+          {props => (
+            <Layout>
+              <OrderDetails {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+
+        {/* </> :
+          <> */}
+        <Stack.Screen name="login" options={{ headerShown: false }}>
+          {props => (
+            <Layout>
+              <Login {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="signup" options={{ headerShown: false }}>
+          {props => (
+            <Layout>
+              <Signup {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+
+        {/* </>} */}
       </Stack.Navigator>
     </PaperProvider>
   );
