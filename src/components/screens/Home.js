@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         marginBottom: 6,
     },
     card: {
-        padding: 5,
+        padding: 10,
     },
     image: {
         width: '100%',
