@@ -2,21 +2,32 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const SubServices = ({ data }) => {
+const SubServices = ({ data, parentName }) => {
     const navigation = useNavigation();
 
     const handlePress = () => {
         navigation.navigate("service_types", { data });
     };
+
     return (
         <TouchableOpacity onPress={handlePress}>
-            <View style={styles.card}>
+            {(parentName != undefined) && (parentName == 'COORDONNERIE' || parentName == "LAVAGE AUTO-MOTO" || parentName == "Pressing et blanchisserie") ? <View style={styles.card}>
                 <View style={styles.imageContainer}>
                     <ImageBackground source={{ uri: `https://maisonaxcess.com/${data.image}` }} style={styles.image} >
                         <View style={styles.overlay} />
                     </ImageBackground>
                 </View>
-            </View>
+                <View style={styles.textContainer}>
+                    <Text style={styles.title}> {data.name}</Text>
+                </View>
+            </View> : 
+                <View style={styles.card}>
+                    <View style={styles.imageContainer}>
+                        <ImageBackground source={{ uri: `https://maisonaxcess.com/${data.image}` }} style={styles.image} >
+                            <View style={styles.overlay} />
+                        </ImageBackground>
+                    </View>
+                </View>}
         </TouchableOpacity>
     );
 };
@@ -57,8 +68,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        top: '50%',
-        left: '5%',
+        top: '40%',
+        left: '28%',
     },
     title: {
         fontSize: 17,
