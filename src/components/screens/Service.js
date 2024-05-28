@@ -162,7 +162,7 @@ const Service = () => {
             state: customerAddress.state,
             country: customerAddress.country,
             postalCode: customerAddress.postalCode,
-            service_image: service.image,
+            service_image: service[0].image,
             address: customerAddress.address,
             services_detail: customerAddress.services,
             payment_info: 'cod',
@@ -194,7 +194,7 @@ const Service = () => {
 
         } catch (error) {
             if (error.response) {
-                console.log('Response data:', error.response.data.message);
+                // console.log('Response data:', error.response.data.message);
                 setShowError(error.response.data.message);
                 setError(true);
             }
