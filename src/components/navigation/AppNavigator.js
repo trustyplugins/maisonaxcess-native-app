@@ -12,6 +12,7 @@ import { PaperProvider } from 'react-native-paper';
 import OrderSuccess from '../screens/OrderSuccess';
 import Dashboard from '../screens/Dashboard';
 import OrderDetails from '../screens/OrderDetails';
+import VerifyOtp from '../screens/VerifyOtp';
 import Layout from '../common/Layout';
 import CarouselScreen from '../screens/CarouselScreen';
 import { useSelector } from 'react-redux';
@@ -110,6 +111,13 @@ const Navigation = () => {
           {props => (
             <Layout>
               <Signup {...props} />
+            </Layout>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="verify-otp">
+          {props => (
+            <Layout>
+              <VerifyOtp {...props} />
             </Layout>
           )}
         </Stack.Screen>

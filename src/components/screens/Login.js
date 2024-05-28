@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, ScrollView } from "react-native";
 import CheckBox from 'expo-checkbox';
 import CustomButton from "../common/CustomButton";
 import axios from "axios";
@@ -76,49 +76,51 @@ const Login = ({ navigation }) => {
                 message={modalMessage}
                 onDismiss={() => setSnackbarVisible(false)}
             />
-            <View style={styles.container}>
-                <View style={styles.imgContainer}>
-                    <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
-                </View>
-                <View style={styles.formContainer}>
-                    <Text style={styles.heading}>Login</Text>
-                    <Text style={styles.label}>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Email"
-                        value={email}
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                        onPress={resetError}
-                    />
-                    <Text style={styles.label}>Password</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Password"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                        onPress={resetError}
-                    />
-                    {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
-
-                    <View style={styles.checkboxContainer}>
-                        <CheckBox
-                            value={rememberMe}
-                            onValueChange={setRememberMe}
-                            color="#11696a"
+            <ScrollView>
+                <View style={styles.container}>
+                    <View style={styles.imgContainer}>
+                        <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
+                    </View>
+                    <View style={styles.formContainer}>
+                        <Text style={styles.heading}>Login</Text>
+                        <Text style={styles.label}>Email</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Email"
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            onPress={resetError}
                         />
-                        <Text style={styles.labelRem}>Remember Me</Text>
-                    </View>
-                    <CustomButton title="Login" onPress={handleLogin} />
-                    <View style={styles.actionButton}>
-                        <Text style={styles.labelRem}>Dont't have an Account?</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate("signup")}>
-                            <Text style={styles.actionButtonText}>Sign Up</Text>
-                        </TouchableOpacity>
+                        <Text style={styles.label}>Password</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                            onPress={resetError}
+                        />
+                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+
+                        <View style={styles.checkboxContainer}>
+                            <CheckBox
+                                value={rememberMe}
+                                onValueChange={setRememberMe}
+                                color="#11696a"
+                            />
+                            <Text style={styles.labelRem}>Remember Me</Text>
+                        </View>
+                        <CustomButton title="Login" onPress={handleLogin} />
+                        <View style={styles.actionButton}>
+                            <Text style={styles.labelRem}>Dont't have an Account?</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate("signup")}>
+                                <Text style={styles.actionButtonText}>Sign Up</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </>
     );
 };
