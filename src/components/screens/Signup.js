@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, Dimensions, Image, ImageBackground, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, Image, ScrollView, TouchableOpacity } from "react-native";
 import axios from "axios";
 import Snackbar from '../Snackbar';
 import CustomButton from "../common/CustomButton";
@@ -21,6 +21,8 @@ function Signup({ navigation }) {
             return;
         }
         const data = {
+            api_otp: '',
+            otp: '',
             name: name,
             email: email,
             password: password,
@@ -29,10 +31,11 @@ function Signup({ navigation }) {
         }
         try {
             const req = await axios.post(`${API_BASE_URL}/register`, data);
-            console.log('Response:', req.data.message);
-            dispatch({ type: 'SIGNUP', payload: req.data.user });
-            setModalMessage(req.data.message);
-            showSnackbar();
+            // console.log('Response:', req.data.message);
+            data.api_otp = req.data.api_otp;
+            dispatch({ type: 'SIGNUP', payload: data });
+            navigation.navigate('verify-otp');
+
         } catch (error) {
             if (error.response) {
                 setShowError(error.response.data.message);
@@ -45,13 +48,7 @@ function Signup({ navigation }) {
         setError(false)
         setShowError('');
     }
-    const showSnackbar = () => {
-        setSnackbarVisible(true);
-        setTimeout(() => {
-            setSnackbarVisible(false);
-            navigation.navigate('login');
-        }, 3000);
-    };
+
     return (
         <>
             <Snackbar
@@ -59,59 +56,61 @@ function Signup({ navigation }) {
                 message={modalMessage}
                 onDismiss={() => setSnackbarVisible(false)}
             />
-            <View style={styles.container}>
-                <View style={styles.imgContainer}>
-                    <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
-                </View>
-                <View style={styles.formContainer}>
-                    <Text style={styles.heading}>SignUp</Text>
-                    <Text style={styles.label}>Name</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Name"
-                        value={name}
-                        onChangeText={setName}
-                        onPress={resetError}
-                    />
-                    <Text style={styles.label}>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Email"
-                        value={email}
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                        onPress={resetError}
-                    />
-                    <Text style={styles.label}>Phone</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Phone"
-                        value={phone}
-                        onChangeText={setPhone}
-                        keyboardType="phone-pad"
-                        onPress={resetError}
-                    />
-                    <Text style={styles.label}>Password</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Password"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                        onPress={resetError}
-                    />
-                    {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
-                    <View style={{marginTop:10}}>
-                        <CustomButton title="SignUp" onPress={handleSignup} />
+            <ScrollView>
+                <View style={styles.container}>
+                    <View style={styles.imgContainer}>
+                        <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
                     </View>
-                    <View style={styles.actionButton}>
-                        <Text style={styles.labelRem}>If already have an Account?</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate("login")}>
-                            <Text style={styles.actionButtonText}>Login</Text>
-                        </TouchableOpacity>
+                    <View style={styles.formContainer}>
+                        <Text style={styles.heading}>SignUp</Text>
+                        <Text style={styles.label}>Name</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Name"
+                            value={name}
+                            onChangeText={setName}
+                            onPress={resetError}
+                        />
+                        <Text style={styles.label}>Email</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Email"
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            onPress={resetError}
+                        />
+                        <Text style={styles.label}>Phone</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Phone"
+                            value={phone}
+                            onChangeText={setPhone}
+                            keyboardType="phone-pad"
+                            onPress={resetError}
+                        />
+                        <Text style={styles.label}>Password</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Password"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                            onPress={resetError}
+                        />
+                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+                        <View style={{ marginTop: 10 }}>
+                            <CustomButton title="SignUp" onPress={handleSignup} />
+                        </View>
+                        <View style={styles.actionButton}>
+                            <Text style={styles.labelRem}>If already have an Account?</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate("login")}>
+                                <Text style={styles.actionButtonText}>Login</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </>
     );
 }
@@ -131,7 +130,7 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         flex: 1,
-        marginTop: screenHeight * 0.1/2,
+        marginTop: screenHeight * 0.1 / 2,
         backgroundColor: '#C7C7C7',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
