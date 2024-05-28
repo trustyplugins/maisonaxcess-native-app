@@ -49,9 +49,9 @@ const Dashboard = () => {
                         <View style={styles.card} key={index}>
                             <View style={styles.header}>
                                 <View style={styles.logo}>
-                                    <Image source={require("../../assets/image/logo.jpg")} style={styles.image} />
+                                    <Image source={{ uri: `https://maisonaxcess.com/${item?.service_image}` }} style={styles.image} />
                                     <View style={styles.titleContainer}>
-                                        <Text style={styles.title} ellipsizeMode="tail" numberOfLines={1}>Coordonnerie</Text>
+                                        <Text style={styles.title} ellipsizeMode="tail" numberOfLines={1}>{item?.service_provider_name}</Text>
                                         {/* <Text style={styles.address}>{item.customer_address}</Text> */}
                                     </View>
                                 </View>
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2,
-        paddingVertical:10
+        paddingVertical: 10
     },
     header: {
         flexDirection: 'row',
@@ -119,11 +119,12 @@ const styles = StyleSheet.create({
     logo: {
         flexDirection: 'row',
         alignItems: 'center',
+        gap:4
     },
     image: {
-        width: 70,
-        height: 70,
-        borderRadius: 10,
+        width: 60,
+        height: 60,
+        borderRadius: 40,
     },
     titleContainer: {
         justifyContent: 'center',
@@ -143,17 +144,17 @@ const styles = StyleSheet.create({
     actionButton: {
         paddingVertical: 5,
         borderRadius: 5,
-        paddingRight:12
+        paddingRight: 12
     },
     actionButtonText: {
-        color:"#11696A",
+        color: "#11696A",
         fontWeight: 'bold',
     },
     body: {
         borderTopWidth: 1,
         borderTopColor: '#eee',
         paddingTop: 16,
-        paddingHorizontal:10
+        paddingHorizontal: 10
     },
     services: {
         flexDirection: 'row',
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
         borderTopColor: '#eee',
         paddingTop: 16,
         marginTop: 12,
-        paddingHorizontal:10
+        paddingHorizontal: 10
     },
     footerText: {
         fontSize: 16,

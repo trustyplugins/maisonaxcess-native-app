@@ -1,17 +1,34 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import { useSelector } from 'react-redux';
-const SubServices = ({ data, parentName }) => {
+const SubServices = ({ data, parentDetail }) => {
     const userData = useSelector(state => state.user.user);
     const navigation = useNavigation();
+    const [serviceType, setServiceType] = useState([]);
+    const serviceProvider = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/users/category/${parentDetail.id}`, {
+                headers: {
+                    Authorization: `Bearer ${userData?.token}`
+                },
+            });
+            setServiceType(response.data.user[0]);
+            fetch();
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
 
     const handlePress = () => {
         navigation.navigate("service_types", { data });
     };
-    const handleClick = async (id) => {
+    const handleClick = async () => {
+        serviceProvider();
+    };
+    const fetch = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/services/${data.id}`, {
                 headers: {
@@ -19,16 +36,16 @@ const SubServices = ({ data, parentName }) => {
                 },
             });
             if (response.data.services?.length > 0) {
-                navigation.navigate("service", { userid: `${data.id}` });
+                navigation.navigate("service", { userid: `${data.id}`, service_provider_id: `${serviceType.id}` });
             }
 
         } catch (error) {
-            // console.log(error)
+            console.log(error)
         }
-    };
+    }
 
     return (<>
-        {(parentName != undefined) && (parentName == 'COORDONNERIE' || parentName == "LAVAGE AUTO-MOTO" || parentName == "Pressing et blanchisserie") ?
+        {(parentDetail?.name != undefined) && (parentDetail?.name == 'COORDONNERIE' || parentDetail?.name == "LAVAGE AUTO-MOTO" || parentDetail?.name == "Pressing et blanchisserie") ?
             <View style={styles.cardQuo}>
                 <View style={styles.textContainerQuo}>
                     <Text style={styles.titleQuo}> {data.name}</Text>

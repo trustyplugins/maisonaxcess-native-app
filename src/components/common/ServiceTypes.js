@@ -51,7 +51,7 @@ const ServiceTypes = ({ navigation }) => {
                                 {
                                     serviceType.map((item, index) => (
                                         <View key={index}>
-                                            <SubServices data={item} parentName={data.name}/>
+                                            <SubServices data={item} parentDetail={data}/>
                                         </View>
                                     ))
                                 }

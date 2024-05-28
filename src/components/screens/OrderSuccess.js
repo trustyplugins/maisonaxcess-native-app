@@ -53,7 +53,7 @@ const OrderSuccess = () => {
                 </View>
                 <View style={styles.detailRow}>
                     <Text style={styles.label}>Service Provider:</Text>
-                    <Text>{orderData?.service_provider_id}</Text>
+                    <Text>{orderData?.service_provider_name}</Text>
                 </View>
                 <View style={styles.detailRow}>
                     <Text style={styles.label}>Appointment Date:</Text>
