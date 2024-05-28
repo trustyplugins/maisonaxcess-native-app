@@ -18,7 +18,11 @@ const Service = () => {
     const route = useRoute();
     const { userid, service_provider_id } = route.params;
     const userData = useSelector(state => state.user.user);
-    const serviceDetail = useSelector(state => state.user.serviceDetail);
+    const serviceDetails = useSelector(state => state.user.serviceDetail);
+    let serviceDetail = "";
+    if (serviceDetails != null || undefined) {
+        serviceDetail = serviceDetails.find(ele => ele.id == userid);
+    }
     const userCredential = useSelector(state => state.user.credentials);
     const [service, setService] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -29,6 +33,7 @@ const Service = () => {
     const [modalVisible, setModalVisible] = useState(serviceDetail?.services?.length > 0 ? false : true);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [customerAddress, setCustomerAddress] = useState({
+        id: userid,
         email: userCredential?.email || '',
         phone: serviceDetail?.phone || '',
         state: serviceDetail?.state || '',
@@ -172,6 +177,7 @@ const Service = () => {
                 }
             });
             setCustomerAddress({
+                id: userid,
                 phone: '',
                 state: '',
                 country: '',

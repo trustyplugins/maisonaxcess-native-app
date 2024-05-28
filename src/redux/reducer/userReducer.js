@@ -3,8 +3,8 @@ const initialState = {
   user: null,
   isLoggedIn: false,
   credentials: null,
-  userDetails:null,
-  serviceDetail:null
+  userDetails: null,
+  serviceDetail: null
 };
 
 const userReducer = (state = initialState, action) => {
@@ -31,10 +31,16 @@ const userReducer = (state = initialState, action) => {
         ...state,
         userDetails: action.payload,
       };
-    case 'ADD_SERVICE': 
+    case 'ADD_SERVICE':
+      let updatedAddresses = [];
+      if (state.serviceDetail) {
+        updatedAddresses = state.serviceDetail.filter(
+          addr => addr.id !== action.payload.id
+        );
+      }
       return {
         ...state,
-        serviceDetail: action.payload,
+        serviceDetail: [...updatedAddresses, action.payload],
       };
     default:
       return state;
