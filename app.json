@@ -2,8 +2,8 @@
   "expo": {
     "name": "maisonaxcess-native-app",
     "slug": "maisonaxcess-native-app",
-    "version": "1.0.0",
-    "runtimeVersion": "1.0.0",
+    "version": "1.0.1",
+    "runtimeVersion": "1.0.1",
     "description": "Description of the app",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.jasveer7863.maisonaxcessnativeapp"
+      "package": "com.jasveer7863.maisonaxcessnativeapp",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
