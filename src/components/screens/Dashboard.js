@@ -7,13 +7,14 @@ import { useNavigation } from '@react-navigation/native';
 const Dashboard = () => {
     const navigation = useNavigation();
     const userData = useSelector(state => state.user.user);
+    const userID = useSelector(state => state.user.userDetails);
     const [orderData, setOrderData] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         setLoading(true);
         const getOrders = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/orders/user/84`, {
+                const response = await axios.get(`${API_BASE_URL}/orders/user/${userID.id}`, {
                     headers: {
                         Authorization: `Bearer ${userData?.token}`
                     },
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     logo: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap:4
+        gap: 4
     },
     image: {
         width: 60,

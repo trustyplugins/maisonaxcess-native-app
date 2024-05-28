@@ -9,6 +9,7 @@ const SubServices = ({ data, parentDetail }) => {
     const navigation = useNavigation();
     const [serviceType, setServiceType] = useState([]);
     const serviceProvider = async () => {
+
         try {
             const response = await axios.get(`${API_BASE_URL}/users/category/${parentDetail.id}`, {
                 headers: {
@@ -16,6 +17,7 @@ const SubServices = ({ data, parentDetail }) => {
                 },
             });
             setServiceType(response.data.user[0]);
+
             fetch();
         } catch (error) {
             console.log('error', error)
@@ -28,20 +30,27 @@ const SubServices = ({ data, parentDetail }) => {
     const handleClick = async () => {
         serviceProvider();
     };
-    const fetch = async () => {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/services/${data.id}`, {
-                headers: {
-                    Authorization: `Bearer ${userData?.token}`
-                },
-            });
-            if (response.data.services?.length > 0) {
-                navigation.navigate("service", { userid: `${data.id}`, service_provider_id: `${serviceType.id}` });
-            }
+    const fetch = () => {
+        setTimeout(async () => {
+            if (serviceType?.id != undefined) {
+                try {
+                    const response = await axios.get(`${API_BASE_URL}/services/${data.id}`, {
+                        headers: {
+                            Authorization: `Bearer ${userData?.token}`
+                        },
+                    });
+                    if (response.data.services?.length > 0) {
+                        navigation.navigate("service", { userid: `${data.id}`, service_provider_id: `${serviceType.id}` });
+                    }
 
-        } catch (error) {
-            console.log(error)
-        }
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        }, 500)
+
+
+
     }
 
     return (<>
