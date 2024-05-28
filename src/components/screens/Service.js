@@ -46,6 +46,8 @@ const Service = () => {
         appointment_date: serviceDetail?.appointment_date || 'dd-mm-yyyy',
         services: serviceDetail?.services ? [...serviceDetail.services] : [],
         total_price: serviceDetail?.total_price || 0.0,
+        cancelComment: serviceDetail?.cancelComment || '',
+        location: serviceDetail?.location || ''
     });
 
     const calTotalOrder = () => {
@@ -154,21 +156,20 @@ const Service = () => {
         }
         const bookData = {
             service_provider_id: service_provider_id,
+            main_service_id: userid,
             email: customerAddress.email,
             phone_number: customerAddress.phone,
             state: customerAddress.state,
             country: customerAddress.country,
             postalCode: customerAddress.postalCode,
+            service_image: service.image,
             address: customerAddress.address,
             services_detail: customerAddress.services,
-            payment_info: "cod",
+            payment_info: 'cod',
             appointment_date: ReverseDate(customerAddress.appointment_date),
-            total_price: customerAddress.total_price
-            // card_number: customerAddress.card_number,
-            // expiry: customerAddress.expiry,
-            // cvv_number: customerAddress.cvv_number,
+            location_for_service: customerAddress.location,
+            cancellation_comment: customerAddress.cancelComment
         }
-
         try {
             const response = await axios.post(`${API_BASE_URL}/orders`, bookData, {
                 headers: {
@@ -183,12 +184,11 @@ const Service = () => {
                 country: '',
                 postalCode: '',
                 address: '',
-                card_number: '',
-                expiry: '',
-                cvv_number: '',
                 appointment_date: 'dd-mm-yyyy',
                 services: [],
                 total_price: 0.0,
+                cancelComment: '',
+                location: ''
             });
             navigation.navigate('order-success', { orderId: response.data.orderid });
 
@@ -209,17 +209,6 @@ const Service = () => {
 
     };
 
-    const formatCardNumber = (value) => {
-        return value.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim();
-    };
-
-    const formatExpiry = (value) => {
-        return value.replace(/[^0-9]/g, '').replace(/(\d{2})(\d{2})/, '$1/$2').trim();
-    };
-
-    const formatCVV = (value) => {
-        return value.replace(/[^0-9]/g, '').slice(0, 3);
-    };
     const resetError = () => {
         setError(false)
     }
@@ -342,22 +331,6 @@ const Service = () => {
                         </View>
                         <View style={styles.customerFormContainer}>
                             <Text style={styles.customerHeading}>Customer Address</Text>
-                            {/* <Text style={styles.customerLabel}>Name</Text>
-                            <TextInput
-                                style={styles.customerInput}
-                                placeholder="Name"
-                                value={customerAddress.name}
-                                onChangeText={(value) => handleChange('name', value)}
-                            /> */}
-                            {/* <Text style={styles.customerLabel}>Email</Text>
-                            <TextInput
-                                style={styles.customerInput}
-                                placeholder="Email"
-                                value={customerAddress.email}
-                                onChangeText={(value) => handleChange('email', value)}
-                                keyboardType="email-address"
-                                editable={false}
-                            /> */}
                             <Text style={styles.customerLabel}>Phone</Text>
                             <TextInput
                                 style={styles.customerInput}
@@ -401,43 +374,38 @@ const Service = () => {
                                 multiline
                                 onPress={resetError}
                             />
-                            <Text style={styles.customerLabel}>Payment Method</Text>
-                            <TextInput
-                                style={styles.customerInputCard}
-                                placeholder="Card Number"
-                                value={formatCardNumber(customerAddress.card_number)}
-                                onChangeText={(value) => handleChange('card_number', value)}
-                                keyboardType="numeric"
-                                maxLength={19}
-                                onPress={resetError}
-                            />
-
-                            <View style={styles.accInfo}>
-                                <View >
-                                    <Text style={styles.customerLabel}>Expiry</Text>
+                            {service.payment_mode == 'offline' &&
+                                <>
+                                    <View style={styles.radioContainer}>
+                                        <Text style={styles.customerLabel}>Lieu de réservation du service?</Text>
+                                        <TouchableOpacity
+                                            style={styles.radioButton}
+                                            onPress={() => handleChange('location', 'Maison')}
+                                        >
+                                            <View style={[styles.radioCircle, customerAddress.location === 'Maison' && styles.selectedRadio]} />
+                                            <Text style={styles.radioText}>Maison</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={styles.radioButton}
+                                            onPress={() => handleChange('location', 'Bureau')}
+                                        >
+                                            <View style={[styles.radioCircle, customerAddress.location === 'Bureau' && styles.selectedRadio]} />
+                                            <Text style={styles.radioText}>Bureau</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <Text style={styles.customerLabel}>Délai d'annulation de la commande:</Text>
+                                    <Text style={styles.customerLabel}>Commentaire:</Text>
+                                    <Text style={styles.customerLabel}>48 heures</Text>
                                     <TextInput
-                                        style={styles.customerInputCard}
-                                        placeholder="MM/YY"
-                                        value={formatExpiry(customerAddress.expiry)}
-                                        onChangeText={(value) => handleChange('expiry', value)}
-                                        keyboardType="numeric"
-                                        maxLength={5}
+                                        style={styles.customerInput}
+                                        placeholder="comment"
+                                        value={customerAddress.cancelComment}
+                                        onChangeText={(value) => handleChange('cancelComment', value)}
+                                        multiline
                                         onPress={resetError}
                                     />
-                                </View>
-                                <View >
-                                    <Text style={styles.customerLabel}>CVC</Text>
-                                    <TextInput
-                                        style={styles.customerInputCard}
-                                        placeholder="CVC Number"
-                                        value={formatCVV(customerAddress.cvv_number)}
-                                        onChangeText={(value) => handleChange('cvv_number', value)}
-                                        keyboardType="numeric"
-                                        maxLength={3}
-                                        onPress={resetError}
-                                    />
-                                </View>
-                            </View>
+                                </>
+                            }
                         </View>
                         {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
 
@@ -570,21 +538,29 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 10,
     },
-    customerInputCard: {
-        height: 40,
-        border: 'none',
-        marginBottom: 10,
-        borderBottomWidth: 2,
-        borderColor: 'gray',
+    radioContainer: {
+        marginTop: 5,
     },
-    accInfo: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    customerCheckboxContainer: {
+    radioButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 5,
+    },
+    radioCircle: {
+        height: 20,
+        width: 20,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#11696A',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 10,
+    },
+    selectedRadio: {
+        backgroundColor: '#11696A',
+    },
+    radioText: {
+        fontSize: 16,
     },
     errorMessage: {
         color: 'red',
