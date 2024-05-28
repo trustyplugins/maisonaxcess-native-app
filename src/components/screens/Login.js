@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         marginTop: 110
     },
     headerLogo: {
-        width: '60%',
+        width: '65%',
         height: 65
     },
     formContainer: {
