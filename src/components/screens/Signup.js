@@ -48,7 +48,6 @@ function Signup({ navigation }) {
         setError(false)
         setShowError('');
     }
-
     return (
         <>
             <Snackbar
@@ -137,6 +136,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: 20,
         paddingBottom: 30,
+        height: screenHeight * 1
     },
     heading: {
         fontSize: 24,

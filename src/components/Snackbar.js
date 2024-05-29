@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Snackbar = ({ visible, message, onDismiss }) => {
   return (
@@ -8,7 +9,7 @@ const Snackbar = ({ visible, message, onDismiss }) => {
         <View style={styles.snackbar}>
           <Text style={styles.message}>{message}</Text>
           <TouchableOpacity onPress={onDismiss} style={styles.dismissButton}>
-            <Text style={styles.dismissButtonText}>Close</Text>
+            <MaterialIcons name="close" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </View>
@@ -19,30 +20,31 @@ const Snackbar = ({ visible, message, onDismiss }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-   
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   snackbar: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 8,
+    backgroundColor: '#323232',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
     marginHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 30,
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop:45,
+    elevation: 10, // For Android
+    shadowColor: '#000', // For iOS
+    shadowOffset: { width: 0, height: 2 }, // For iOS
+    shadowOpacity: 0.8, // For iOS
+    shadowRadius: 4, // For iOS
   },
   message: {
     flex: 1,
     fontSize: 16,
-    color: 'black',
+    color: 'white',
   },
   dismissButton: {
     marginLeft: 10,
-  },
-  dismissButtonText: {
-    color: 'blue',
-    fontSize: 16,
   },
 });
 
