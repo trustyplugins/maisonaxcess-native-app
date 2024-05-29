@@ -7,10 +7,11 @@ import Snackbar from '../Snackbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 const Profile = ({ navigation }) => {
+  const userDetails = useSelector(state => state.user.userDetails);
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(userDetails.name || '');
+  const [phone, setPhone] = useState(userDetails.phone_number || "");
+  const [email, setEmail] = useState(userDetails.email || "");
   const [curr, setCurr] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,8 +19,37 @@ const Profile = ({ navigation }) => {
   const [modalMessage, setModalMessage] = useState('');
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [showError, setShowError] = useState('');
-  const userCredential = useSelector(state => state.user.credentials);
+  console.log(userDetails)
+  const handleUpdate = async () => {
+    if (!email || !password || !name || !phone) {
+      setError(true);
+      return;
+    }
 
+    const data = {
+      name: name,
+      email: email,
+      password: password,
+      phone_number: phone
+    }
+    try {
+      const response = await axios.post(`${API_BASE_URL}/users/${userDetails.id}`, data, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      setModalMessage(response.data.message);
+      dispatch({ type: 'SIGNUP', payload: response.data.user });
+      showSnackbar();
+    } catch (error) {
+      // console.error('Error:', error);
+      if (error.response) {
+        // console.log('Response data:', error.response.data);
+        setShowError(error.response.data.message);
+        setError(true);
+      }
+    }
+  };
 
   const resetError = () => {
     setError(false)
@@ -59,6 +89,7 @@ const Profile = ({ navigation }) => {
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
+              editable={false}
               onPress={resetError}
             />
             <Text style={styles.label}>Phone number</Text>
@@ -67,12 +98,12 @@ const Profile = ({ navigation }) => {
               placeholder="Phone number"
               value={phone}
               onChangeText={setPhone}
-              secureTextEntry
               onPress={resetError}
             />
             {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+            <CustomButton title="Sauvegarder" onPress={() => { handleUpdate }} />
           </View>
-          <View style={styles.container1}>
+          <View style={styles.container2}>
             <Text style={styles.heading}>Update password</Text>
             <Text style={styles.subHeading}>Make sure your account uses a long, random password to stay safe.</Text>
             <Text style={styles.label}>Current Password</Text>
@@ -103,6 +134,7 @@ const Profile = ({ navigation }) => {
               onPress={resetError}
             />
             {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+            <CustomButton title="Sauvegarder" onPress={() => { handleUpdate }} />
           </View>
         </View>
       </ScrollView>
@@ -113,6 +145,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 15
+  },
+  container1: {
+    marginTop: 10
+  },
+  container2: {
+    marginTop: 30
   },
   heading: {
     fontSize: 24,
