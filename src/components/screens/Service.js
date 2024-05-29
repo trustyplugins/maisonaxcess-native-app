@@ -374,7 +374,7 @@ const Service = () => {
                                 multiline
                                 onPress={resetError}
                             />
-                            {service.payment_mode != 'online' &&
+                            {service[0]?.payment_mode != 'online' &&
                                 <>
                                     <View style={styles.radioContainer}>
                                         <Text style={styles.customerLabelLoc}>Lieu de réservation du service?</Text>
