@@ -7,52 +7,53 @@ import { useSelector } from 'react-redux';
 const SubServices = ({ data, parentDetail }) => {
     const userData = useSelector(state => state.user.user);
     const navigation = useNavigation();
-    const [serviceType, setServiceType] = useState([]);
-    const serviceProvider = async () => {
+    const [serviceType, setServiceType] = useState('');
 
+    useEffect(() => {
+        if (serviceType?.id != undefined) {
+            fetch();
+        }
+    }, [serviceType?.id])
+
+    const serviceProvider = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/users/category/${parentDetail.id}`, {
                 headers: {
                     Authorization: `Bearer ${userData?.token}`
                 },
             });
-            setServiceType(response.data.user[0]);
 
-            fetch();
+            setServiceType(response.data.user[0]);
         } catch (error) {
             console.log('error', error)
+        }
+    }
+
+    const handleClick = async () => {
+        serviceProvider();
+    };
+    const fetch = async () => {
+        if (serviceType != '') {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/services/${data.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${userData?.token}`
+                    },
+                });
+                if (response.data.services?.length > 0) {
+                    navigation.navigate("service", { userid: `${data.id}`, service_provider_id: `${serviceType.id}` });
+                }
+                setServiceType('');
+
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 
     const handlePress = () => {
         navigation.navigate("service_types", { data });
     };
-    const handleClick = async () => {
-        serviceProvider();
-    };
-    const fetch = () => {
-        setTimeout(async () => {
-            if (serviceType?.id != undefined) {
-                try {
-                    const response = await axios.get(`${API_BASE_URL}/services/${data.id}`, {
-                        headers: {
-                            Authorization: `Bearer ${userData?.token}`
-                        },
-                    });
-                    if (response.data.services?.length > 0) {
-                        navigation.navigate("service", { userid: `${data.id}`, service_provider_id: `${serviceType.id}` });
-                    }
-
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-        }, 500)
-
-
-
-    }
-
     return (<>
         {(parentDetail?.name != undefined) && (parentDetail?.name == 'COORDONNERIE' || parentDetail?.name == "LAVAGE AUTO-MOTO" || parentDetail?.name == "Pressing et blanchisserie") ?
             <View style={styles.cardQuo}>
