@@ -1,28 +1,177 @@
-import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-const Profile = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Profile Information</Text>
-      <Text style={styles.text}>Update your account's profile information and email address.</Text>
-    </View>
-  )
-}
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, ScrollView } from "react-native";
+import CheckBox from 'expo-checkbox';
+import CustomButton from "../common/CustomButton";
+import axios from "axios";
+import Snackbar from '../Snackbar';
+import { useDispatch, useSelector } from 'react-redux';
+import { API_BASE_URL } from '@env';
+const Profile = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [curr, setCurr] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [showError, setShowError] = useState('');
+  const userCredential = useSelector(state => state.user.credentials);
 
-export default Profile;
+
+  const resetError = () => {
+    setError(false)
+  }
+  const showSnackbar = () => {
+    setSnackbarVisible(true);
+    setTimeout(() => {
+      setSnackbarVisible(false);
+      navigation.navigate('carousel');
+    }, 2000);
+  };
+
+  return (
+    <>
+      <Snackbar
+        visible={snackbarVisible}
+        message={modalMessage}
+        onDismiss={() => setSnackbarVisible(false)}
+      />
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.container1}>
+            <Text style={styles.heading}>Profile information</Text>
+            <Text style={styles.subHeading}>Update your account profile information and email address.</Text>
+            <Text style={styles.label}>Name</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              value={name}
+              onChangeText={setName}
+              onPress={resetError}
+            />
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              onPress={resetError}
+            />
+            <Text style={styles.label}>Phone number</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Phone number"
+              value={phone}
+              onChangeText={setPhone}
+              secureTextEntry
+              onPress={resetError}
+            />
+            {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+          </View>
+          <View style={styles.container1}>
+            <Text style={styles.heading}>Update password</Text>
+            <Text style={styles.subHeading}>Make sure your account uses a long, random password to stay safe.</Text>
+            <Text style={styles.label}>Current Password</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              value={curr}
+              onChangeText={setCurr}
+              secureTextEntry
+              onPress={resetError}
+            />
+            <Text style={styles.label}>New Password</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              value={newPassword}
+              onChangeText={setNewPassword}
+              secureTextEntry
+              onPress={resetError}
+            />
+            <Text style={styles.label}>Confirm the password</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+              onPress={resetError}
+            />
+            {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+          </View>
+        </View>
+      </ScrollView>
+    </>
+  );
+};
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     flex: 1,
-    paddingHorizontal: 20
+    paddingHorizontal: 15
   },
   heading: {
-    fontSize: 22,
+    fontSize: 24,
+    marginBottom: 20,
     textAlign: 'center',
-    textDecorationLine: 'underline',
+    color: '#11696a',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline'
   },
-  text: {
-    fontSize: 15,
-    marginTop:5
-  }
-})
+  subHeading: {
+    fontSize: 18,
+    marginBottom: 20,
+    color: '#000',
+    fontWeight: '450'
+  },
+  input: {
+    width: "100%",
+    height: 45,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: '#fff',
+    color: 'gray',
+  },
+  errorMessage: {
+    color: 'red'
+  },
+  label: {
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 10,
+    fontWeight: '500',
+  },
+  labelRem: {
+    fontSize: 16,
+    color: '#000',
+    fontWeight: '500'
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 18,
+    gap: 10
+  },
+  actionButton: {
+    paddingVertical: 5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 10,
+    paddingVertical: 25
+  },
+  actionButtonText: {
+    color: "#11696A",
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});
+
+export default Profile;
