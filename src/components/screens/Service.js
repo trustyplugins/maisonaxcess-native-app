@@ -20,8 +20,8 @@ const Service = () => {
     const userData = useSelector(state => state.user.user);
     const serviceDetails = useSelector(state => state.user.serviceDetail);
     let serviceDetail = "";
-    if (serviceDetails != null || undefined) {
-        serviceDetail = serviceDetails.find(ele => ele.id == userid);
+    if (serviceDetails != null && serviceDetails != undefined) {
+        serviceDetail = serviceDetails?.find(ele => ele.id == userid);
     }
     const userCredential = useSelector(state => state.user.credentials);
     const [service, setService] = useState([]);
@@ -374,10 +374,10 @@ const Service = () => {
                                 multiline
                                 onPress={resetError}
                             />
-                            {service.payment_mode == 'offline' &&
+                            {service.payment_mode != 'online' &&
                                 <>
                                     <View style={styles.radioContainer}>
-                                        <Text style={styles.customerLabel}>Lieu de réservation du service?</Text>
+                                        <Text style={styles.customerLabelLoc}>Lieu de réservation du service?</Text>
                                         <TouchableOpacity
                                             style={styles.radioButton}
                                             onPress={() => handleChange('location', 'Maison')}
@@ -393,9 +393,9 @@ const Service = () => {
                                             <Text style={styles.radioText}>Bureau</Text>
                                         </TouchableOpacity>
                                     </View>
-                                    <Text style={styles.customerLabel}>Délai d'annulation de la commande:</Text>
-                                    <Text style={styles.customerLabel}>Commentaire:</Text>
-                                    <Text style={styles.customerLabel}>48 heures</Text>
+                                    <Text style={styles.customerLabelLoc}>Délai d'annulation de la commande:</Text>
+                                    <Text style={styles.customerLabelLoc}>Commentaire:</Text>
+                                    <Text style={styles.customerLabelLoc}>48 heures</Text>
                                     <TextInput
                                         style={styles.customerInput}
                                         placeholder="comment"
@@ -470,7 +470,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: 150,
+        height: 300,
         borderRadius: 10,
     },
     textContainer: {
@@ -530,6 +530,11 @@ const styles = StyleSheet.create({
     customerLabel: {
         fontSize: 16,
         marginBottom: 5,
+    },
+    customerLabelLoc:{
+        fontSize: 16,
+        marginBottom: 5,
+        fontWeight:'500'
     },
     customerInput: {
         height: 40,

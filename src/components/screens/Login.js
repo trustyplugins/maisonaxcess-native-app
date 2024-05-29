@@ -145,7 +145,8 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
-        paddingTop: 30
+        paddingTop: 30,
+        height: screenHeight * 1
     },
     heading: {
         fontSize: 24,
