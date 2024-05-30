@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native';
 import axios from "axios";
 import { API_BASE_URL } from '@env';
+import Loader from "../common/Loader";
 const Home = ({ navigation }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
@@ -45,7 +46,7 @@ const Home = ({ navigation }) => {
     };
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
+        return (<Loader loading={loading} />)
     }
 
     return (

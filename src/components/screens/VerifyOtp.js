@@ -38,7 +38,7 @@ const VerifyOtp = ({ navigation }) => {
         setTimeout(() => {
             setSnackbarVisible(false);
             navigation.navigate('login');
-        }, 3000);
+        }, 1000);
     };
     const resetError = () => {
         setError(false)

@@ -4,6 +4,7 @@ import { useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
+import Loader from "../common/Loader";
 const OrderSuccess = () => {
     const userData = useSelector(state => state.user.user);
     const route = useRoute();
@@ -36,7 +37,7 @@ const OrderSuccess = () => {
     }, [orderId])
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
+        return (<Loader loading={loading} />)
     }
     const formatDate = (dateString) => {
         if (dateString) {

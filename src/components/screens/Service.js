@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Loader from "../common/Loader";
 const Service = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -266,7 +267,7 @@ const Service = () => {
     };
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
+        return (<Loader loading={loading} />)
     }
     return (<ScrollView>
         <Snackbar

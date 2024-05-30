@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import HTML from 'react-native-render-html';
+import Loader from "../common/Loader";
 const UserCategory = ({ data }) => {
     const navigation = useNavigation();
     const userData = useSelector(state => state.user.user);
@@ -50,7 +51,7 @@ const UserCategory = ({ data }) => {
     };
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
+        return (<Loader loading={loading} />)
     }
     return (<>
         <Text style={styles.heading}>User details</Text>

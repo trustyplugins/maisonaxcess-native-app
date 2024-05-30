@@ -4,6 +4,7 @@ import { API_BASE_URL } from '@env';
 import axios from "axios";
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
+import Loader from "../common/Loader";
 const Dashboard = () => {
     const navigation = useNavigation();
     const userData = useSelector(state => state.user.user);
@@ -39,7 +40,7 @@ const Dashboard = () => {
     };
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
+        return (<Loader loading={loading} />)
     }
     return (
         <SafeAreaView style={styles.safeArea}>

@@ -33,7 +33,6 @@ const Login = ({ navigation }) => {
         const data = {
             email: email,
             password: password
-            // password: 'password@123'
         }
         try {
             const response = await axios.post(`${API_BASE_URL}/login`, data, {
@@ -50,9 +49,7 @@ const Login = ({ navigation }) => {
             }
             showSnackbar();
         } catch (error) {
-            // console.error('Error:', error);
             if (error.response) {
-                // console.log('Response data:', error.response.data);
                 setShowError(error.response.data.message);
                 setError(true);
             }
@@ -66,7 +63,7 @@ const Login = ({ navigation }) => {
         setTimeout(() => {
             setSnackbarVisible(false);
             navigation.navigate('carousel');
-        }, 2000);
+        }, 1000);
     };
 
     return (

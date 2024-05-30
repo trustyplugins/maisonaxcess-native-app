@@ -31,7 +31,6 @@ function Signup({ navigation }) {
         }
         try {
             const req = await axios.post(`${API_BASE_URL}/register`, data);
-            // console.log('Response:', req.data.message);
             data.api_otp = req.data.api_otp;
             dispatch({ type: 'SIGNUP', payload: data });
             navigation.navigate('verify-otp');

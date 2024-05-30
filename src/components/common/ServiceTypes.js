@@ -7,6 +7,7 @@ import UserCategory from "./UserCategory";
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
 import { API_BASE_URL } from '@env';
+import Loader from "../common/Loader";
 const ServiceTypes = ({ navigation }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
@@ -35,7 +36,7 @@ const ServiceTypes = ({ navigation }) => {
 
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
+        return (<Loader loading={loading} />)
     }
     return (
         <SafeAreaView>

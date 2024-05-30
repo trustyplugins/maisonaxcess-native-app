@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import formatDate from '../../utils/formatDate';
+import Loader from "../common/Loader";
 const OrderDetails = () => {
     const userData = useSelector(state => state.user.user);
     const route = useRoute();
@@ -40,7 +41,7 @@ const OrderDetails = () => {
     };
 
     if (loading) {
-        return (<View style={styles.loader}><ActivityIndicator size="large" color="#11696A" /></View>)
+        return (<Loader loading={loading} />)
     }
     return (
         <ScrollView contentContainerStyle={styles.container}>
