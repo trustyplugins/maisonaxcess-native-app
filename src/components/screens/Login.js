@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, Dimensions, ImageBackground, Image, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, Modal, Image, TouchableOpacity, ScrollView } from "react-native";
 import CheckBox from 'expo-checkbox';
 import CustomButton from "../common/CustomButton";
 import axios from "axios";
 import Snackbar from '../Snackbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
+import Icon from 'react-native-vector-icons/FontAwesome';
 const Login = ({ navigation }) => {
     const dispatch = useDispatch();
     const [email, setEmail] = useState("");
@@ -14,8 +15,11 @@ const Login = ({ navigation }) => {
     const [modalMessage, setModalMessage] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [showError, setShowError] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
+
     const userCredential = useSelector(state => state.user.credentials);
+    const user = useSelector(state => state.user.userDetails);
     useEffect(() => {
         if (userCredential != null) {
             setEmail(userCredential.email);
@@ -25,7 +29,6 @@ const Login = ({ navigation }) => {
     }, [userCredential])
 
     const handleLogin = async () => {
-
         if (!email || !password) {
             setError(true);
             return;
@@ -55,6 +58,32 @@ const Login = ({ navigation }) => {
             }
         }
     };
+    const forgetPassword = async () => {
+        if (user == null || user == undefined) {
+            setShowError('non authentifié');
+            setError(true);
+        }
+        const data = {
+            email: user.email,
+        }
+        setModalVisible(true)
+        try {
+            const response = await axios.post(`${API_BASE_URL}/password/email`, data, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            console.log(response.data)
+            if (response.data.success == true) {
+                setModalVisible(true);
+            }
+        } catch (error) {
+            if (error.response) {
+                setShowError(error.response.data.message);
+                setError(true);
+            }
+        }
+    }
     const resetError = () => {
         setError(false)
     }
@@ -65,9 +94,9 @@ const Login = ({ navigation }) => {
             navigation.navigate('carousel');
         }, 1000);
     };
-    const forgetPassword = () => {
-
-    }
+    const closeModal = () => {
+        setModalVisible(false);
+    };
 
     return (
         <>
@@ -124,6 +153,21 @@ const Login = ({ navigation }) => {
                         </View>
                     </View>
                 </View>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={closeModal}
+                >
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalContent}>
+                            <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
+                                <Icon name="close" size={24} color="#11696A" />
+                            </TouchableOpacity>
+                            <Text style={styles.modalText}>Lien de réinitialisation envoyé à votre e-mail.</Text>
+                        </View>
+                    </View>
+                </Modal>
             </ScrollView>
         </>
     );
@@ -209,6 +253,32 @@ const styles = StyleSheet.create({
         color: "#11696A",
         fontWeight: 'bold',
         fontSize: 16,
+    },
+    //modal
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalContent: {
+        width: '80%',
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center',
+        position: 'relative',
+    },
+    modalCloseButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+    },
+    modalText: {
+        marginTop: 20,
+        fontSize: 16,
+        textAlign: 'center',
+        color: "#11696A",
     },
 });
 
