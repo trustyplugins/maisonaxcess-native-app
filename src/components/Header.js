@@ -81,22 +81,22 @@ const Header = ({ navigation, back }) => {
                             <Menu.Item onPress={() => {
                                 navigation.navigate('profile')
                                 setMenuVisible(false)
-                            }} title="Profile" />
+                            }} title="Profil" />
                             <Menu.Item onPress={() => {
                                 navigation.navigate('dashboard')
                                 setMenuVisible(false)
-                            }} title="Orders" />
-                            <Menu.Item onPress={handleLogout} title="Logout" />
+                            }} title="Ordres" />
+                            <Menu.Item onPress={handleLogout} title="Se déconnecter" />
                         </> :
                             <>
                                 <Menu.Item onPress={() => {
                                     navigation.navigate('signup')
                                     setMenuVisible(false)
-                                }} title="SignUp" />
+                                }} title="Inscription" />
                                 <Menu.Item onPress={() => {
                                     navigation.navigate('login')
                                     setMenuVisible(false)
-                                }} title="Login" />
+                                }} title="Se connecter" />
                             </>
                         }
                     </Menu>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     },
     menu: {
         // padding: 10,
-        marginTop: 25
+        marginTop: 25,
     },
     menuButton: {
         padding: 10,

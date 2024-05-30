@@ -46,34 +46,34 @@ const OrderSuccess = () => {
     };
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.successMessage}>Thank you for confirming your appointment. We will contact you soon!</Text>
+            <Text style={styles.successMessage}>Merci d'avoir confirmé votre rendez-vous. Nous vous contacterons bientôt!</Text>
             <View style={styles.detailsContainer}>
                 <View style={styles.detailRow}>
-                    <Text style={styles.label}>Order Number:</Text>
+                    <Text style={styles.label}>Numéro de commande :</Text>
                     <Text>{orderData?.order_number}</Text>
                 </View>
                 <View style={styles.detailRow}>
-                    <Text style={styles.label}>Service Provider:</Text>
+                    <Text style={styles.label}>Fournisseur de services :</Text>
                     <Text>{orderData?.service_provider_name}</Text>
                 </View>
                 <View style={styles.detailRow}>
-                    <Text style={styles.label}>Appointment Date:</Text>
+                    <Text style={styles.label}>Date de réservation :</Text>
                     <Text>{formatDate(orderData?.appointment_date)}</Text>
                 </View>
                 <View style={styles.detailRow}>
-                    <Text style={styles.label}>Address:</Text>
+                    <Text style={styles.label}>Adresse :</Text>
                     <Text>{orderData?.customer_address}</Text>
                 </View>
                 <View style={styles.detailRow}>
-                    <Text style={styles.label}>Phone Number:</Text>
+                    <Text style={styles.label}>Numéro de téléphone :</Text>
                     <Text>{orderData?.phone_number}</Text>
                 </View>
                 <View >
-                    <Text style={styles.tableHeading}>Order Details</Text>
+                    <Text style={styles.tableHeading}>Prestations de service</Text>
                     <View style={styles.tableRow}>
-                        <Text style={[styles.tableCell, styles.tableHeader]}>Item</Text>
-                        <Text style={[styles.tableCell, styles.tableHeader]}>Quantity</Text>
-                        <Text style={[styles.tableCell, styles.tableHeader]}>Price</Text>
+                        <Text style={[styles.tableCell, styles.tableHeader]}>Nom</Text>
+                        <Text style={[styles.tableCell, styles.tableHeader]}>Quantité</Text>
+                        <Text style={[styles.tableCell, styles.tableHeader]}>Prix</Text>
                     </View>
                     {orderData && orderData?.services_with_price?.map((service, index) => (
                         <View key={index} style={styles.tableRow}>
@@ -84,12 +84,12 @@ const OrderSuccess = () => {
                     ))}
                     <View style={styles.tableRow}>
                         <Text style={styles.tableCell}></Text>
-                        <Text style={[styles.tableCell, styles.totalLabel]}>Total Price:</Text>
+                        <Text style={[styles.tableCell, styles.totalLabel]}>Total de la commande :</Text>
                         <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
                     </View>
                     <View style={styles.tableRow}>
                         <Text style={styles.tableCell}></Text>
-                        <Text style={[styles.tableCell, styles.totalLabel]}>Payment Method:</Text>
+                        <Text style={[styles.tableCell, styles.totalLabel]}>Mode de paiement :</Text>
                         <Text style={[styles.tableCell, styles.totalValue]}>{orderData?.payment_info}</Text>
                     </View>
                 </View>

@@ -30,7 +30,7 @@ function Signup({ navigation }) {
             user_role: '3'
         }
         try {
-            const req = await axios.post(`${API_BASE_URL}/register`, data);            
+            const req = await axios.post(`${API_BASE_URL}/register`, data);
             data.api_otp = req.data.api_otp;
             dispatch({ type: 'SIGNUP', payload: data });
             navigation.navigate('verify-otp');
@@ -60,50 +60,50 @@ function Signup({ navigation }) {
                         <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
                     </View>
                     <View style={styles.formContainer}>
-                        <Text style={styles.heading}>SignUp</Text>
-                        <Text style={styles.label}>Name</Text>
+                        <Text style={styles.heading}>Inscription</Text>
+                        <Text style={styles.label}>Nom</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Name"
+                            placeholder="Nom"
                             value={name}
                             onChangeText={setName}
                             onPress={resetError}
                         />
-                        <Text style={styles.label}>Email</Text>
+                        <Text style={styles.label}>E-mail</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Email"
+                            placeholder="E-mail"
                             value={email}
                             onChangeText={setEmail}
                             keyboardType="email-address"
                             onPress={resetError}
                         />
-                        <Text style={styles.label}>Phone</Text>
+                        <Text style={styles.label}>Portable</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Phone"
+                            placeholder="Portable"
                             value={phone}
                             onChangeText={setPhone}
                             keyboardType="phone-pad"
                             onPress={resetError}
                         />
-                        <Text style={styles.label}>Password</Text>
+                        <Text style={styles.label}>Mot de passe</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Password"
+                            placeholder="Mot de passe"
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry
                             onPress={resetError}
                         />
-                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Veuillez remplir les détails ci-dessus"}</Text>}
                         <View style={{ marginTop: 10 }}>
-                            <CustomButton title="SignUp" onPress={handleSignup} />
+                            <CustomButton title="Inscription" onPress={handleSignup} />
                         </View>
                         <View style={styles.actionButton}>
-                            <Text style={styles.labelRem}>If already have an Account?</Text>
+                            <Text style={styles.labelRem}>Déjà inscrit?</Text>
                             <TouchableOpacity onPress={() => navigation.navigate("login")}>
-                                <Text style={styles.actionButtonText}>Login</Text>
+                                <Text style={styles.actionButtonText}>Se connecter</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

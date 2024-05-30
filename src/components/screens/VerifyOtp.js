@@ -57,17 +57,17 @@ const VerifyOtp = ({ navigation }) => {
                     <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
                 </View>
                 <View style={styles.formContainer}>
-                    <Text style={styles.heading}>Verify OTP</Text>
+                    <Text style={styles.heading}>Vérifier OTP</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="Enter OTP"
+                        placeholder="Entrez OTP"
                         value={otp}
                         onChangeText={setOtp}
                         keyboardType="numeric"
                         onPress={resetError}
                     />
-                    {error && <Text style={styles.errorMessage}>{showError ? showError : "Enter the OTP"}</Text>}
-                    <CustomButton title="Verify" onPress={handleVerifyOtp} />
+                    {error && <Text style={styles.errorMessage}>{showError ? showError : "Entrez OTP"}</Text>}
+                    <CustomButton title="Vérifier" onPress={handleVerifyOtp} />
                 </View>
             </View>
         </>

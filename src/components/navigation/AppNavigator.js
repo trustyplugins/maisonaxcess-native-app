@@ -1,7 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from '../screens/Home';
-import About from '../screens/About';
 import Signup from '../screens/Signup';
 import Login from '../screens/Login';
 import ServiceTypes from '../common/ServiceTypes';
@@ -42,16 +41,6 @@ const Navigation = () => {
               <Home {...props} />
             </Layout>
           )}
-        </Stack.Screen>
-
-        <Stack.Screen name="about">
-          {
-            props => (
-              <Layout>
-                <About {...props} />
-              </Layout>
-            )
-          }
         </Stack.Screen>
 
         <Stack.Screen name="service_types">

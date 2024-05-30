@@ -288,7 +288,7 @@ const Service = () => {
                         </View>
                         <Text style={styles.contentText}>{parseFromHtml(item.content)}</Text>
                         <TouchableOpacity onPress={toggleModal} style={styles.servicesContainer}>
-                            <Text style={styles.servicesText}>Add Services</Text>
+                            <Text style={styles.servicesText}>Ajouter des services</Text>
                             {
                                 customerAddress?.services?.length > 0 && customerAddress.services.map((serviceItem, id) => (
                                     <View key={id} style={styles.serviceItem}>
@@ -311,7 +311,7 @@ const Service = () => {
                         </TouchableOpacity>
                         <View style={styles.dateSection}>
                             <View>
-                                <Text style={styles.dateLabelText}>Select Appointment Date:</Text>
+                                <Text style={styles.dateLabelText}>Date de réalisation souhaitée:</Text>
                                 <View style={styles.dateContainer}>
                                     <Text style={styles.dateText}>{customerAddress.appointment_date}</Text>
                                     <TouchableOpacity onPress={showDatePicker}>
@@ -333,45 +333,45 @@ const Service = () => {
                             </View>
                         </View>
                         <View style={styles.customerFormContainer}>
-                            <Text style={styles.customerHeading}>Customer Address</Text>
-                            <Text style={styles.customerLabel}>Phone</Text>
+                            <Text style={styles.customerHeading}>Adresse du client</Text>
+                            <Text style={styles.customerLabel}>Téléphone</Text>
                             <TextInput
                                 style={styles.customerInput}
-                                placeholder="Phone"
+                                placeholder="Téléphone"
                                 value={customerAddress.phone}
                                 onChangeText={(value) => handleChange('phone', value)}
                                 keyboardType="phone-pad"
                                 onPress={resetError}
                             />
-                            <Text style={styles.customerLabel}>State</Text>
+                            <Text style={styles.customerLabel}>Ville</Text>
                             <TextInput
                                 style={styles.customerInput}
-                                placeholder="State"
+                                placeholder="Ville"
                                 value={customerAddress.state}
                                 onChangeText={(value) => handleChange('state', value)}
                                 onPress={resetError}
                             />
-                            <Text style={styles.customerLabel}>Country</Text>
+                            <Text style={styles.customerLabel}>Pays</Text>
                             <TextInput
                                 style={styles.customerInput}
-                                placeholder="Country"
+                                placeholder="Pays"
                                 value={customerAddress.country}
                                 onChangeText={(value) => handleChange('country', value)}
                                 onPress={resetError}
                             />
-                            <Text style={styles.customerLabel}>Postal Code</Text>
+                            <Text style={styles.customerLabel}>Code Postal</Text>
                             <TextInput
                                 style={styles.customerInput}
-                                placeholder="Postal Code"
+                                placeholder="Code Postal"
                                 value={customerAddress.postalCode}
                                 onChangeText={(value) => handleChange('postalCode', value)}
                                 keyboardType="numeric"
                                 onPress={resetError}
                             />
-                            <Text style={styles.customerLabel}>Address</Text>
+                            <Text style={styles.customerLabel}>Adresse</Text>
                             <TextInput
                                 style={styles.customerInput}
-                                placeholder="Address"
+                                placeholder="Adresse"
                                 value={customerAddress.address}
                                 onChangeText={(value) => handleChange('address', value)}
                                 multiline
@@ -410,10 +410,10 @@ const Service = () => {
                                 </>
                             }
                         </View>
-                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Veuillez remplir les détails ci-dessus"}</Text>}
 
                         <View style={styles.payNow}>
-                            <CustomButton title="Pay Now" onPress={bookAppointment} />
+                            <CustomButton title="Demander un devis" onPress={bookAppointment} />
                         </View>
                     </View>
                     <Modal
@@ -427,7 +427,7 @@ const Service = () => {
                                 <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
                                     <FontAwesome name="close" size={24} color="#11696A" />
                                 </TouchableOpacity>
-                                <Text style={styles.modalHeading}>Services</Text>
+                                <Text style={styles.modalHeading}>Prestations de service</Text>
                                 <ScrollView style={styles.scrollView}>
                                     {item.services.map((service, id) => (
                                         <View key={id} style={styles.serviceItem}>
@@ -587,11 +587,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
     },
     modalContent: {
-        width: '80%',
+        width: '85%',
         height: '70%', // Adjust the height to leave space for scrolling
         backgroundColor: '#fff',
         borderRadius: 10,
-        padding: 20,
+        padding: 15,
         position: 'relative',
     },
     closeButton: {
@@ -600,10 +600,10 @@ const styles = StyleSheet.create({
         right: 10,
     },
     modalHeading: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 20,
-        textAlign: 'center',
+        textAlign: 'left',
     },
     scrollView: {
         flex: 1,

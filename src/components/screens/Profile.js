@@ -104,12 +104,12 @@ const Profile = ({ navigation }) => {
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched, status }) => (
               <View style={styles.container1}>
-                <Text style={styles.heading}>Profile information</Text>
-                <Text style={styles.subHeading}>Update your account profile information and email address.</Text>
-                <Text style={styles.label}>Name</Text>
+                <Text style={styles.heading}>Informations sur le profil</Text>
+                <Text style={styles.subHeading}>Mettez à jour les informations de profil et l'adresse e-mail de votre compte.</Text>
+                <Text style={styles.label}>Nom</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Name"
+                  placeholder="Nom"
                   onChangeText={handleChange('name')}
                   onBlur={handleBlur('name')}
                   value={values.name}
@@ -117,17 +117,17 @@ const Profile = ({ navigation }) => {
                 {errors.name && touched.name && (
                   <Text style={styles.errorMessage}>{errors.name}</Text>
                 )}
-                <Text style={styles.label}>Email</Text>
+                <Text style={styles.label}>E-mail</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Email"
+                  placeholder="E-mail"
                   value={userDetails.email}
                   editable={false}
                 />
-                <Text style={styles.label}>Phone number</Text>
+                <Text style={styles.label}>Numéro de téléphone</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Phone number"
+                  placeholder="Numéro de téléphone"
                   onChangeText={handleChange('phone')}
                   onBlur={handleBlur('phone')}
                   value={values.phone}
@@ -153,12 +153,12 @@ const Profile = ({ navigation }) => {
           >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched, status }) => (
               <View style={styles.container2}>
-                <Text style={styles.heading}>Update password</Text>
-                <Text style={styles.subHeading}>Make sure your account uses a long, random password to stay safe.</Text>
-                <Text style={styles.label}>Current Password</Text>
+                <Text style={styles.heading}>Mettre à jour le mot de passe</Text>
+                <Text style={styles.subHeading}>Assurez-vous que votre compte utilise un mot de passe long et aléatoire pour rester en sécurité.</Text>
+                <Text style={styles.label}>Mot de passe actuel</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Current Password"
+                  placeholder="Mot de passe actuel"
                   secureTextEntry
                   onChangeText={handleChange('curr')}
                   onBlur={handleBlur('curr')}
@@ -167,10 +167,10 @@ const Profile = ({ navigation }) => {
                 {errors.curr && touched.curr && (
                   <Text style={styles.errorMessage}>{errors.curr}</Text>
                 )}
-                <Text style={styles.label}>New Password</Text>
+                <Text style={styles.label}>nouveau mot de passe</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="New Password"
+                  placeholder="nouveau mot de passe"
                   secureTextEntry
                   onChangeText={handleChange('newPassword')}
                   onBlur={handleBlur('newPassword')}
@@ -179,10 +179,10 @@ const Profile = ({ navigation }) => {
                 {errors.newPassword && touched.newPassword && (
                   <Text style={styles.errorMessage}>{errors.newPassword}</Text>
                 )}
-                <Text style={styles.label}>Confirm Password</Text>
+                <Text style={styles.label}>Confirmez le mot de passe</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Confirm Password"
+                  placeholder="Confirmez le mot de passe"
                   secureTextEntry
                   onChangeText={handleChange('confirmPassword')}
                   onBlur={handleBlur('confirmPassword')}

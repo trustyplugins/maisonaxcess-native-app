@@ -45,7 +45,7 @@ const Dashboard = () => {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.container}>
-                <Text style={styles.heading}>Your Orders</Text>
+                <Text style={styles.heading}>Vos commandes</Text>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     {orderData?.length > 0 && orderData.map((item, index) => (
                         <View style={styles.card} key={index}>
@@ -57,7 +57,7 @@ const Dashboard = () => {
                                     </View>
                                 </View>
                                 <TouchableOpacity style={styles.actionButton} onPress={() => { navigation.navigate("order-details", { id: item.id }) }}>
-                                    <Text style={styles.actionButtonText}>View</Text>
+                                    <Text style={styles.actionButtonText}>Voir</Text>
                                 </TouchableOpacity>
                             </View>
 
@@ -77,10 +77,10 @@ const Dashboard = () => {
                             </View>
                             <View style={styles.footer}>
                                 <View>
-                                    <Text style={styles.footerText}>Appointment date</Text>
+                                    <Text style={styles.footerText}>Date de rendez-vous</Text>
                                     <Text style={styles.footerText}> {formatDate(item.appointment_date)}</Text>
                                 </View>
-                                <Text style={styles.footerText}> ${item.total_price}</Text>
+                                <Text style={styles.footerText}> € {item.total_price}</Text>
                             </View>
                         </View>
                     ))

@@ -54,7 +54,7 @@ const UserCategory = ({ data }) => {
         return (<Loader loading={loading} />)
     }
     return (<>
-        <Text style={styles.heading}>User details</Text>
+        <Text style={styles.heading}>Détails de l'utilisateur</Text>
         {serviceType?.length > 0 ? serviceType.map((item, index) => {
             return (
                 <View key={index}>
@@ -70,7 +70,7 @@ const UserCategory = ({ data }) => {
                     </TouchableOpacity>
                 </View>
             )
-        }) : <Text style={styles.errorMessage}>No Data Found !</Text>}
+        }) : <Text style={styles.errorMessage}>Aucune donnée disponible !</Text>}
     </>
     );
 };

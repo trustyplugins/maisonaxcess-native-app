@@ -65,6 +65,9 @@ const Login = ({ navigation }) => {
             navigation.navigate('carousel');
         }, 1000);
     };
+    const forgetPassword = () => {
+
+    }
 
     return (
         <>
@@ -79,26 +82,26 @@ const Login = ({ navigation }) => {
                         <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
                     </View>
                     <View style={styles.formContainer}>
-                        <Text style={styles.heading}>Login</Text>
-                        <Text style={styles.label}>Email</Text>
+                        <Text style={styles.heading}>Se connecter</Text>
+                        <Text style={styles.label}>E-mail</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Email"
+                            placeholder="E-mail"
                             value={email}
                             onChangeText={setEmail}
                             keyboardType="email-address"
                             onPress={resetError}
                         />
-                        <Text style={styles.label}>Password</Text>
+                        <Text style={styles.label}>Mot de passe</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="Password"
+                            placeholder="Mot de passe"
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry
                             onPress={resetError}
                         />
-                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Please fill the above details"}</Text>}
+                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Veuillez remplir les détails ci-dessus"}</Text>}
 
                         <View style={styles.checkboxContainer}>
                             <CheckBox
@@ -106,13 +109,17 @@ const Login = ({ navigation }) => {
                                 onValueChange={setRememberMe}
                                 color="#11696a"
                             />
-                            <Text style={styles.labelRem}>Remember Me</Text>
+                            <Text style={styles.labelRem}>Souviens-toi de moi</Text>
                         </View>
-                        <CustomButton title="Login" onPress={handleLogin} />
+                        <TouchableOpacity onPress={() => forgetPassword()}>
+                            <Text style={styles.forgetPassword}>Mot de passe oublié?</Text>
+                        </TouchableOpacity>
+                        <CustomButton title="Se connecter" onPress={handleLogin} />
+
                         <View style={styles.actionButton}>
-                            <Text style={styles.labelRem}>Dont't have an Account?</Text>
+                            <Text style={styles.labelRem}>Vous n'avez pas encore de compte ?</Text>
                             <TouchableOpacity onPress={() => navigation.navigate("signup")}>
-                                <Text style={styles.actionButtonText}>Sign Up</Text>
+                                <Text style={styles.actionButtonText}>Inscription</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -142,7 +149,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
-        paddingTop: 30,
+        paddingTop: 25,
         height: screenHeight * 1
     },
     heading: {
@@ -158,7 +165,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#ccc",
         borderRadius: 50,
-        marginBottom: 20,
+        marginBottom: 15,
         padding: 10,
         backgroundColor: '#fff',
         color: 'gray',
@@ -182,8 +189,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        marginBottom: 18,
+        marginBottom: 7,
         gap: 10
+    },
+    forgetPassword: {
+        fontSize: 16,
+        textAlign: 'right',
+        paddingVertical: 10,
+        color: "#11696A",
     },
     actionButton: {
         paddingVertical: 5,
