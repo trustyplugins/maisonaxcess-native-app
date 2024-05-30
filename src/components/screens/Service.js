@@ -169,7 +169,8 @@ const Service = () => {
             payment_info: 'cod',
             appointment_date: ReverseDate(customerAddress.appointment_date),
             location_for_service: customerAddress.location,
-            cancellation_comment: customerAddress.cancelComment
+            cancellation_comment: customerAddress.cancelComment,
+            stripeToken: ''
         }
         try {
             const response = await axios.post(`${API_BASE_URL}/orders`, bookData, {
@@ -327,7 +328,8 @@ const Service = () => {
                             </View>
                             <View style={styles.totalPrice}>
                                 <Text style={styles.dateLabelText}>Total Order:</Text>
-                                <Text style={styles.price}>${customerAddress.total_price || 0.0}</Text>
+                                {service[0]?.payment_mode != 'online' ? <Text style={styles.price}>Sur devis
+                                </Text> : <Text style={styles.price}>€{customerAddress.total_price || 0.0}</Text>}
                             </View>
                         </View>
                         <View style={styles.customerFormContainer}>
@@ -532,10 +534,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 5,
     },
-    customerLabelLoc:{
+    customerLabelLoc: {
         fontSize: 16,
         marginBottom: 5,
-        fontWeight:'500'
+        fontWeight: '500'
     },
     customerInput: {
         height: 40,

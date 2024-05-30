@@ -54,7 +54,6 @@ const Dashboard = () => {
                                     <Image source={{ uri: `https://maisonaxcess.com/${item?.service_image}` }} style={styles.image} />
                                     <View style={styles.titleContainer}>
                                         <Text style={styles.title} ellipsizeMode="tail" numberOfLines={1}>{item?.service_provider_name}</Text>
-                                        {/* <Text style={styles.address}>{item.customer_address}</Text> */}
                                     </View>
                                 </View>
                                 <TouchableOpacity style={styles.actionButton} onPress={() => { navigation.navigate("order-details", { id: item.id }) }}>
@@ -64,15 +63,23 @@ const Dashboard = () => {
 
                             <View style={styles.body}>
                                 {JSON.parse(item.services_with_price).map((order, id) => (
-                                    <View style={styles.services} key={id}>
-                                        <Text style={styles.qnty}>{order.quantity}</Text>
-                                        <Text style={styles.qnty}>*</Text>
-                                        <Text style={styles.service}>{order.name}</Text>
+                                    <View style={styles.servicesData} key={id}>
+                                        <View style={styles.services}>
+                                            <Text style={styles.qnty}>{order.quantity}</Text>
+                                            <Text style={styles.qnty}>x</Text>
+                                            <Text style={styles.service}>{order.name}</Text>
+                                        </View>
+                                        <View>
+                                            <Text style={styles.service}>€ {order.price}</Text>
+                                        </View>
                                     </View>
                                 ))}
                             </View>
                             <View style={styles.footer}>
-                                <Text style={styles.footerText}> {formatDate(item.appointment_date)}</Text>
+                                <View>
+                                    <Text style={styles.footerText}>Appointment date</Text>
+                                    <Text style={styles.footerText}> {formatDate(item.appointment_date)}</Text>
+                                </View>
                                 <Text style={styles.footerText}> ${item.total_price}</Text>
                             </View>
                         </View>
@@ -157,6 +164,11 @@ const styles = StyleSheet.create({
         borderTopColor: '#eee',
         paddingTop: 16,
         paddingHorizontal: 10
+    },
+    servicesData: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     services: {
         flexDirection: 'row',

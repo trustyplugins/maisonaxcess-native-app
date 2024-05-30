@@ -30,7 +30,7 @@ function Signup({ navigation }) {
             user_role: '3'
         }
         try {
-            const req = await axios.post(`${API_BASE_URL}/register`, data);
+            const req = await axios.post(`${API_BASE_URL}/register`, data);            
             data.api_otp = req.data.api_otp;
             dispatch({ type: 'SIGNUP', payload: data });
             navigation.navigate('verify-otp');
