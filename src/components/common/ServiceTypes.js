@@ -79,13 +79,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#D3D3D3',
         paddingLeft: 20
     },
-    // parent: {
-    //     flexDirection: 'row',
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     height: 80,
-    //     backgroundColor: '#D3D3D3'
-    // },
     image: {
         width: '18%',
         height: 60,

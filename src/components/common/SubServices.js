@@ -89,9 +89,11 @@ const SubServices = ({ data, parentDetail }) => {
     };
     return (<ScrollView>
         {(parentDetail?.name != undefined) && (parentDetail?.name == 'COORDONNERIE' || parentDetail?.name == "LAVAGE AUTO-MOTO" || parentDetail?.name == "Pressing et blanchisserie" || parentDetail?.name == "Esthéticienne") ?
-            <View style={styles.cardQuo}>
-                <View style={styles.textContainerQuo}>
-                    <Text style={styles.titleQuo}> {data.name}</Text>
+            <View>
+                <View style={styles.cardQuo}>
+                    <View style={styles.textContainerQuo}>
+                        <Text style={styles.titleQuo}> {data.name}</Text>
+                    </View>
                 </View>
                 <TouchableOpacity onPress={() => { fetch('detail') }}>
                     <Text style={styles.detail}> Détails</Text>
@@ -102,6 +104,7 @@ const SubServices = ({ data, parentDetail }) => {
                 <TouchableOpacity onPress={() => { handleClick(data.id) }}>
                     <Text style={styles.btnQuo}> Commander</Text>
                 </TouchableOpacity>
+
             </View>
             :
             <TouchableOpacity onPress={handlePress}>
@@ -203,14 +206,6 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 10,
     },
-    textContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        top: '40%',
-        left: '28%',
-    },
     title: {
         fontSize: 17,
         fontWeight: 'bold',
@@ -220,13 +215,12 @@ const styles = StyleSheet.create({
     //
     cardQuo: {
         backgroundColor: '#fff',
-        // borderWidth: 1,
-        // borderColor: '#ddd',
         shadowColor: '#000',
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        padding: 10
+        paddingHorizontal: 10,
+        paddingTop: 10
     },
     textContainerQuo: {
         paddingBottom: 10
@@ -244,7 +238,8 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         backgroundColor: '#f4f4f4',
         borderBottomColor: '#d9d9d9',
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+        paddingHorizontal: 10,
     },
     btnQuo: {
         fontSize: 17,
@@ -253,6 +248,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f4f4f4',
         paddingBottom: 8,
         paddingTop: 8,
+        paddingHorizontal: 10,
     },
     // modal
     modalContainer: {

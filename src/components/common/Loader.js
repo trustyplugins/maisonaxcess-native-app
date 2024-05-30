@@ -20,9 +20,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     loader: {
-        backgroundColor: 'rgba(255,255,255,0.5)', // Semi-transparent background
+        backgroundColor: 'transparent', 
         borderRadius: 10,
-        padding: 20,
+        padding: 10,
     },
 });
 
