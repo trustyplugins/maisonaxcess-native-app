@@ -73,7 +73,6 @@ const Login = ({ navigation }) => {
                     "Content-Type": "application/json"
                 }
             });
-            console.log(response.data)
             if (response.data.success == true) {
                 setModalVisible(true);
             }
