@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, StyleSheet, ScrollView, Keyboard, Platform } from "react-native";
 import { useDispatch, useSelector } from 'react-redux';
 import axios from "axios";
 import { API_BASE_URL } from '@env';
@@ -8,13 +8,14 @@ import * as Yup from 'yup';
 import CustomButton from "../common/CustomButton";
 import Snackbar from '../Snackbar';
 
+
 const Profile = ({ navigation }) => {
   const userDetails = useSelector(state => state.user.userDetails);
   const userData = useSelector(state => state.user.user);
   const dispatch = useDispatch();
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const profileValidationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     phone: Yup.string().required('Phone number is required'),
@@ -27,6 +28,26 @@ const Profile = ({ navigation }) => {
       .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
       .required('Confirm password is required'),
   });
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true); // Keyboard is visible
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false); // Keyboard is hidden
+      }
+    );
+
+    // Cleanup listeners on component unmount
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   const handleUpdate = async (values, { setErrors, setStatus }) => {
     const data = {
@@ -93,7 +114,7 @@ const Profile = ({ navigation }) => {
         onDismiss={() => setSnackbarVisible(false)}
       />
       <ScrollView>
-        <View style={styles.container}>
+        <View style={Platform.OS == 'ios' && isKeyboardVisible ? styles.containerKeyboard : styles.container}>
           <Formik
             initialValues={{
               name: userDetails.name || '',
@@ -205,9 +226,15 @@ const Profile = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  containerKeyboard: {
+    flex: 1,
+    paddingHorizontal: 15,
+    marginBottom: 250
+  },
   container: {
     flex: 1,
     paddingHorizontal: 15,
+    marginBottom: 0
   },
   container1: {
     marginTop: 10,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, TextInput, ScrollView, Modal, Switch } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, TextInput, ScrollView, Modal, Switch, Keyboard, Platform } from 'react-native';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
@@ -36,6 +36,7 @@ const Service = () => {
     const [modalVisible, setModalVisible] = useState(serviceDetail?.services?.length > 0 ? false : true);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [cardInfo, setCardInfo] = useState(null);
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [customerAddress, setCustomerAddress] = useState({
         id: userid,
         email: userCredential?.email || '',
@@ -61,7 +62,26 @@ const Service = () => {
         }
     };
     const totalOrderMemoized = useMemo(calTotalOrder, [customerAddress.services]);
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // Keyboard is visible
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // Keyboard is hidden
+            }
+        );
 
+        // Cleanup listeners on component unmount
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
     useEffect(() => {
         if (service[0]?.payment_mode == 'online' && customerAddress?.stripeToken) {
             bookAppointment();
@@ -143,6 +163,7 @@ const Service = () => {
             setCustomerAddress(prev => ({
                 ...prev,
                 services: [...prev.services, listItem]
+                
             }))
         }
         setError(false)
@@ -213,7 +234,7 @@ const Service = () => {
 
         } catch (error) {
             if (error.response) {
-                console.log('Response data:', error.response);
+                console.log('Response data:', error.response.data);
                 setShowError(error.response.data.message);
                 setError(true);
             }
@@ -223,7 +244,7 @@ const Service = () => {
         console.log(cardInfo)
         if (cardInfo != null) {
             try {
-                const res = await createToken({ ...cardInfo, type: 'Card' });
+                const res = await createToken({ ...cardInfo, type: 'card' });
                 setCustomerAddress(prev => ({
                     ...prev,
                     stripeToken: res.token.id
@@ -325,7 +346,7 @@ const Service = () => {
             {service?.length > 0 && service.map((item, index) => {
                 return (
                     <View key={index}>
-                        <View style={styles.card}>
+                        <View style={Platform.OS == 'ios' && isKeyboardVisible ? styles.cardKeyboard : styles.card}>
                             <View style={styles.imageContainer}>
                                 <Image source={{ uri: `https://maisonaxcess.com/${item.image}` }} style={styles.image} />
                             </View>
@@ -529,7 +550,22 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2,
         },
-        paddingBottom: 25
+        paddingBottom: 25,
+    },
+    cardKeyboard: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        margin: 10,
+        padding: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        paddingBottom: 25,
+        marginBottom: 220
     },
     imageContainer: {
         borderRadius: 10,
