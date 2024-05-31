@@ -11,7 +11,7 @@ export default function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <StripeProvider
-          publishableKey={SP_KEY}
+          publishableKey="pk_test_51OgjHMSGJh91kjRpMOEaBkoQv3UOmFU09WxBJZVBc6jtMeE76qmD4soM079S4odtrklGOfVvJxdbv04JxB3yBOpA00NWP70dWe"
           merchantIdentifier="merchant.identifier" // required for Apple Pay
           urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
         >

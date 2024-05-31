@@ -6,6 +6,7 @@ import axios from "axios";
 import { useSelector } from 'react-redux';
 import parseFromHtml from '../../utils/parseHtml';
 import { FontAwesome } from '@expo/vector-icons';
+import Loader from './Loader';
 const SubServices = ({ data, parentDetail }) => {
     const userData = useSelector(state => state.user.user);
     const navigation = useNavigation();
@@ -13,7 +14,7 @@ const SubServices = ({ data, parentDetail }) => {
     const [services, setServices] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [tarifVisible, setTarifVisible] = useState(false);
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         if (serviceProviderId?.id != undefined) {
             fetch();
@@ -23,7 +24,7 @@ const SubServices = ({ data, parentDetail }) => {
     const serviceProvider = async (attempt = 1) => {
         const MAX_ATTEMPTS = 2; // Prevent infinite recursion
         let id = attempt === 1 ? data.id : parentDetail.id;
-
+        setLoading(true);
         try {
             const response = await axios.get(`${API_BASE_URL}/users/category/${id}`, {
                 headers: {
@@ -38,9 +39,11 @@ const SubServices = ({ data, parentDetail }) => {
             } else {
                 console.log('No service provider found after maximum attempts');
             }
+            setLoading(false)
 
         } catch (error) {
             console.log('error', error);
+            setLoading(false)
         }
     };
 
@@ -50,6 +53,7 @@ const SubServices = ({ data, parentDetail }) => {
     };
     const fetch = async (type) => {
         if (serviceProviderId != '' || type == 'detail' || type == 'tarif') {
+            setLoading(true);
             try {
                 const response = await axios.get(`${API_BASE_URL}/services/${data.id}`, {
                     headers: {
@@ -70,9 +74,11 @@ const SubServices = ({ data, parentDetail }) => {
                     }
                 }
                 setServiceProviderId('');
+                setLoading(false)
 
             } catch (error) {
                 console.log(error)
+                setLoading(false)
             }
         }
     }
@@ -87,6 +93,9 @@ const SubServices = ({ data, parentDetail }) => {
     const handleCloseTarif = () => {
         setTarifVisible(false);
     };
+    if (loading) {
+        return (<Loader loading={loading} />)
+    }
     return (<ScrollView>
         {(parentDetail?.name != undefined) && (parentDetail?.name == 'COORDONNERIE' || parentDetail?.name == "LAVAGE AUTO-MOTO" || parentDetail?.name == "Pressing et blanchisserie" || parentDetail?.name == "Esthéticienne") ?
             <View>

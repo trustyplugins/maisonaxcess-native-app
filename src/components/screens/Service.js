@@ -164,13 +164,12 @@ const Service = () => {
             setCustomerAddress(prev => ({
                 ...prev,
                 services: [...prev.services, listItem]
-                
+
             }))
         }
         setError(false)
 
     };
-    // console.log(customerAddress)
     const bookAppointment = async () => {
         const { phone, state, country, postalCode, address } = customerAddress;
 
@@ -189,6 +188,7 @@ const Service = () => {
             setError(true);
             return;
         }
+        setLoading(true);
 
         const bookData = {
             service_provider_id: service_provider_id,
@@ -197,7 +197,7 @@ const Service = () => {
             phone_number: customerAddress.phone,
             state: customerAddress.state,
             country: customerAddress.country,
-            postalCode: customerAddress.postalCode,
+            postal_code: customerAddress.postalCode,
             service_image: service[0].image,
             address: customerAddress.address,
             services_detail: customerAddress.services,
@@ -230,14 +230,16 @@ const Service = () => {
                 location: '',
                 stripeToken: ''
             });
-            // navigation.navigate('order-success', { orderId: response.data.orderid });
-            console.log(response.data)
+            navigation.navigate('order-success', { orderId: response.data.orderid });
+            // console.log(response.data)
+            setLoading(false);
 
         } catch (error) {
             if (error.response) {
                 console.log('Response data:', error.response.data);
                 setShowError(error.response.data.message);
                 setError(true);
+                setLoading(false);
             }
         }
     }
