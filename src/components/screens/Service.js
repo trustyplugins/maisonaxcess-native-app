@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Loader from "../common/Loader";
 import { CardField, createToken } from '@stripe/stripe-react-native';
+import creatPaymentIntent from '../../StripeApi';
 import { Field } from 'formik';
 const Service = () => {
     const dispatch = useDispatch();
@@ -164,7 +165,7 @@ const Service = () => {
             setCustomerAddress(prev => ({
                 ...prev,
                 services: [...prev.services, listItem]
-                
+
             }))
         }
         setError(false)
@@ -242,21 +243,39 @@ const Service = () => {
         }
     }
     const createTokenHandle = async () => {
-        if (cardInfo != null) {
-            try {
-                const res = await createToken({ ...cardInfo, type: 'Card' });
-                setCustomerAddress(prev => ({
-                    ...prev,
-                    stripeToken: res.token?.id
-                }));
+        // if (cardInfo != null) {
+        //     try {
+        //         const res = await createToken({ ...cardInfo, type: 'Card' });
+        //         setCustomerAddress(prev => ({
+        //             ...prev,
+        //             stripeToken: res.token?.id
+        //         }));
 
-            } catch (error) {
-                setShowError("Détails invalides");
-                setError(true);
+        //     } catch (error) {
+        //         setShowError("Détails invalides");
+        //         setError(true);
+        //     }
+        // } else {
+        //     setShowError("Détails invalides");
+        //     setError(true);
+        // }
+
+        let apiData = {
+            amount: 500,
+            currency: "INR"
+        }
+
+        try {
+            const res = await creatPaymentIntent(apiData)
+            console.log("payment intent create succesfully...!!!", res)
+
+            if (res?.data?.paymentIntent) {
+                let confirmPaymentIntent = await confirmPayment(res?.data?.paymentIntent, { paymentMethodType: 'Card' })
+                console.log("confirmPaymentIntent res++++", confirmPaymentIntent)
+                alert("Payment succesfully...!!!")
             }
-        } else {
-            setShowError("Détails invalides");
-            setError(true);
+        } catch (error) {
+            console.log("Error rasied during payment intent", error)
         }
     }
 
