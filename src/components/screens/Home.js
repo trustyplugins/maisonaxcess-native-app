@@ -39,7 +39,7 @@ const Home = ({ navigation }) => {
             }
         })()
 
-    }, [userData?.token])
+    }, [])
 
     const handlePress = (item, icon) => {
         navigation.navigate("service_types", { data: item, iconData: icon });

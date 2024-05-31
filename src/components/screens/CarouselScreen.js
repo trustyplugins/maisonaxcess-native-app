@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, FlatList, Image, Dimensions, StyleSheet, TouchableOpacity, Text, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import { useSelector } from 'react-redux';
 const { width } = Dimensions.get('window');
 
 const images = [
@@ -11,11 +11,15 @@ const images = [
 ];
 
 const CarouselScreen = () => {
+    const userData = useSelector(state => state.user.user);
     const [activeIndex, setActiveIndex] = useState(0);
     const flatListRef = useRef(null);
     const navigation = useNavigation();
-
+    
     useEffect(() => {
+        if (userData == null) {
+            navigation.navigate('login');
+        }
         const interval = setInterval(() => {
             const nextIndex = (activeIndex + 1) % images.length;
             setActiveIndex(nextIndex);

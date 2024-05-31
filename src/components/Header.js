@@ -37,6 +37,7 @@ const Header = ({ navigation, back }) => {
         setSnackbarVisible(true);
         setTimeout(() => {
             setSnackbarVisible(false);
+            dispatch({ type: 'REMOVE_SERVICE', payload: null });
             dispatch({ type: 'LOGIN', payload: null });
             navigation.navigate('login');
         }, 2000);

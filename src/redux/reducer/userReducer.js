@@ -42,6 +42,11 @@ const userReducer = (state = initialState, action) => {
         ...state,
         serviceDetail: [...updatedAddresses, action.payload],
       };
+    case 'REMOVE_SERVICE':
+      return {
+        ...state,
+        serviceDetail: null,
+      };
     default:
       return state;
   }
