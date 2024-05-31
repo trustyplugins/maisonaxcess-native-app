@@ -24,7 +24,7 @@ const Service = () => {
     const serviceDetails = useSelector(state => state.user.serviceDetail);
     let serviceDetail = "";
     if (serviceDetails != null && serviceDetails != undefined) {
-        serviceDetail = serviceDetails?.find(ele => ele.id == userid);
+        serviceDetail = serviceDetails?.find(ele => ele?.id == userid);
     }
     const userCredential = useSelector(state => state.user.credentials);
     const [service, setService] = useState([]);
@@ -87,6 +87,7 @@ const Service = () => {
             bookAppointment();
         }
     }, [customerAddress?.stripeToken]);
+
     useEffect(() => {
         setCustomerAddress(prev => ({
             ...prev,
@@ -241,13 +242,12 @@ const Service = () => {
         }
     }
     const createTokenHandle = async () => {
-        console.log(cardInfo)
         if (cardInfo != null) {
             try {
-                const res = await createToken({ ...cardInfo, type: 'card' });
+                const res = await createToken({ ...cardInfo, type: 'Card' });
                 setCustomerAddress(prev => ({
                     ...prev,
-                    stripeToken: res.token.id
+                    stripeToken: res.token?.id
                 }));
 
             } catch (error) {
