@@ -99,6 +99,21 @@ const OrderDetails = () => {
                             <Text style={[styles.tableCell, styles.totalLabel]}>Total de la commande :</Text>
                             <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
                         </View>
+                        <View style={styles.tableRow}>
+                            <Text style={styles.tableCell}></Text>
+                            <Text style={[styles.tableCell, styles.totalLabel]}>Total de la commande :</Text>
+                            <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
+                        </View>
+                        <View style={styles.tableRow}>
+                            <Text style={styles.tableCell}></Text>
+                            <Text style={[styles.tableCell, styles.totalLabel]}>Total de la commande :</Text>
+                            <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
+                        </View>
+                        <View style={styles.tableRow}>
+                            <Text style={styles.tableCell}></Text>
+                            <Text style={[styles.tableCell, styles.totalLabel]}>Total de la commande :</Text>
+                            <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -109,18 +124,20 @@ const OrderDetails = () => {
 export default OrderDetails;
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 20,
-        backgroundColor: '#f5f5f5',
-        flex: 1,
-        justifyContent: 'center'
-    },
+    // container: {
+    //     paddingHorizontal: 20,
+    //     backgroundColor: '#f5f5f5',
+    //     flex: 1
+    // },
     detailsContainer: {
         backgroundColor: '#fff',
         padding: 10,
         borderRadius: 10,
         elevation: 3,
-        paddingVertical: 20
+        marginVertical: 20,
+        paddingVertical: 20,
+        paddingHorizontal: 7,
+        marginHorizontal: 10,
     },
     details: {
         padding: 10,

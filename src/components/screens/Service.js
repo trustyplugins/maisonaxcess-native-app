@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, TextInput, ScrollView, Modal, Switch } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, TextInput, ScrollView, Modal, Switch, Keyboard, Platform } from 'react-native';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import { useRoute } from '@react-navigation/native';
@@ -13,6 +13,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Loader from "../common/Loader";
+import { CardField, createToken } from '@stripe/stripe-react-native';
+import { Field } from 'formik';
 const Service = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -33,6 +35,8 @@ const Service = () => {
     const [error, setError] = useState(false);
     const [modalVisible, setModalVisible] = useState(serviceDetail?.services?.length > 0 ? false : true);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [cardInfo, setCardInfo] = useState(null);
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [customerAddress, setCustomerAddress] = useState({
         id: userid,
         email: userCredential?.email || '',
@@ -48,7 +52,8 @@ const Service = () => {
         services: serviceDetail?.services ? [...serviceDetail.services] : [],
         total_price: serviceDetail?.total_price || 0.0,
         cancelComment: serviceDetail?.cancelComment || '',
-        location: serviceDetail?.location || ''
+        location: serviceDetail?.location || '',
+        stripeToken: ''
     });
 
     const calTotalOrder = () => {
@@ -57,7 +62,31 @@ const Service = () => {
         }
     };
     const totalOrderMemoized = useMemo(calTotalOrder, [customerAddress.services]);
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // Keyboard is visible
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // Keyboard is hidden
+            }
+        );
 
+        // Cleanup listeners on component unmount
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+    useEffect(() => {
+        if (service[0]?.payment_mode == 'online' && customerAddress?.stripeToken) {
+            bookAppointment();
+        }
+    }, [customerAddress?.stripeToken]);
     useEffect(() => {
         setCustomerAddress(prev => ({
             ...prev,
@@ -65,6 +94,7 @@ const Service = () => {
         }));
 
     }, [totalOrderMemoized]);
+
     useEffect(() => {
         dispatch({ type: 'ADD_SERVICE', payload: customerAddress });
     }, [customerAddress])
@@ -133,28 +163,32 @@ const Service = () => {
             setCustomerAddress(prev => ({
                 ...prev,
                 services: [...prev.services, listItem]
+                
             }))
         }
         setError(false)
 
     };
+    // console.log(customerAddress)
     const bookAppointment = async () => {
         const { phone, state, country, postalCode, address } = customerAddress;
 
         if (!phone || !state || !country || !postalCode || !address) {
+            setShowError('Veuillez remplir les détails ci-dessus');
             setError(true);
             return;
         }
         if (customerAddress.appointment_date == 'dd-mm-yyyy') {
-            setShowError("Please select the Appointment Date!");
+            setShowError("Veuillez sélectionner la date du rendez-vous!");
             setError(true);
             return;
         }
         if (customerAddress.services?.length == 0) {
-            setShowError("Please add the services!");
+            setShowError("Veuillez ajouter les services!");
             setError(true);
             return;
         }
+
         const bookData = {
             service_provider_id: service_provider_id,
             main_service_id: userid,
@@ -166,12 +200,14 @@ const Service = () => {
             service_image: service[0].image,
             address: customerAddress.address,
             services_detail: customerAddress.services,
-            payment_info: 'cod',
+            payment_info: service[0].payment_mode == 'online' ? 'stripe' : 'cod',
             appointment_date: ReverseDate(customerAddress.appointment_date),
             location_for_service: customerAddress.location,
             cancellation_comment: customerAddress.cancelComment,
-            stripeToken: ''
+            stripeToken: customerAddress.stripeToken
         }
+        // console.log(bookData);
+        // return;
         try {
             const response = await axios.post(`${API_BASE_URL}/orders`, bookData, {
                 headers: {
@@ -190,16 +226,37 @@ const Service = () => {
                 services: [],
                 total_price: 0.0,
                 cancelComment: '',
-                location: ''
+                location: '',
+                stripeToken: ''
             });
-            navigation.navigate('order-success', { orderId: response.data.orderid });
+            // navigation.navigate('order-success', { orderId: response.data.orderid });
+            console.log(response.data)
 
         } catch (error) {
             if (error.response) {
-                // console.log('Response data:', error.response.data.message);
+                console.log('Response data:', error.response.data);
                 setShowError(error.response.data.message);
                 setError(true);
             }
+        }
+    }
+    const createTokenHandle = async () => {
+        console.log(cardInfo)
+        if (cardInfo != null) {
+            try {
+                const res = await createToken({ ...cardInfo, type: 'card' });
+                setCustomerAddress(prev => ({
+                    ...prev,
+                    stripeToken: res.token.id
+                }));
+
+            } catch (error) {
+                setShowError("Détails invalides");
+                setError(true);
+            }
+        } else {
+            setShowError("Détails invalides");
+            setError(true);
         }
     }
 
@@ -266,189 +323,217 @@ const Service = () => {
         });
         hideDatePicker();
     };
+    // const handlePay = () => { }
+    const handlePaymentChange = (field) => {
+        if (field.complete) {
+            setCardInfo(field);
+        } else {
+            setCardInfo(null);
+        }
+
+    }
 
     if (loading) {
         return (<Loader loading={loading} />)
     }
-    return (<ScrollView>
-        <Snackbar
-            visible={snackbarVisible}
-            message="This date is already booked!"
-            onDismiss={() => setSnackbarVisible(false)}
-        />
-        {service?.length > 0 && service.map((item, index) => {
-            return (
-                <View key={index}>
-                    <View style={styles.card}>
-                        <View style={styles.imageContainer}>
-                            <Image source={{ uri: `https://maisonaxcess.com/${item.image}` }} style={styles.image} />
-                        </View>
-                        <View style={styles.textContainer}>
-                            <Text style={styles.title}>{item?.title} </Text>
-                        </View>
-                        <Text style={styles.contentText}>{parseFromHtml(item.content)}</Text>
-                        <TouchableOpacity onPress={toggleModal} style={styles.servicesContainer}>
-                            <Text style={styles.servicesText}>Ajouter des services</Text>
-                            {
-                                customerAddress?.services?.length > 0 && customerAddress.services.map((serviceItem, id) => (
-                                    <View key={id} style={styles.serviceItem}>
-                                        <View style={styles.serviceItemName}>
-                                            <Text>{serviceItem.title}</Text>
-                                            <Text>${serviceItem.price}</Text>
-                                        </View>
-                                        <View style={styles.quantity}>
-                                            <TouchableOpacity onPress={() => decrementQuantity(serviceItem.title)}>
-                                                <Icon name="remove-circle-outline" size={30} color="#000" />
-                                            </TouchableOpacity>
-                                            <Text style={styles.quantityText}>{serviceItem.quantity}</Text>
-                                            <TouchableOpacity onPress={() => incrementQuantity(serviceItem.title)}>
-                                                <Icon name="add-circle-outline" size={30} color="#000" />
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                ))
-                            }
-                        </TouchableOpacity>
-                        <View style={styles.dateSection}>
-                            <View>
-                                <Text style={styles.dateLabelText}>Date de réalisation souhaitée:</Text>
-                                <View style={styles.dateContainer}>
-                                    <Text style={styles.dateText}>{customerAddress.appointment_date}</Text>
-                                    <TouchableOpacity onPress={showDatePicker}>
-                                        <FontAwesome name="calendar" size={20} color="black" />
-                                    </TouchableOpacity>
-                                    <DateTimePickerModal
-                                        isVisible={isDatePickerVisible}
-                                        mode="date"
-                                        onConfirm={handleConfirm}
-                                        onCancel={hideDatePicker}
-                                        minimumDate={new Date()}
-                                    />
-                                </View>
+    return (
+        <ScrollView>
+            <Snackbar
+                visible={snackbarVisible}
+                message="This date is already booked!"
+                onDismiss={() => setSnackbarVisible(false)}
+            />
+            {service?.length > 0 && service.map((item, index) => {
+                return (
+                    <View key={index}>
+                        <View style={Platform.OS == 'ios' && isKeyboardVisible ? styles.cardKeyboard : styles.card}>
+                            <View style={styles.imageContainer}>
+                                <Image source={{ uri: `https://maisonaxcess.com/${item.image}` }} style={styles.image} />
                             </View>
-                            <View style={styles.totalPrice}>
-                                <Text style={styles.dateLabelText}>Total Order:</Text>
-                                {service[0]?.payment_mode != 'online' ? <Text style={styles.price}>Sur devis
-                                </Text> : <Text style={styles.price}>€{customerAddress.total_price || 0.0}</Text>}
+                            <View style={styles.textContainer}>
+                                <Text style={styles.title}>{item?.title} </Text>
                             </View>
-                        </View>
-                        <View style={styles.customerFormContainer}>
-                            <Text style={styles.customerHeading}>Adresse du client</Text>
-                            <Text style={styles.customerLabel}>Téléphone</Text>
-                            <TextInput
-                                style={styles.customerInput}
-                                placeholder="Téléphone"
-                                value={customerAddress.phone}
-                                onChangeText={(value) => handleChange('phone', value)}
-                                keyboardType="phone-pad"
-                                onPress={resetError}
-                            />
-                            <Text style={styles.customerLabel}>Ville</Text>
-                            <TextInput
-                                style={styles.customerInput}
-                                placeholder="Ville"
-                                value={customerAddress.state}
-                                onChangeText={(value) => handleChange('state', value)}
-                                onPress={resetError}
-                            />
-                            <Text style={styles.customerLabel}>Pays</Text>
-                            <TextInput
-                                style={styles.customerInput}
-                                placeholder="Pays"
-                                value={customerAddress.country}
-                                onChangeText={(value) => handleChange('country', value)}
-                                onPress={resetError}
-                            />
-                            <Text style={styles.customerLabel}>Code Postal</Text>
-                            <TextInput
-                                style={styles.customerInput}
-                                placeholder="Code Postal"
-                                value={customerAddress.postalCode}
-                                onChangeText={(value) => handleChange('postalCode', value)}
-                                keyboardType="numeric"
-                                onPress={resetError}
-                            />
-                            <Text style={styles.customerLabel}>Adresse</Text>
-                            <TextInput
-                                style={styles.customerInput}
-                                placeholder="Adresse"
-                                value={customerAddress.address}
-                                onChangeText={(value) => handleChange('address', value)}
-                                multiline
-                                onPress={resetError}
-                            />
-                            {service[0]?.payment_mode != 'online' &&
-                                <>
-                                    <View style={styles.radioContainer}>
-                                        <Text style={styles.customerLabelLoc}>Lieu de réservation du service?</Text>
-                                        <TouchableOpacity
-                                            style={styles.radioButton}
-                                            onPress={() => handleChange('location', 'Maison')}
-                                        >
-                                            <View style={[styles.radioCircle, customerAddress.location === 'Maison' && styles.selectedRadio]} />
-                                            <Text style={styles.radioText}>Maison</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            style={styles.radioButton}
-                                            onPress={() => handleChange('location', 'Bureau')}
-                                        >
-                                            <View style={[styles.radioCircle, customerAddress.location === 'Bureau' && styles.selectedRadio]} />
-                                            <Text style={styles.radioText}>Bureau</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    <Text style={styles.customerLabelLoc}>Délai d'annulation de la commande:</Text>
-                                    <Text style={styles.customerLabelLoc}>Commentaire:</Text>
-                                    <Text style={styles.customerLabelLoc}>48 heures</Text>
-                                    <TextInput
-                                        style={styles.customerInput}
-                                        placeholder="comment"
-                                        value={customerAddress.cancelComment}
-                                        onChangeText={(value) => handleChange('cancelComment', value)}
-                                        multiline
-                                        onPress={resetError}
-                                    />
-                                </>
-                            }
-                        </View>
-                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Veuillez remplir les détails ci-dessus"}</Text>}
-
-                        <View style={styles.payNow}>
-                            <CustomButton title="Demander un devis" onPress={bookAppointment} />
-                        </View>
-                    </View>
-                    <Modal
-                        visible={modalVisible}
-                        animationType="slide"
-                        transparent={true}
-                        onRequestClose={toggleModal}
-                    >
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
-                                <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-                                    <FontAwesome name="close" size={24} color="#11696A" />
-                                </TouchableOpacity>
-                                <Text style={styles.modalHeading}>Prestations de service</Text>
-                                <ScrollView style={styles.scrollView}>
-                                    {item.services.map((service, id) => (
+                            <Text style={styles.contentText}>{parseFromHtml(item.content)}</Text>
+                            <TouchableOpacity onPress={toggleModal} style={styles.servicesContainer}>
+                                <Text style={styles.servicesText}>Ajouter des services</Text>
+                                {
+                                    customerAddress?.services?.length > 0 && customerAddress.services.map((serviceItem, id) => (
                                         <View key={id} style={styles.serviceItem}>
                                             <View style={styles.serviceItemName}>
-                                                <Text style={styles.serviceName}>{service.name}</Text>
-                                                <Text style={styles.servicePrice}>{service.price}</Text>
+                                                <Text>{serviceItem.title}</Text>
+                                                <Text>${serviceItem.price}</Text>
                                             </View>
-                                            <Switch
-                                                value={customerAddress.services?.some((ele) => ele.title === service?.name)}
-                                                onValueChange={() => toggleService(service)}
-                                            />
+                                            <View style={styles.quantity}>
+                                                <TouchableOpacity onPress={() => decrementQuantity(serviceItem.title)}>
+                                                    <Icon name="remove-circle-outline" size={30} color="#000" />
+                                                </TouchableOpacity>
+                                                <Text style={styles.quantityText}>{serviceItem.quantity}</Text>
+                                                <TouchableOpacity onPress={() => incrementQuantity(serviceItem.title)}>
+                                                    <Icon name="add-circle-outline" size={30} color="#000" />
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
-                                    ))}
-                                </ScrollView>
+                                    ))
+                                }
+                            </TouchableOpacity>
+                            <View style={styles.dateSection}>
+                                <View>
+                                    <Text style={styles.dateLabelText}>Date de réalisation souhaitée:</Text>
+                                    <View style={styles.dateContainer}>
+                                        <Text style={styles.dateText}>{customerAddress.appointment_date}</Text>
+                                        <TouchableOpacity onPress={showDatePicker}>
+                                            <FontAwesome name="calendar" size={20} color="black" />
+                                        </TouchableOpacity>
+                                        <DateTimePickerModal
+                                            isVisible={isDatePickerVisible}
+                                            mode="date"
+                                            onConfirm={handleConfirm}
+                                            onCancel={hideDatePicker}
+                                            minimumDate={new Date()}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={styles.totalPrice}>
+                                    <Text style={styles.dateLabelText}>Total Order:</Text>
+                                    {service[0]?.payment_mode != 'online' ? <Text style={styles.price}>Sur devis
+                                    </Text> : <Text style={styles.price}>€{customerAddress.total_price || 0.0}</Text>}
+                                </View>
+                            </View>
+                            <View style={styles.customerFormContainer}>
+                                <Text style={styles.customerHeading}>Adresse du client</Text>
+                                <Text style={styles.customerLabel}>Téléphone</Text>
+                                <TextInput
+                                    style={styles.customerInput}
+                                    placeholder="Téléphone"
+                                    value={customerAddress.phone}
+                                    onChangeText={(value) => handleChange('phone', value)}
+                                    keyboardType="phone-pad"
+                                    onPress={resetError}
+                                />
+                                <Text style={styles.customerLabel}>Ville</Text>
+                                <TextInput
+                                    style={styles.customerInput}
+                                    placeholder="Ville"
+                                    value={customerAddress.state}
+                                    onChangeText={(value) => handleChange('state', value)}
+                                    onPress={resetError}
+                                />
+                                <Text style={styles.customerLabel}>Pays</Text>
+                                <TextInput
+                                    style={styles.customerInput}
+                                    placeholder="Pays"
+                                    value={customerAddress.country}
+                                    onChangeText={(value) => handleChange('country', value)}
+                                    onPress={resetError}
+                                />
+                                <Text style={styles.customerLabel}>Code Postal</Text>
+                                <TextInput
+                                    style={styles.customerInput}
+                                    placeholder="Code Postal"
+                                    value={customerAddress.postalCode}
+                                    onChangeText={(value) => handleChange('postalCode', value)}
+                                    keyboardType="numeric"
+                                    onPress={resetError}
+                                />
+                                <Text style={styles.customerLabel}>Adresse</Text>
+                                <TextInput
+                                    style={styles.customerInput}
+                                    placeholder="Adresse"
+                                    value={customerAddress.address}
+                                    onChangeText={(value) => handleChange('address', value)}
+                                    multiline
+                                    onPress={resetError}
+                                />
+                                {service[0]?.payment_mode != 'online' &&
+                                    <>
+                                        <View style={styles.radioContainer}>
+                                            <Text style={styles.customerLabelLoc}>Lieu de réservation du service?</Text>
+                                            <TouchableOpacity
+                                                style={styles.radioButton}
+                                                onPress={() => handleChange('location', 'Maison')}
+                                            >
+                                                <View style={[styles.radioCircle, customerAddress.location === 'Maison' && styles.selectedRadio]} />
+                                                <Text style={styles.radioText}>Maison</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                style={styles.radioButton}
+                                                onPress={() => handleChange('location', 'Bureau')}
+                                            >
+                                                <View style={[styles.radioCircle, customerAddress.location === 'Bureau' && styles.selectedRadio]} />
+                                                <Text style={styles.radioText}>Bureau</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <Text style={styles.customerLabelLoc}>Délai d'annulation de la commande:</Text>
+                                        <Text style={styles.customerLabelLoc}>Commentaire:</Text>
+                                        <Text style={styles.customerLabelLoc}>48 heures</Text>
+                                        <TextInput
+                                            style={styles.customerInput}
+                                            placeholder="comment"
+                                            value={customerAddress.cancelComment}
+                                            onChangeText={(value) => handleChange('cancelComment', value)}
+                                            multiline
+                                            onPress={resetError}
+                                        />
+                                    </>
+                                }
+                            </View>
+
+                            {service[0].payment_mode == 'online' &&
+                                <CardField
+                                    postalCodeEnabled={false}
+                                    placeholders={{
+                                        number: '4242 4242 4242 4242',
+                                    }}
+                                    cardStyle={{
+                                        backgroundColor: '#FFFFFF',
+                                        textColor: '#000000',
+                                    }}
+                                    style={{
+                                        width: '100%',
+                                        height: 50,
+                                        marginVertical: 30,
+                                    }}
+                                    onCardChange={handlePaymentChange}
+                                />}
+                            {error && <Text style={styles.errorMessage}>{showError ? showError : "Veuillez remplir les détails ci-dessus"}</Text>}
+
+                            <View style={styles.payNow}>
+                                <CustomButton title="Demander un devis" onPress={service[0].payment_mode == 'online' ? createTokenHandle : bookAppointment} />
                             </View>
                         </View>
-                    </Modal>
-                </View>
-            )
-        })}
-    </ScrollView>
+                        <Modal
+                            visible={modalVisible}
+                            animationType="slide"
+                            transparent={true}
+                            onRequestClose={toggleModal}
+                        >
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modalContent}>
+                                    <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+                                        <FontAwesome name="close" size={24} color="#11696A" />
+                                    </TouchableOpacity>
+                                    <Text style={styles.modalHeading}>Prestations de service</Text>
+                                    <ScrollView style={styles.scrollView}>
+                                        {item.services.map((service, id) => (
+                                            <View key={id} style={styles.serviceItem}>
+                                                <View style={styles.serviceItemName}>
+                                                    <Text style={styles.serviceName}>{service.name}</Text>
+                                                    <Text style={styles.servicePrice}>{service.price}</Text>
+                                                </View>
+                                                <Switch
+                                                    value={customerAddress.services?.some((ele) => ele.title === service?.name)}
+                                                    onValueChange={() => toggleService(service)}
+                                                />
+                                            </View>
+                                        ))}
+                                    </ScrollView>
+                                </View>
+                            </View>
+                        </Modal>
+                    </View>
+                )
+            })}
+        </ScrollView>
     );
 };
 
@@ -465,7 +550,22 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2,
         },
-        paddingBottom: 25
+        paddingBottom: 25,
+    },
+    cardKeyboard: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        margin: 10,
+        padding: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        paddingBottom: 25,
+        marginBottom: 220
     },
     imageContainer: {
         borderRadius: 10,
