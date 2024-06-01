@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.jasveer7863.maisonaxcessnativeapp"
+      "package": "com.jasveer7863.maisonaxcessnativeapp",
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
