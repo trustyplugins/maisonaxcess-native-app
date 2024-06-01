@@ -15,7 +15,9 @@
       },
       "channel": "development",
       "env": {
-        "API_BASE_URL": "https://maisonaxcess.com/api"
+        "API_BASE_URL": "https://maisonaxcess.com/api",
+        "SP_KEY":"pk_test_51OgjHMSGJh91kjRpMOEaBkoQv3UOmFU09WxBJZVBc6jtMeE76qmD4soM079S4odtrklGOfVvJxdbv04JxB3yBOpA00NWP70dWe",
+        "SECRET_KEY":"sk_test_51PMN9f03dsvurDQtZy7hpH6HRIhAaHZFm7dZtAAnAW19cEY66HrqUQPUPx2tWSwzfV2GjjvnbRRNZOKo4lJgjnnj00JUpkNAkB"
       }
     },
     "preview": {  
