@@ -15,11 +15,8 @@ const CarouselScreen = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const flatListRef = useRef(null);
     const navigation = useNavigation();
-    
+
     useEffect(() => {
-        if (userData == null) {
-            navigation.navigate('login');
-        }
         const interval = setInterval(() => {
             const nextIndex = (activeIndex + 1) % images.length;
             setActiveIndex(nextIndex);
