@@ -17,9 +17,6 @@ const CarouselScreen = () => {
     const navigation = useNavigation();
     
     useEffect(() => {
-        if (userData == null) {
-            navigation.navigate('login');
-        }
         const interval = setInterval(() => {
             const nextIndex = (activeIndex + 1) % images.length;
             setActiveIndex(nextIndex);
