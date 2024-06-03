@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import Snackbar from '../components/Snackbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Menu, Provider } from 'react-native-paper';
-import { API_BASE_URL } from '@env';
+import { Menu } from 'react-native-paper';
+import { makeAuthenticatedRequest } from './common/api/makeAuthenticatedRequest';
 const Header = ({ navigation, back }) => {
     const [modalMessage, setModalMessage] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -17,16 +16,8 @@ const Header = ({ navigation, back }) => {
     const handleLogout = async () => {
         setMenuVisible(false)
         try {
-            const res = await axios.post(`${API_BASE_URL}/logout`, { ...isAuthenticated.user?.email },
-                {
-                    headers: {
-                        "Accept": "application/json",
-                        Authorization: `Bearer ${isAuthenticated.user?.token}`
-
-                    }
-                }
-            );
-            setModalMessage(res.data.message);
+            const res = await makeAuthenticatedRequest('post', '/logout', { ...isAuthenticated.user.user_data.email }, isAuthenticated.user.token);
+            setModalMessage(res.message);
             showSnackbar();
         } catch (error) {
             setModalMessage(error.response.data.message);

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Button, StyleSheet, ScrollView, ActivityIndicator, Image, RefreshControl } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, RefreshControl } from "react-native";
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native';
-import axios from "axios";
-import { API_BASE_URL } from '@env';
 import Loader from "../common/Loader";
+import { makeAuthenticatedRequest } from "../common/api/makeAuthenticatedRequest";
 const Home = ({ navigation }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
@@ -22,12 +21,8 @@ const Home = ({ navigation }) => {
         (async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${API_BASE_URL}/servicetypes`, {
-                    headers: {
-                        Authorization: `Bearer ${userData?.token}`,
-                    },
-                });
-                setServiceType(response.data.servicetypes);
+                const response = await makeAuthenticatedRequest('get', '/servicetypes', '', userData?.token);
+                setServiceType(response.servicetypes);
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -43,12 +38,8 @@ const Home = ({ navigation }) => {
 
     const fetchService = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/servicetypes`, {
-                headers: {
-                    Authorization: `Bearer ${userData?.token}`,
-                },
-            });
-            setServiceType(response.data.servicetypes);
+            const response = await makeAuthenticatedRequest('get', '/servicetypes', '', userData?.token);
+            setServiceType(response.servicetypes);
         } catch (error) {
             setLoading(false);
             setServiceType([])

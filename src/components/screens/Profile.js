@@ -7,12 +7,12 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from "../common/CustomButton";
 import Snackbar from '../Snackbar';
-
+import { makeAuthenticatedRequest } from "../common/api/makeAuthenticatedRequest";
 
 const Profile = ({ navigation }) => {
   let userDetails = '';
   const userData = useSelector(state => state.user.user);
-  userDetails = userData?.user_data;
+  userDetails = useSelector(state => state.user.userDetails);
   const dispatch = useDispatch();
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
@@ -58,14 +58,9 @@ const Profile = ({ navigation }) => {
     };
 
     try {
-      const response = await axios.put(`${API_BASE_URL}/users/${userDetails?.id}`, data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userData?.token}`,
-        }
-      });
-      setModalMessage(response.data.message);
-      dispatch({ type: 'SIGNUP', payload: response.data.user });
+      const response = await makeAuthenticatedRequest('put', `/users/${userDetails?.id}`, data, userData?.token);
+      setModalMessage(response.message);
+      dispatch({ type: 'SIGNUP', payload: response.user });
       showSnackbar();
     } catch (error) {
       if (error.response) {
@@ -83,14 +78,9 @@ const Profile = ({ navigation }) => {
     };
 
     try {
-      const response = await axios.put(`${API_BASE_URL}/users/${userDetails.id}`, data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userData?.token}`,
-        }
-      });
-      setModalMessage(response.data.message);
-      dispatch({ type: 'SIGNUP', payload: response.data.user });
+      const response = await makeAuthenticatedRequest('put', `/users/${userDetails?.id}`, data, userData?.token);
+      setModalMessage(response.message);
+      dispatch({ type: 'SIGNUP', payload: response.user });
       showSnackbar();
     } catch (error) {
       if (error.response) {

@@ -19,7 +19,7 @@ const Login = ({ navigation }) => {
     const [showError, setShowError] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [error,setError]=useState(false);
+    const [error, setError] = useState(false);
     const userCredential = useSelector(state => state.user.credentials);
     const user = useSelector(state => state.user.userDetails);
 
@@ -53,6 +53,7 @@ const Login = ({ navigation }) => {
             });
             setModalMessage(response.data.message);
             dispatch({ type: 'LOGIN', payload: response.data });
+            dispatch({ type: 'SIGNUP', payload: response.data.user_data });
             if (values.rememberMe) {
                 dispatch({ type: 'SAVE_CREDENTIALS', payload: values });
             } else {
