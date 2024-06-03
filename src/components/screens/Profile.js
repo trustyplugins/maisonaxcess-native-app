@@ -10,8 +10,9 @@ import Snackbar from '../Snackbar';
 
 
 const Profile = ({ navigation }) => {
-  const userDetails = useSelector(state => state.user.userDetails);
+  let userDetails = '';
   const userData = useSelector(state => state.user.user);
+  userDetails = userData?.user_data;
   const dispatch = useDispatch();
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
@@ -52,12 +53,12 @@ const Profile = ({ navigation }) => {
   const handleUpdate = async (values, { setErrors, setStatus }) => {
     const data = {
       name: values.name,
-      email: userDetails.email,
+      email: userDetails?.email,
       phone_number: values.phone,
     };
 
     try {
-      const response = await axios.put(`${API_BASE_URL}/users/${userDetails.id}`, data, {
+      const response = await axios.put(`${API_BASE_URL}/users/${userDetails?.id}`, data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userData?.token}`,
@@ -75,10 +76,10 @@ const Profile = ({ navigation }) => {
   };
   const handleUpdatePassword = async (values, { setErrors, setStatus }) => {
     const data = {
-      name: userDetails.name,
-      email: userDetails.email,
+      name: userDetails?.name,
+      email: userDetails?.email,
       password: values.curr,
-      phone_number: userDetails.phone_number,
+      phone_number: userDetails?.phone_number,
     };
 
     try {
@@ -117,8 +118,8 @@ const Profile = ({ navigation }) => {
         <View style={Platform.OS == 'ios' && isKeyboardVisible ? styles.containerKeyboard : styles.container}>
           <Formik
             initialValues={{
-              name: userDetails.name || '',
-              phone: userDetails.phone_number || ''
+              name: userDetails?.name || '',
+              phone: userDetails?.phone_number || ''
             }}
             validationSchema={profileValidationSchema}
             onSubmit={handleUpdate}
@@ -129,7 +130,7 @@ const Profile = ({ navigation }) => {
                 <Text style={styles.subHeading}>Mettez à jour les informations de profil et l'adresse e-mail de votre compte.</Text>
                 <Text style={styles.label}>Nom</Text>
                 <TextInput
-                  style={styles.input}
+                  style={{ ...styles.input, color: values.name != '' ? '#000' : 'gray' }}
                   placeholder="Nom"
                   onChangeText={handleChange('name')}
                   onBlur={handleBlur('name')}
@@ -140,14 +141,14 @@ const Profile = ({ navigation }) => {
                 )}
                 <Text style={styles.label}>E-mail</Text>
                 <TextInput
-                  style={styles.input}
+                  style={{ ...styles.input, color: '#000' }}
                   placeholder="E-mail"
-                  value={userDetails.email}
+                  value={userDetails?.email}
                   editable={false}
                 />
                 <Text style={styles.label}>Numéro de téléphone</Text>
                 <TextInput
-                  style={styles.input}
+                  style={{ ...styles.input, color: values.phone != '' ? '#000' : 'gray' }}
                   placeholder="Numéro de téléphone"
                   onChangeText={handleChange('phone')}
                   onBlur={handleBlur('phone')}

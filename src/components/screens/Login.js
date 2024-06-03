@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, Dimensions, Modal, Image, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, Modal, Image, TouchableOpacity, ScrollView, Keyboard, Platform } from "react-native";
 import CheckBox from 'expo-checkbox';
 import CustomButton from "../common/CustomButton";
 import axios from "axios";
@@ -7,8 +7,10 @@ import Snackbar from '../Snackbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Loader from "../common/Loader";
 const Login = ({ navigation }) => {
     const dispatch = useDispatch();
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
@@ -17,9 +19,30 @@ const Login = ({ navigation }) => {
     const [showError, setShowError] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
-
+    const [loading, setLoading] = useState(false);
     const userCredential = useSelector(state => state.user.credentials);
     const user = useSelector(state => state.user.userDetails);
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // Keyboard is visible
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // Keyboard is hidden
+            }
+        );
+
+        // Cleanup listeners on component unmount
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
     useEffect(() => {
         if (userCredential != null) {
             setEmail(userCredential.email);
@@ -37,6 +60,7 @@ const Login = ({ navigation }) => {
             email: email,
             password: password
         }
+        setLoading(true);
         try {
             const response = await axios.post(`${API_BASE_URL}/login`, data, {
                 headers: {
@@ -50,12 +74,14 @@ const Login = ({ navigation }) => {
             } else {
                 dispatch({ type: 'SAVE_CREDENTIALS', payload: null });
             }
-            showSnackbar();
+            navigation.navigate('carousel');
+            setLoading(false);
         } catch (error) {
             if (error.response) {
                 setShowError(error.response.data.message);
                 setError(true);
             }
+            setLoading(false);
         }
     };
     const forgetPassword = async () => {
@@ -86,16 +112,13 @@ const Login = ({ navigation }) => {
     const resetError = () => {
         setError(false)
     }
-    const showSnackbar = () => {
-        setSnackbarVisible(true);
-        setTimeout(() => {
-            setSnackbarVisible(false);
-            navigation.navigate('carousel');
-        }, 1000);
-    };
     const closeModal = () => {
         setModalVisible(false);
     };
+
+    if (loading) {
+        return (<Loader loading={loading} />)
+    }
 
     return (
         <>
@@ -109,11 +132,11 @@ const Login = ({ navigation }) => {
                     <View style={styles.imgContainer}>
                         <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
                     </View>
-                    <View style={styles.formContainer}>
+                    <View style={Platform.OS == 'ios' && isKeyboardVisible ? styles.formContainerKeyword : styles.formContainer}>
                         <Text style={styles.heading}>Se connecter</Text>
                         <Text style={styles.label}>E-mail</Text>
                         <TextInput
-                            style={styles.input}
+                            style={{ ...styles.input, color: email != '' ? '#000' : 'gray' }}
                             placeholder="E-mail"
                             value={email}
                             onChangeText={setEmail}
@@ -183,7 +206,7 @@ const styles = StyleSheet.create({
     },
     headerLogo: {
         width: '65%',
-        height: 65
+        height: Platform.OS == 'ios' ? 70 : 65,
     },
     formContainer: {
         flex: 1,
@@ -192,8 +215,18 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
+        paddingTop: Platform.OS == 'ios' ? 40 : 25,
+        height: Platform.OS == 'ios' ? 650 : 500,
+    },
+    formContainerKeyword: {
+        flex: 1,
+        marginTop: screenHeight * 0.1,
+        backgroundColor: '#C7C7C7',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingHorizontal: 20,
         paddingTop: 25,
-        height: screenHeight * 1
+        height: 800
     },
     heading: {
         fontSize: 24,
@@ -211,7 +244,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         padding: 10,
         backgroundColor: '#fff',
-        color: 'gray',
+        color: 'gray'
     },
     errorMessage: {
         color: 'red'

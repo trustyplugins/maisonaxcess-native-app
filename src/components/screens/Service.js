@@ -26,7 +26,7 @@ const Service = () => {
     if (serviceDetails != null && serviceDetails != undefined) {
         serviceDetail = serviceDetails?.find(ele => ele?.id == userid);
     }
-    const userCredential = useSelector(state => state.user.credentials);
+    const userCredential = userData?.user_data;
     const [service, setService] = useState([]);
     const [loading, setLoading] = useState(false);
     const [appointmentDates, setAppointmentDates] = useState([]);
@@ -207,8 +207,7 @@ const Service = () => {
             cancellation_comment: customerAddress.cancelComment,
             stripeToken: customerAddress.stripeToken
         }
-        // console.log(bookData);
-        // return;
+        
         try {
             const response = await axios.post(`${API_BASE_URL}/orders`, bookData, {
                 headers: {
@@ -231,12 +230,10 @@ const Service = () => {
                 stripeToken: ''
             });
             navigation.navigate('order-success', { orderId: response.data.orderid });
-            // console.log(response.data)
             setLoading(false);
 
         } catch (error) {
             if (error.response) {
-                console.log('Response data:', error.response.data);
                 setShowError(error.response.data.message);
                 setError(true);
                 setLoading(false);

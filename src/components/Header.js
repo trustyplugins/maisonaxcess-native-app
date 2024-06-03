@@ -17,11 +17,11 @@ const Header = ({ navigation, back }) => {
     const handleLogout = async () => {
         setMenuVisible(false)
         try {
-            const res = await axios.post(`${API_BASE_URL}/logout`, { ...isAuthenticated.user.email },
+            const res = await axios.post(`${API_BASE_URL}/logout`, { ...isAuthenticated.user?.email },
                 {
                     headers: {
                         "Accept": "application/json",
-                        Authorization: `Bearer ${isAuthenticated.user.token}`
+                        Authorization: `Bearer ${isAuthenticated.user?.token}`
 
                     }
                 }
@@ -39,6 +39,7 @@ const Header = ({ navigation, back }) => {
             setSnackbarVisible(false);
             dispatch({ type: 'REMOVE_SERVICE', payload: null });
             dispatch({ type: 'LOGIN', payload: null });
+            dispatch({ type: 'SIGNUP', payload: null });
             navigation.navigate('login');
         }, 2000);
     };
