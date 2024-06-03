@@ -10,9 +10,8 @@ import Snackbar from '../Snackbar';
 
 
 const Profile = ({ navigation }) => {
-  let userDetails = '';
   const userData = useSelector(state => state.user.user);
-  userDetails = userData?.user_data;
+  const userDetails = useSelector(state => state.user.userDetails);
   const dispatch = useDispatch();
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
