@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
 import CustomButton from '../common/CustomButton';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import Snackbar from '../Snackbar';
 import axios from "axios";
 const VerifyOtp = ({ navigation }) => {
-    const dispatch = useDispatch();
     const userData = useSelector(state => state.user.userDetails);
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
@@ -22,7 +21,6 @@ const VerifyOtp = ({ navigation }) => {
         data.otp = otp;
         try {
             const req = await axios.post(`${API_BASE_URL}/verifyOtp`, data);
-            dispatch({ type: 'SIGNUP', payload: req.data.user });
             setModalMessage(req.data.message);
             showSnackbar();
         } catch (error) {

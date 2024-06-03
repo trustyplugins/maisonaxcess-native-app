@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, Dimensions, Image, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, StyleSheet, Dimensions, Image, ScrollView, TouchableOpacity, Platform, Keyboard } from "react-native";
 import axios from "axios";
 import Snackbar from '../Snackbar';
 import CustomButton from "../common/CustomButton";
@@ -15,6 +15,29 @@ function Signup({ navigation }) {
     const [modalMessage, setModalMessage] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [showError, setShowError] = useState('');
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true); // Keyboard is visible
+            }
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false); // Keyboard is hidden
+            }
+        );
+
+        // Cleanup listeners on component unmount
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
     const handleSignup = async () => {
         if (!name || !email || !password || !phone) {
             setError(true);
@@ -59,7 +82,7 @@ function Signup({ navigation }) {
                     <View style={styles.imgContainer}>
                         <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
                     </View>
-                    <View style={styles.formContainer}>
+                    <View style={Platform.OS == 'ios' && isKeyboardVisible ? styles.formContainerKeyboard : styles.formContainer}>
                         <Text style={styles.heading}>Inscription</Text>
                         <Text style={styles.label}>Nom</Text>
                         <TextInput
@@ -124,18 +147,27 @@ const styles = StyleSheet.create({
     },
     headerLogo: {
         width: '65%',
-        height: 65
+        height: Platform.OS == 'ios' ? 70 : 65,
     },
     formContainer: {
+        flex: 1,
+        marginTop: Platform.OS == 'ios' ? screenHeight * 0.1 : screenHeight * 0.1 / 2,
+        backgroundColor: '#C7C7C7',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        paddingHorizontal: 20,
+        paddingTop: Platform.OS == 'ios' ? 50 : 20,
+        height: Platform.OS == 'ios' ? 650 : 600,
+    },
+    formContainerKeyboard: {
         flex: 1,
         marginTop: screenHeight * 0.1 / 2,
         backgroundColor: '#C7C7C7',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 30,
-        height: screenHeight * 1
+        paddingTop: Platform.OS == 'ios' ? 50 : 20,
+        height: 900
     },
     heading: {
         fontSize: 24,

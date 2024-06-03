@@ -1,7 +1,6 @@
 // reducers/userReducer.js
 const initialState = {
   user: null,
-  isLoggedIn: false,
   credentials: null,
   userDetails: null,
   serviceDetail: null
@@ -13,7 +12,6 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         user: action.payload,
-        isLoggedIn: true,
       };
     case 'LOGOUT':
       return {

@@ -99,21 +99,6 @@ const OrderDetails = () => {
                             <Text style={[styles.tableCell, styles.totalLabel]}>Total de la commande :</Text>
                             <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
                         </View>
-                        <View style={styles.tableRow}>
-                            <Text style={styles.tableCell}></Text>
-                            <Text style={[styles.tableCell, styles.totalLabel]}>Total de la commande :</Text>
-                            <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <Text style={styles.tableCell}></Text>
-                            <Text style={[styles.tableCell, styles.totalLabel]}>Total de la commande :</Text>
-                            <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <Text style={styles.tableCell}></Text>
-                            <Text style={[styles.tableCell, styles.totalLabel]}>Total de la commande :</Text>
-                            <Text style={[styles.tableCell, styles.totalValue]}>${orderData.total_price}</Text>
-                        </View>
                     </View>
                 </View>
             </View>

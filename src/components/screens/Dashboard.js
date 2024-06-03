@@ -7,15 +7,16 @@ import { useNavigation } from '@react-navigation/native';
 import Loader from "../common/Loader";
 const Dashboard = () => {
     const navigation = useNavigation();
+    let userID = '';
     const userData = useSelector(state => state.user.user);
-    const userID = useSelector(state => state.user.userDetails);
+    userID = userData?.user_data;
     const [orderData, setOrderData] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         setLoading(true);
         const getOrders = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/orders/user/${userID.id}`, {
+                const response = await axios.get(`${API_BASE_URL}/orders/user/${userID?.id}`, {
                     headers: {
                         Authorization: `Bearer ${userData?.token}`
                     },
