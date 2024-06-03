@@ -77,6 +77,7 @@ const Home = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            <ScrollView contentContainerStyle={styles.scrollView}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor='#11696A' colors={['blue']}
                         progressBackgroundColor="#fff" />
