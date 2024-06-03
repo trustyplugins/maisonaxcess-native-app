@@ -5,13 +5,11 @@ import Snackbar from '../Snackbar';
 import CustomButton from "../common/CustomButton";
 import { API_BASE_URL } from '@env';
 import { useDispatch } from 'react-redux';
-function Signup({ navigation }) {
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+const Signup = ({ navigation }) => {
     const dispatch = useDispatch();
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [showError, setShowError] = useState('');
@@ -31,25 +29,20 @@ function Signup({ navigation }) {
             }
         );
 
-        // Cleanup listeners on component unmount
         return () => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
         };
     }, []);
 
-    const handleSignup = async () => {
-        if (!name || !email || !password || !phone) {
-            setError(true);
-            return;
-        }
+    const handleSignup = async (values, { setSubmitting, setErrors }) => {
         const data = {
             api_otp: '',
             otp: '',
-            name: name,
-            email: email,
-            password: password,
-            phone_number: phone,
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            phone_number: values.phone,
             user_role: '3'
         }
         try {
@@ -61,15 +54,19 @@ function Signup({ navigation }) {
         } catch (error) {
             if (error.response) {
                 setShowError(error.response.data.message);
-                setError(true);
+                setErrors({ api: error.response.data.message });
+            } else {
+                setErrors({ api: "An unexpected error occurred." });
             }
+        } finally {
+            setSubmitting(false);
         }
-
     };
+
     const resetError = () => {
-        setError(false)
         setShowError('');
     }
+
     return (
         <>
             <Snackbar
@@ -83,58 +80,101 @@ function Signup({ navigation }) {
                         <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
                     </View>
                     <View style={Platform.OS == 'ios' && isKeyboardVisible ? styles.formContainerKeyboard : styles.formContainer}>
-                        <Text style={styles.heading}>Inscription</Text>
-                        <Text style={styles.label}>Nom</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Nom"
-                            value={name}
-                            onChangeText={setName}
-                            onPress={resetError}
-                        />
-                        <Text style={styles.label}>E-mail</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="E-mail"
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
-                            onPress={resetError}
-                        />
-                        <Text style={styles.label}>Portable</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Portable"
-                            value={phone}
-                            onChangeText={setPhone}
-                            keyboardType="phone-pad"
-                            onPress={resetError}
-                        />
-                        <Text style={styles.label}>Mot de passe</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Mot de passe"
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry
-                            onPress={resetError}
-                        />
-                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Veuillez remplir les détails ci-dessus"}</Text>}
-                        <View style={{ marginTop: 10 }}>
-                            <CustomButton title="Inscription" onPress={handleSignup} />
-                        </View>
-                        <View style={styles.actionButton}>
-                            <Text style={styles.labelRem}>Déjà inscrit?</Text>
-                            <TouchableOpacity onPress={() => navigation.navigate("login")}>
-                                <Text style={styles.actionButtonText}>Se connecter</Text>
-                            </TouchableOpacity>
-                        </View>
+                        <Formik
+                            initialValues={{
+                                name: '',
+                                email: '',
+                                phone: '',
+                                password: ''
+                            }}
+                            validationSchema={Yup.object({
+                                name: Yup.string().required('Required'),
+                                email: Yup.string().email('Invalid email address').required('Required'),
+                                phone: Yup.string().required('Required'),
+                                password: Yup.string().required('Required'),
+                            })}
+                            onSubmit={handleSignup}
+                        >
+                            {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
+                                <View>
+                                    <Text style={styles.heading}>Inscription</Text>
+                                    <Text style={styles.label}>Nom</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Nom"
+                                        value={values.name}
+                                        onChangeText={handleChange('name')}
+                                        onBlur={handleBlur('name')}
+                                        onFocus={resetError}
+                                    />
+                                    {touched.name && errors.name ? (
+                                        <Text style={styles.errorMessage}>{errors.name}</Text>
+                                    ) : null}
+
+                                    <Text style={styles.label}>E-mail</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="E-mail"
+                                        value={values.email}
+                                        onChangeText={handleChange('email')}
+                                        onBlur={handleBlur('email')}
+                                        keyboardType="email-address"
+                                        onFocus={resetError}
+                                    />
+                                    {touched.email && errors.email ? (
+                                        <Text style={styles.errorMessage}>{errors.email}</Text>
+                                    ) : null}
+
+                                    <Text style={styles.label}>Portable</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Portable"
+                                        value={values.phone}
+                                        onChangeText={handleChange('phone')}
+                                        onBlur={handleBlur('phone')}
+                                        keyboardType="phone-pad"
+                                        onFocus={resetError}
+                                    />
+                                    {touched.phone && errors.phone ? (
+                                        <Text style={styles.errorMessage}>{errors.phone}</Text>
+                                    ) : null}
+
+                                    <Text style={styles.label}>Mot de passe</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Mot de passe"
+                                        value={values.password}
+                                        onChangeText={handleChange('password')}
+                                        onBlur={handleBlur('password')}
+                                        secureTextEntry
+                                        onFocus={resetError}
+                                    />
+                                    {touched.password && errors.password ? (
+                                        <Text style={styles.errorMessage}>{errors.password}</Text>
+                                    ) : null}
+
+                                    {errors.api && <Text style={styles.errorMessage}>{errors.api}</Text>}
+
+                                    <View style={{ marginTop: 10 }}>
+                                        <CustomButton title="Inscription" onPress={handleSubmit} disabled={isSubmitting} />
+                                    </View>
+
+                                    <View style={styles.actionButton}>
+                                        <Text style={styles.labelRem}>Déjà inscrit?</Text>
+                                        <TouchableOpacity onPress={() => navigation.navigate("login")}>
+                                            <Text style={styles.actionButtonText}>Se connecter</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            )}
+                        </Formik>
                     </View>
                 </View>
             </ScrollView>
         </>
     );
 }
+
 const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
     container: {
@@ -188,7 +228,8 @@ const styles = StyleSheet.create({
         color: 'gray',
     },
     errorMessage: {
-        color: 'red'
+        color: 'red',
+        paddingLeft: 5
     },
     label: {
         fontSize: 16,

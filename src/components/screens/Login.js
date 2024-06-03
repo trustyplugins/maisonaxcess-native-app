@@ -8,20 +8,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Loader from "../common/Loader";
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
 const Login = ({ navigation }) => {
     const dispatch = useDispatch();
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [showError, setShowError] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
-    const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [error,setError]=useState(false);
     const userCredential = useSelector(state => state.user.credentials);
     const user = useSelector(state => state.user.userDetails);
+
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -36,88 +37,66 @@ const Login = ({ navigation }) => {
             }
         );
 
-        // Cleanup listeners on component unmount
         return () => {
             keyboardDidHideListener.remove();
             keyboardDidShowListener.remove();
         };
     }, []);
 
-    useEffect(() => {
-        if (userCredential != null) {
-            setEmail(userCredential.email);
-            setPassword(userCredential.password);
-            setRememberMe(true);
-        }
-    }, [userCredential])
-
-    const handleLogin = async () => {
-        if (!email || !password) {
-            setError(true);
-            return;
-        }
-        const data = {
-            email: email,
-            password: password
-        }
+    const handleLogin = async (values, { setSubmitting, setErrors, setStatus }) => {
         setLoading(true);
         try {
-            const response = await axios.post(`${API_BASE_URL}/login`, data, {
+            const response = await axios.post(`${API_BASE_URL}/login`, values, {
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
             setModalMessage(response.data.message);
             dispatch({ type: 'LOGIN', payload: response.data });
-            if (rememberMe) {
-                dispatch({ type: 'SAVE_CREDENTIALS', payload: data });
+            if (values.rememberMe) {
+                dispatch({ type: 'SAVE_CREDENTIALS', payload: values });
             } else {
                 dispatch({ type: 'SAVE_CREDENTIALS', payload: null });
             }
             navigation.navigate('carousel');
-            setLoading(false);
         } catch (error) {
             if (error.response) {
+                console.log(error.response.data.message)
                 setShowError(error.response.data.message);
                 setError(true);
             }
+        } finally {
             setLoading(false);
+            setSubmitting(false);
         }
     };
+
     const forgetPassword = async () => {
-        if (user == null || user == undefined) {
+        if (!user) {
             setShowError('non authentifié');
-            setError(true);
+            return;
         }
-        const data = {
-            email: user.email,
-        }
-        setModalVisible(true)
+        const data = { email: user.email };
         try {
             const response = await axios.post(`${API_BASE_URL}/password/email`, data, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
+                headers: { "Content-Type": "application/json" }
             });
-            if (response.data.success == true) {
+            if (response.data.success) {
                 setModalVisible(true);
             }
         } catch (error) {
             if (error.response) {
                 setShowError(error.response.data.message);
-                setError(true);
             }
         }
     }
+
     const resetError = () => {
-        setError(false)
+        setShowError('');
     }
-    const closeModal = () => {
-        setModalVisible(false);
-    };
 
     if (loading) {
-        return (<Loader loading={loading} />)
+        return <Loader loading={loading} />;
     }
 
     return (
@@ -133,57 +112,84 @@ const Login = ({ navigation }) => {
                         <Image source={require('../../assets/image/AXCESS_Logo.png')} style={styles.headerLogo} />
                     </View>
                     <View style={Platform.OS == 'ios' && isKeyboardVisible ? styles.formContainerKeyword : styles.formContainer}>
-                        <Text style={styles.heading}>Se connecter</Text>
-                        <Text style={styles.label}>E-mail</Text>
-                        <TextInput
-                            style={{ ...styles.input, color: email != '' ? '#000' : 'gray' }}
-                            placeholder="E-mail"
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
-                            onPress={resetError}
-                        />
-                        <Text style={styles.label}>Mot de passe</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Mot de passe"
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry
-                            onPress={resetError}
-                        />
-                        {error && <Text style={styles.errorMessage}>{showError ? showError : "Veuillez remplir les détails ci-dessus"}</Text>}
+                        <Formik
+                            initialValues={{
+                                email: userCredential?.email || '',
+                                password: userCredential?.password || '',
+                                rememberMe: !!userCredential,
+                            }}
+                            validationSchema={Yup.object({
+                                email: Yup.string().email('Invalid email address').required('Required'),
+                                password: Yup.string().required('Required'),
+                            })}
+                            onSubmit={handleLogin}
+                        >
+                            {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, isSubmitting, status }) => (
+                                <View>
+                                    <Text style={styles.heading}>Se connecter</Text>
+                                    <Text style={styles.label}>E-mail</Text>
+                                    <TextInput
+                                        style={{ ...styles.input, color: values.email != '' ? '#000' : 'gray' }}
+                                        placeholder="E-mail"
+                                        value={values.email}
+                                        onChangeText={handleChange('email')}
+                                        onBlur={handleBlur('email')}
+                                        keyboardType="email-address"
+                                        onFocus={resetError}
+                                    />
+                                    {touched.email && errors.email ? (
+                                        <Text style={styles.errorMessage}>{errors.email}</Text>
+                                    ) : null}
 
-                        <View style={styles.checkboxContainer}>
-                            <CheckBox
-                                value={rememberMe}
-                                onValueChange={setRememberMe}
-                                color="#11696a"
-                            />
-                            <Text style={styles.labelRem}>Souviens-toi de moi</Text>
-                        </View>
-                        <TouchableOpacity onPress={() => forgetPassword()}>
-                            <Text style={styles.forgetPassword}>Mot de passe oublié?</Text>
-                        </TouchableOpacity>
-                        <CustomButton title="Se connecter" onPress={handleLogin} />
+                                    <Text style={styles.label}>Mot de passe</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Mot de passe"
+                                        value={values.password}
+                                        onChangeText={handleChange('password')}
+                                        onBlur={handleBlur('password')}
+                                        secureTextEntry
+                                        onFocus={resetError}
+                                    />
+                                    {touched.password && errors.password ? (
+                                        <Text style={styles.errorMessage}>{errors.password}</Text>
+                                    ) : null}
 
-                        <View style={styles.actionButton}>
-                            <Text style={styles.labelRem}>Vous n'avez pas encore de compte ?</Text>
-                            <TouchableOpacity onPress={() => navigation.navigate("signup")}>
-                                <Text style={styles.actionButtonText}>Inscription</Text>
-                            </TouchableOpacity>
-                        </View>
+                                    {error && <Text style={styles.errorMessage}>{showError}</Text>}
+
+                                    <View style={styles.checkboxContainer}>
+                                        <CheckBox
+                                            value={values.rememberMe}
+                                            onValueChange={value => setFieldValue('rememberMe', value)}
+                                            color="#11696a"
+                                        />
+                                        <Text style={styles.labelRem}>Souviens-toi de moi</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={forgetPassword}>
+                                        <Text style={styles.forgetPassword}>Mot de passe oublié?</Text>
+                                    </TouchableOpacity>
+                                    <CustomButton title="Se connecter" onPress={handleSubmit} disabled={isSubmitting} />
+
+                                    <View style={styles.actionButton}>
+                                        <Text style={styles.labelRem}>Vous n'avez pas encore de compte ?</Text>
+                                        <TouchableOpacity onPress={() => navigation.navigate("signup")}>
+                                            <Text style={styles.actionButtonText}>Inscription</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            )}
+                        </Formik>
                     </View>
                 </View>
                 <Modal
                     animationType="slide"
                     transparent={true}
                     visible={modalVisible}
-                    onRequestClose={closeModal}
+                    onRequestClose={() => setModalVisible(false)}
                 >
                     <View style={styles.modalOverlay}>
                         <View style={styles.modalContent}>
-                            <TouchableOpacity onPress={closeModal} style={styles.modalCloseButton}>
+                            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>
                                 <Icon name="close" size={24} color="#11696A" />
                             </TouchableOpacity>
                             <Text style={styles.modalText}>Lien de réinitialisation envoyé à votre e-mail.</Text>
@@ -194,6 +200,7 @@ const Login = ({ navigation }) => {
         </>
     );
 };
+
 const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
     container: {
@@ -247,7 +254,8 @@ const styles = StyleSheet.create({
         color: 'gray'
     },
     errorMessage: {
-        color: 'red'
+        color: 'red',
+        paddingHorizontal: 5
     },
     label: {
         fontSize: 16,
