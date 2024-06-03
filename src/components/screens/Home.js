@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Button, StyleSheet, ScrollView, ActivityIndicator, Image } from "react-native";
+import { View, Text, TouchableOpacity, Button, StyleSheet, ScrollView, ActivityIndicator, Image, RefreshControl } from "react-native";
 import { useSelector } from 'react-redux';
 import { SafeAreaView } from 'react-native';
 import axios from "axios";
@@ -9,6 +9,7 @@ const Home = ({ navigation }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const iconData = [
         { id: 84, title: 'Famille', image: require("../../assets/image/FAMILLE.png") },
         { id: 90, title: 'MAISON', image: require("../../assets/image/MAISON.png") },
@@ -38,12 +39,37 @@ const Home = ({ navigation }) => {
                 setLoading(false);
             }
         })()
+    }, []);
 
-    }, [])
+    const fetchService = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/servicetypes`, {
+                headers: {
+                    Authorization: `Bearer ${userData?.token}`,
+                },
+            });
+            setServiceType(response.data.servicetypes);
+        } catch (error) {
+            setLoading(false);
+            setServiceType([])
+            if (userData == null) {
+                navigation.navigate('login');
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const handlePress = (item, icon) => {
         navigation.navigate("service_types", { data: item, iconData: icon });
     };
+    const onRefresh = () => {
+        setRefreshing(true);
+        fetchService()
+        setTimeout(() => {
+            setRefreshing(false)
+        }, 2000)
+    }
 
     if (loading) {
         return (<Loader loading={loading} />)
@@ -51,7 +77,11 @@ const Home = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <ScrollView contentContainerStyle={styles.scrollView}>
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor='#11696A' colors={['blue']}
+                        progressBackgroundColor="#fff" />
+                }
+            >
                 <View style={styles.container}>
                     {serviceType?.length > 0 && iconData.map((item) => {
                         const matchingData = serviceType.find(dataItem => dataItem.id === item.id);
