@@ -206,7 +206,7 @@ const Login = ({ navigation }) => {
                             <Text style={{ ...styles.label, color: "#11696A" }}>Indiquez-nous simplement votre adresse e-mail et nous vous enverrons par e-mail un lien de réinitialisation de mot de passe qui vous permettra d'en choisir un nouveau.</Text>
                             <Text style={styles.label}>E-mail</Text>
                             <TextInput
-                                style={styles.input}
+                                style={{ ...styles.input, fontWeight: 'bold' }}
                                 placeholder="Entrer E-mail"
                                 value={resetEmail}
                                 onChangeText={setResetEmail}
