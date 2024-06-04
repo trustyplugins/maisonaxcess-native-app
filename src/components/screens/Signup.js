@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
         paddingTop: Platform.OS == 'ios' ? 50 : 20,
-        height: Platform.OS == 'ios' ? 650 : 600,
+        height: Platform.OS == 'ios' ? 650 : 610,
     },
     formContainerKeyboard: {
         flex: 1,
