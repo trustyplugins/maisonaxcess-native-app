@@ -26,22 +26,17 @@ const Header = ({ navigation, back }) => {
                 }
             );
             setModalMessage(res.data.message);
-            showSnackbar();
+            dispatch({ type: 'REMOVE_SERVICE', payload: null });
+            dispatch({ type: 'LOGIN', payload: null });
+            dispatch({ type: 'SIGNUP', payload: null });
+            setSnackbarVisible(false);
+            navigation.navigate('login');
         } catch (error) {
             setModalMessage(error.response.data.message);
             showError();
             setSnackbarVisible(false);
         }
     }
-    const showSnackbar = () => {
-        setTimeout(() => {
-            setSnackbarVisible(false);
-            dispatch({ type: 'REMOVE_SERVICE', payload: null });
-            dispatch({ type: 'LOGIN', payload: null });
-            dispatch({ type: 'SIGNUP', payload: null });
-            navigation.navigate('login');
-        }, 1000);
-    };
     const showError = () => {
         setSnackbarVisible(true);
     }
