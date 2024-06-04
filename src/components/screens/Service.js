@@ -20,14 +20,14 @@ const Service = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { userid, service_provider_id } = route.params;
+    let service = [{ ...userid.article }];
     const userData = useSelector(state => state.user.user);
     const serviceDetails = useSelector(state => state.user.serviceDetail);
     let serviceDetail = "";
     if (serviceDetails != null && serviceDetails != undefined) {
-        serviceDetail = serviceDetails?.find(ele => ele?.id == userid);
+        serviceDetail = serviceDetails?.find(ele => ele?.id == userid.id);
     }
     const userCredential = userData?.user_data;
-    const [service, setService] = useState([]);
     const [loading, setLoading] = useState(false);
     const [appointmentDates, setAppointmentDates] = useState([]);
     const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -38,7 +38,7 @@ const Service = () => {
     const [cardInfo, setCardInfo] = useState(null);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [customerAddress, setCustomerAddress] = useState({
-        id: userid,
+        id: userid.id,
         email: userCredential?.email || '',
         phone: serviceDetail?.phone || '',
         state: serviceDetail?.state || '',
@@ -103,7 +103,7 @@ const Service = () => {
     useEffect(() => {
         const getAppointments = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/appointments/${userid}`, {
+                const response = await axios.get(`${API_BASE_URL}/appointments/${userid.id}`, {
                     headers: {
                         Authorization: `Bearer ${userData?.token}`
                     },
@@ -118,27 +118,7 @@ const Service = () => {
             }
         }
         getAppointments();
-    }, [userid])
-
-    useEffect(() => {
-        (async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get(`${API_BASE_URL}/services/${userid}`, {
-                    headers: {
-                        Authorization: `Bearer ${userData?.token}`
-                    },
-                });
-                setService(response.data.services);
-                setLoading(false);
-            } catch (error) {
-                setLoading(false);
-                setService([])
-            } finally {
-                setLoading(false);
-            }
-        })();
-    }, [userid])
+    }, [userid.id])
 
     const ReverseDate = (dateString) => {
         if (dateString) {
@@ -192,7 +172,7 @@ const Service = () => {
 
         const bookData = {
             service_provider_id: service_provider_id,
-            main_service_id: userid,
+            main_service_id: userid.id,
             email: customerAddress.email,
             phone_number: customerAddress.phone,
             state: customerAddress.state,
@@ -207,7 +187,7 @@ const Service = () => {
             cancellation_comment: customerAddress.cancelComment,
             stripeToken: customerAddress.stripeToken
         }
-        
+
         try {
             const response = await axios.post(`${API_BASE_URL}/orders`, bookData, {
                 headers: {
@@ -216,7 +196,7 @@ const Service = () => {
                 }
             });
             setCustomerAddress({
-                id: userid,
+                id: userid.id,
                 phone: '',
                 state: '',
                 country: '',
@@ -353,8 +333,10 @@ const Service = () => {
                                 <Text style={styles.title}>{item?.title} </Text>
                             </View>
                             <Text style={styles.contentText}>{parseFromHtml(item.content)}</Text>
-                            <TouchableOpacity onPress={toggleModal} style={styles.servicesContainer}>
-                                <Text style={styles.servicesText}>Ajouter des services</Text>
+                            <View>
+                                <TouchableOpacity onPress={toggleModal} style={styles.servicesContainer}>
+                                    <Text style={styles.servicesText}>Ajouter des services</Text>
+                                </TouchableOpacity>
                                 {
                                     customerAddress?.services?.length > 0 && customerAddress.services.map((serviceItem, id) => (
                                         <View key={id} style={styles.serviceItem}>
@@ -374,7 +356,8 @@ const Service = () => {
                                         </View>
                                     ))
                                 }
-                            </TouchableOpacity>
+
+                            </View>
                             <View style={styles.dateSection}>
                                 <View>
                                     <Text style={styles.dateLabelText}>Date de réalisation souhaitée:</Text>

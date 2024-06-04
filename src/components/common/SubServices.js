@@ -1,86 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Modal, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { API_BASE_URL } from '@env';
-import axios from "axios";
-import { useSelector } from 'react-redux';
 import parseFromHtml from '../../utils/parseHtml';
 import { FontAwesome } from '@expo/vector-icons';
-import Loader from './Loader';
 const SubServices = ({ data, parentDetail }) => {
-    const userData = useSelector(state => state.user.user);
     const navigation = useNavigation();
-    const [serviceProviderId, setServiceProviderId] = useState('');
-    const [services, setServices] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [tarifVisible, setTarifVisible] = useState(false);
-    const [loading, setLoading] = useState(false);
-    useEffect(() => {
-        if (serviceProviderId?.id != undefined) {
-            fetch();
+
+    const handleClick = () => {
+        let id = '';
+        if (data.users?.length > 0) {
+            id = data.users[0].id;
+        } else {
+            id = parentDetail.users[0].id;
         }
-    }, [serviceProviderId?.id])
+        navigation.navigate("service", {
+            userid: data,
+            service_provider_id: id
+        });
 
-    const serviceProvider = async (attempt = 1) => {
-        const MAX_ATTEMPTS = 2; // Prevent infinite recursion
-        let id = attempt === 1 ? data.id : parentDetail.id;
-        setLoading(true);
-        try {
-            const response = await axios.get(`${API_BASE_URL}/users/category/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${userData?.token}`
-                },
-            });
-
-            if (response.data.user?.length > 0) {
-                setServiceProviderId(response.data.user[0]);
-            } else if (attempt < MAX_ATTEMPTS) {
-                serviceProvider(attempt + 1);
-            } else {
-                console.log('No service provider found after maximum attempts');
-            }
-            setLoading(false)
-
-        } catch (error) {
-            console.log('error', error);
-            setLoading(false)
-        }
-    };
-
-
-    const handleClick = async () => {
-        serviceProvider();
-    };
-    const fetch = async (type) => {
-        if (serviceProviderId != '' || type == 'detail' || type == 'tarif') {
-            setLoading(true);
-            try {
-                const response = await axios.get(`${API_BASE_URL}/services/${data.id}`, {
-                    headers: {
-                        Authorization: `Bearer ${userData?.token}`
-                    },
-                });
-                if (response.data.services?.length > 0) {
-                    if (type == 'detail') {
-                        setServices(response.data.services);
-                        setModalVisible(true);
-                    }
-                    else if (type == 'tarif') {
-                        setServices(response.data.services);
-                        setTarifVisible(true);
-                    }
-                    else {
-                        navigation.navigate("service", { userid: `${data.id}`, service_provider_id: `${serviceProviderId.id}` });
-                    }
-                }
-                setServiceProviderId('');
-                setLoading(false)
-
-            } catch (error) {
-                console.log(error)
-                setLoading(false)
-            }
-        }
     }
 
     const handlePress = () => {
@@ -88,14 +27,11 @@ const SubServices = ({ data, parentDetail }) => {
     };
 
     const handleCloseModal = () => {
-        setModalVisible(false);
+        setModalVisible(!modalVisible);
     };
     const handleCloseTarif = () => {
-        setTarifVisible(false);
+        setTarifVisible(!tarifVisible);
     };
-    if (loading) {
-        return (<Loader loading={loading} />)
-    }
     return (<ScrollView>
         {(parentDetail?.name != undefined) && (parentDetail?.name == 'COORDONNERIE' || parentDetail?.name == "LAVAGE AUTO-MOTO" || parentDetail?.name == "Pressing et blanchisserie" || parentDetail?.name == "Esthéticienne") ?
             <View>
@@ -104,13 +40,13 @@ const SubServices = ({ data, parentDetail }) => {
                         <Text style={styles.titleQuo}> {data.name}</Text>
                     </View>
                 </View>
-                <TouchableOpacity onPress={() => { fetch('detail') }}>
+                <TouchableOpacity onPress={() => { handleCloseModal() }}>
                     <Text style={styles.detail}> Détails</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { fetch('tarif') }}>
+                <TouchableOpacity onPress={() => { handleCloseTarif() }}>
                     <Text style={styles.detail}> Tarifs</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { handleClick(data.id) }}>
+                <TouchableOpacity onPress={() => { handleClick() }}>
                     <Text style={styles.btnQuo}> Commander</Text>
                 </TouchableOpacity>
 
@@ -133,8 +69,8 @@ const SubServices = ({ data, parentDetail }) => {
             onRequestClose={handleCloseModal}
         >
             <View style={styles.modalContainer}>
-                {services?.length > 0 && services?.map((item, index) => (
-                    <View style={styles.modalView} key={index}>
+                {data?.article &&
+                    <View style={styles.modalView}>
                         <View style={styles.modalHeader}>
                             <Text style={styles.modalHeaderTitle}>Details</Text>
                             <TouchableOpacity onPress={handleCloseModal} >
@@ -144,14 +80,14 @@ const SubServices = ({ data, parentDetail }) => {
                         <View style={styles.modalImageContainer}>
                             <Image
                                 style={styles.modalImage}
-                                source={{ uri: `https://maisonaxcess.com/${item.image}` }}
+                                source={{ uri: `https://maisonaxcess.com/${data?.article?.image}` }}
                                 resizeMode="contain"
                             />
                         </View>
-                        <Text style={styles.modalBottomTitle}>{item?.title}</Text>
-                        <Text style={styles.modalContentText}>{parseFromHtml(item.content)}</Text>
+                        <Text style={styles.modalBottomTitle}>{data?.article?.title}</Text>
+                        <Text style={styles.modalContentText}>{parseFromHtml(data?.article?.content)}</Text>
                     </View>
-                ))}
+                }
             </View>
         </Modal>
 
@@ -174,7 +110,7 @@ const SubServices = ({ data, parentDetail }) => {
                         <Text style={styles.serviceName}>Sur devis uniquement</Text>
                     </View>
                     <ScrollView style={styles.scrollView}>
-                        {services?.length > 0 && services[0].services?.map((service, id) => (
+                        {data?.article?.services?.map((service, id) => (
                             <View key={id} style={styles.serviceItem}>
                                 <Text style={styles.serviceName}>{service.name}</Text>
                                 <Text style={styles.servicePrice}>€{service.price}</Text>
