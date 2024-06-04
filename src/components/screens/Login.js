@@ -21,8 +21,8 @@ const Login = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const userCredential = useSelector(state => state.user.credentials);
-    const user = useSelector(state => state.user.userDetails);
-
+    const [resetEmail, setResetEmail] = useState('');
+    const [resetSucc, setResetSucc] = useState(false);
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -62,7 +62,6 @@ const Login = ({ navigation }) => {
             navigation.navigate('carousel');
         } catch (error) {
             if (error.response) {
-                console.log(error.response.data.message)
                 setShowError(error.response.data.message);
                 setError(true);
             }
@@ -73,27 +72,34 @@ const Login = ({ navigation }) => {
     };
 
     const forgetPassword = async () => {
-        if (!user) {
-            setShowError('non authentifié');
+        setModalVisible(true);
+    }
+    const handleResetPassword = async () => {
+        if (!resetEmail) {
+            setShowError('Entrer E-mail');
+            setError(true);
             return;
         }
-        const data = { email: user.email };
+        const data = { email: resetEmail };
         try {
             const response = await axios.post(`${API_BASE_URL}/password/email`, data, {
                 headers: { "Content-Type": "application/json" }
             });
             if (response.data.success) {
-                setModalVisible(true);
+                setShowError('Nous vous avons envoyé par e-mail un lien de réinitialisation de votre mot de passe.');
+                setResetSucc(true);
             }
         } catch (error) {
             if (error.response) {
                 setShowError(error.response.data.message);
+                setError(true)
             }
         }
     }
 
     const resetError = () => {
         setShowError('');
+        setError(false);
     }
 
     if (loading) {
@@ -157,7 +163,6 @@ const Login = ({ navigation }) => {
                                     ) : null}
 
                                     {error && <Text style={styles.errorMessage}>{showError}</Text>}
-
                                     <View style={styles.checkboxContainer}>
                                         <CheckBox
                                             value={values.rememberMe}
@@ -190,10 +195,28 @@ const Login = ({ navigation }) => {
                 >
                     <View style={styles.modalOverlay}>
                         <View style={styles.modalContent}>
-                            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>
+                            <TouchableOpacity onPress={() => {
+                                setModalVisible(false)
+                                setResetSucc(false);
+                                setShowError('');
+                                setResetEmail('');
+                            }} style={styles.modalCloseButton}>
                                 <Icon name="close" size={24} color="#11696A" />
                             </TouchableOpacity>
-                            <Text style={styles.modalText}>Lien de réinitialisation envoyé à votre e-mail.</Text>
+                            <Text style={{ ...styles.label, color: "#11696A" }}>Indiquez-nous simplement votre adresse e-mail et nous vous enverrons par e-mail un lien de réinitialisation de mot de passe qui vous permettra d'en choisir un nouveau.</Text>
+                            <Text style={styles.label}>E-mail</Text>
+                            <TextInput
+                                style={{ ...styles.input, fontWeight: 'bold' }}
+                                placeholder="Entrer E-mail"
+                                value={resetEmail}
+                                onChangeText={setResetEmail}
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                                onFocus={resetError}
+                            />
+                            {resetSucc && <Text style={{ paddingHorizontal: 5, color: '#11696A', paddingBottom: 8 }}>{showError}</Text>}
+                            {error && <Text style={{ ...styles.errorMessage, paddingBottom: 8 }}>{showError}</Text>}
+                            <CustomButton title="Mot de passe oublié" onPress={resetSucc ? null : handleResetPassword} />
                         </View>
                     </View>
                 </Modal>
@@ -303,11 +326,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.5)',
     },
     modalContent: {
-        width: '80%',
+        width: '90%',
         backgroundColor: '#fff',
         borderRadius: 10,
         padding: 20,
-        alignItems: 'center',
         position: 'relative',
     },
     modalCloseButton: {
