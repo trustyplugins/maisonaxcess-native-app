@@ -1,61 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, useWindowDimensions } from 'react-native';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { API_BASE_URL } from '@env';
-import axios from "axios";
 import HTML from 'react-native-render-html';
-import Loader from "../common/Loader";
 const UserCategory = ({ data }) => {
     const navigation = useNavigation();
-    const userData = useSelector(state => state.user.user);
-    const [serviceType, setServiceType] = useState([]);
-    const [loading, setLoading] = useState(false);
     const { width: contentWidth } = useWindowDimensions();
-    useEffect(() => {
-        (async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get(`${API_BASE_URL}/users/category/${data.id}`, {
-                    headers: {
-                        Authorization: `Bearer ${userData?.token}`
-                    },
-                });
-                setServiceType(response.data.user);
-                setLoading(false);
-            } catch (error) {
-                console.log(error)
-                setLoading(false);
-                setServiceType([])
-            } finally {
-                setLoading(false);
-            }
-        })();
-    }, [data?.id])
 
     const handlePress = async (id) => {
-        try {
-            const response = await axios.get(`${API_BASE_URL}/services/${data.id}`, {
-                headers: {
-                    Authorization: `Bearer ${userData?.token}`
-                },
-            });
-            if (response.data.services?.length > 0) {
-                navigation.navigate("service", { userid: `${data.id}`, service_provider_id: `${id}` });
-            }
-
-        } catch (error) {
-            // console.log(error)
+        if (data?.article) {
+            navigation.navigate("service", { userid: `${data}`, service_provider_id: `${id}` });
         }
-        // navigation.navigate("service_types", { data });
     };
 
-    if (loading) {
-        return (<Loader loading={loading} />)
-    }
     return (<>
         <Text style={styles.heading}>Détails de l'utilisateur</Text>
-        {serviceType?.length > 0 ? serviceType.map((item, index) => {
+        {data.users?.length > 0 ? data.users.map((item, index) => {
             return (
                 <View key={index}>
                     <TouchableOpacity onPress={() => handlePress(item.id)} >

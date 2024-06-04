@@ -11,11 +11,10 @@ const Header = ({ navigation, back }) => {
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [menuVisible, setMenuVisible] = useState(false);
     const dispatch = useDispatch();
-    //   const logoImage = require('../assets/logo.png');
     const isAuthenticated = useSelector(state => state.user);
-    // console.log(isAuthenticated.user.token)
     const handleLogout = async () => {
         setMenuVisible(false)
+        setSnackbarVisible(true);
         try {
             const res = await axios.post(`${API_BASE_URL}/logout`, { ...isAuthenticated.user?.email },
                 {
@@ -31,17 +30,17 @@ const Header = ({ navigation, back }) => {
         } catch (error) {
             setModalMessage(error.response.data.message);
             showError();
+            setSnackbarVisible(false);
         }
     }
     const showSnackbar = () => {
-        setSnackbarVisible(true);
         setTimeout(() => {
             setSnackbarVisible(false);
             dispatch({ type: 'REMOVE_SERVICE', payload: null });
             dispatch({ type: 'LOGIN', payload: null });
             dispatch({ type: 'SIGNUP', payload: null });
             navigation.navigate('login');
-        }, 2000);
+        }, 1000);
     };
     const showError = () => {
         setSnackbarVisible(true);
