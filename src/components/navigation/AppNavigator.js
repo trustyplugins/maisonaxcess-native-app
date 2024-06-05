@@ -7,7 +7,7 @@ import ServiceTypes from '../common/ServiceTypes';
 import Header from '../Header';
 import Profile from '../screens/Profile';
 import Service from '../screens/Service';
-import { PaperProvider } from 'react-native-paper';
+import { PaperProvider,DefaultTheme } from 'react-native-paper';
 import OrderSuccess from '../screens/OrderSuccess';
 import Dashboard from '../screens/Dashboard';
 import OrderDetails from '../screens/OrderDetails';
@@ -16,11 +16,17 @@ import Layout from '../common/Layout';
 import CarouselScreen from '../screens/CarouselScreen';
 import { useSelector } from 'react-redux';
 const Stack = createNativeStackNavigator();
-
+const customTheme = {
+  ...DefaultTheme,
+  colors: {
+      ...DefaultTheme.colors,
+      surface: '#fff', // Ensures the background is white
+  },
+};
 const Navigation = () => {
   const userData = useSelector(state => state.user.user);
   return (
-    <PaperProvider>
+    <PaperProvider theme={customTheme}>
       <Stack.Navigator
         screenOptions={{
           header: (props) => <Header {...props} />,
