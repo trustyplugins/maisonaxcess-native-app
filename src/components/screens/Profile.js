@@ -7,7 +7,11 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from "../common/CustomButton";
 import Snackbar from '../Snackbar';
-
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
 
 const Profile = ({ navigation }) => {
   const userData = useSelector(state => state.user.user);
@@ -228,57 +232,57 @@ const Profile = ({ navigation }) => {
 const styles = StyleSheet.create({
   containerKeyboard: {
     flex: 1,
-    paddingHorizontal: 15,
-    marginBottom: 250
+    paddingHorizontal: responsiveWidth(3.75),
+    marginBottom: responsiveHeight(38),
   },
   container: {
     flex: 1,
-    paddingHorizontal: 15,
-    marginBottom: 0
+    paddingHorizontal: responsiveWidth(3.75),
+    marginBottom: 0,
   },
   container1: {
-    marginTop: 10,
+    marginTop: responsiveHeight(1.25),
   },
   container2: {
-    marginVertical: 30,
+    marginVertical: responsiveHeight(3.75),
   },
   heading: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: responsiveFontSize(3),
+    marginBottom: responsiveHeight(2.5),
     textAlign: 'center',
     color: '#11696a',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },
   subHeading: {
-    fontSize: 18,
-    marginBottom: 20,
+    fontSize: responsiveFontSize(2.25),
+    marginBottom: responsiveHeight(2.5),
     color: '#000',
     fontWeight: '450',
   },
   input: {
     width: "100%",
-    height: 45,
+    height: responsiveHeight(5.625),
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 5,
-    marginBottom: 14,
-    padding: 10,
+    borderRadius: responsiveWidth(1.25),
+    marginBottom: responsiveHeight(1.75),
+    padding: responsiveWidth(2.5),
     backgroundColor: '#fff',
     color: 'gray',
   },
   errorMessage: {
     color: 'red',
-    paddingBottom: 10
+    paddingBottom: responsiveHeight(1.25),
   },
   label: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
     color: '#000',
-    marginBottom: 10,
+    marginBottom: responsiveHeight(1.25),
     fontWeight: '500',
   },
   labelRem: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
     color: '#000',
     fontWeight: '500',
   },
@@ -286,20 +290,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 18,
-    gap: 10,
+    marginBottom: responsiveHeight(2.25),
+    gap: responsiveWidth(2.5),
   },
   actionButton: {
-    paddingVertical: 5,
+    paddingVertical: responsiveHeight(3.125),
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 10,
-    paddingVertical: 25,
+    gap: responsiveWidth(2.5),
   },
   actionButtonText: {
     color: "#11696A",
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
   },
 });
 

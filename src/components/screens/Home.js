@@ -5,6 +5,11 @@ import { SafeAreaView } from 'react-native';
 import axios from "axios";
 import { API_BASE_URL } from '@env';
 import Loader from "../common/Loader";
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const Home = ({ navigation }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
@@ -113,7 +118,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     scrollView: {
-        padding: 10,
+        padding: responsiveWidth(2.5),  
     },
     container: {
         flexDirection: 'row',
@@ -121,20 +126,20 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     cardWrapper: {
-        width: '48%', // Two items per row with space between
-        marginBottom: 6,
+        width: responsiveWidth(45),
+        marginBottom: responsiveHeight(0.75),
     },
     card: {
-        padding: 10,
+        padding: responsiveWidth(2.5),  
     },
     image: {
         width: '100%',
-        height: 150,
+        height: responsiveHeight(18.75), 
         borderRadius: 10,
     },
     title: {
-        marginTop: 10,
-        fontSize: 16,
+        marginTop: responsiveHeight(1.25), 
+        fontSize: responsiveFontSize(2), 
         fontWeight: 'bold',
         textAlign: 'center',
     },

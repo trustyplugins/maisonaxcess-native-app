@@ -8,6 +8,11 @@ import axios from "axios";
 import { useRoute } from '@react-navigation/native';
 import { API_BASE_URL } from '@env';
 import Loader from "../common/Loader";
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const ServiceTypes = ({ navigation }) => {
     const userData = useSelector(state => state.user.user);
     const [serviceType, setServiceType] = useState([]);
@@ -69,38 +74,35 @@ export default ServiceTypes;
 
 const styles = StyleSheet.create({
     container: {
-        // paddingHorizontal: 10,
+        paddingVertical: responsiveWidth(2),  
     },
     parent: {
         flexDirection: 'row',
-        gap: 15,
+        gap: responsiveWidth(3.75),  
         alignItems: 'center',
-        height: 90,
+        height: responsiveHeight(11.25),  
         backgroundColor: '#D3D3D3',
-        paddingLeft: 20
+        paddingLeft: responsiveWidth(5), 
     },
     image: {
         width: '18%',
-        height: 60,
+        height: responsiveHeight(7.5), 
         borderRadius: 8,
     },
     parentHeading: {
-        fontSize: 20,
-        marginBottom: 12,
-        marginTop: 10,
+        fontSize: responsiveFontSize(2.5),  
+        marginBottom: responsiveHeight(3),  
+        marginTop: responsiveHeight(2.5),  
         fontWeight: 'bold',
         textAlign: "center",
-        color: "#11696A"
+        color: "#11696A",
     },
     heading: {
-        fontSize: 20,
-        marginBottom: 12,
-        marginTop: 10,
-        fontWeight: 'semibold',
+        fontSize: responsiveFontSize(2.5),  
+        marginBottom: responsiveHeight(3), 
+        marginTop: responsiveHeight(2.5), 
+        fontWeight: '500',  
         textAlign: "center",
-        textDecorationLine: 'underline'
+        textDecorationLine: 'underline',
     },
-    loader: {
-        marginTop: 25,
-    }
 })
