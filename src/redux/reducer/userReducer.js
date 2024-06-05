@@ -3,7 +3,11 @@ const initialState = {
   user: null,
   credentials: null,
   userDetails: null,
-  serviceDetail: null
+  serviceDetail: null,
+  cachedServiceTypes: null,
+  cachedServiceTypesTimestamp: null,
+  cachedAllOrderTimestamp: null,
+  allOrders: null
 };
 
 const userReducer = (state = initialState, action) => {
@@ -44,6 +48,18 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         serviceDetail: null,
+      };
+    case 'SET_SERVICE_TYPES':
+      return {
+        ...state,
+        cachedServiceTypes: action.payload,
+        cachedServiceTypesTimestamp: new Date(),
+      };
+    case 'ALL_ORDERS':
+      return {
+        ...state,
+        allOrders: action.payload,
+        cachedAllOrderTimestamp: new Date(),
       };
     default:
       return state;

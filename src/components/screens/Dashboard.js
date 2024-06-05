@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator, Image } from 'react-native';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import Loader from "../common/Loader";
 import {
@@ -10,14 +10,21 @@ import {
     responsiveWidth,
     responsiveFontSize
 } from "react-native-responsive-dimensions";
+import dayjs from 'dayjs';
 const Dashboard = () => {
+    const dispatch = useDispatch();
     const navigation = useNavigation();
     let userID = '';
     const userData = useSelector(state => state.user.user);
+    const { allOrders, cachedAllOrderTimestamp } = useSelector(state => state.user);
     userID = userData?.user_data;
     const [orderData, setOrderData] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
+        if (allOrders && dayjs().diff(cachedAllOrderTimestamp, 'day') < 1) {
+            setOrderData(allOrders);
+            return;
+        }
         setLoading(true);
         const getOrders = async () => {
             try {
@@ -26,9 +33,9 @@ const Dashboard = () => {
                         Authorization: `Bearer ${userData?.token}`
                     },
                 });
-                // console.log(response.data.orders);
                 if (response.data.orders?.length > 0) {
                     setOrderData(response.data.orders);
+                    dispatch({ type: 'ALL_ORDERS', payload: response.data.orders });
                 }
                 setLoading(false);
 
