@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, Dimensions, Platform } from 'react-native';
 import CustomButton from '../common/CustomButton';
 import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import Snackbar from '../Snackbar';
 import axios from "axios";
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const VerifyOtp = ({ navigation }) => {
     const userData = useSelector(state => state.user.userDetails);
     const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -24,7 +29,6 @@ const VerifyOtp = ({ navigation }) => {
             setModalMessage(req.data.message);
             showSnackbar();
         } catch (error) {
-            console.log(error.response.data);
             setShowError(error.response.data.message);
             setError(true);
         }
@@ -64,7 +68,7 @@ const VerifyOtp = ({ navigation }) => {
                         keyboardType="numeric"
                         onPress={resetError}
                     />
-                    {error && <Text style={styles.errorMessage}>{showError ? showError : "Entrez OTP"}</Text>}
+                    {error && <Text style={styles.errorMessage}>{showError ? showError : "Le champ otp est obligatoire."}</Text>}
                     <CustomButton title="Vérifier" onPress={handleVerifyOtp} />
                 </View>
             </View>
@@ -79,43 +83,43 @@ const styles = StyleSheet.create({
     imgContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 110
+        marginTop: responsiveHeight(12.75),
     },
     heading: {
-        fontSize: 24,
-        marginBottom: 20,
+        fontSize: responsiveFontSize(3),
+        marginBottom: responsiveHeight(2.5),
         textAlign: 'center',
         color: '#11696a',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     headerLogo: {
-        width: '65%',
-        height: 65
+        width: Platform.OS === 'ios' ? responsiveWidth(70) : responsiveWidth(72),
+        height: Platform.OS === 'ios' ? responsiveHeight(9) : responsiveHeight(10)
     },
     formContainer: {
         flex: 1,
         marginTop: screenHeight * 0.1,
         backgroundColor: '#C7C7C7',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingTop: 30
+        borderTopLeftRadius: responsiveWidth(7.5),
+        borderTopRightRadius: responsiveWidth(7.5),
+        paddingHorizontal: responsiveWidth(5),
+        paddingTop: responsiveHeight(3.75),
     },
     input: {
         width: "100%",
-        height: 45,
+        height: responsiveHeight(5.625),
         borderWidth: 1,
         borderColor: "#ccc",
-        borderRadius: 50,
-        marginBottom: 20,
-        padding: 10,
+        borderRadius: responsiveWidth(12.5),
+        marginBottom: responsiveHeight(2.5),
+        padding: responsiveWidth(2.5),
         backgroundColor: '#fff',
         color: 'gray',
     },
     errorMessage: {
         color: 'red',
         textAlign: 'center',
-        marginBottom: 10
+        marginBottom: responsiveHeight(1.25),
     },
 });
 

@@ -14,7 +14,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Loader from "../common/Loader";
 import { CardField, createToken } from '@stripe/stripe-react-native';
-import { Field } from 'formik';
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const Service = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -522,145 +526,145 @@ const Service = () => {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
-        borderRadius: 10,
+        borderRadius: responsiveWidth(2.5),
         borderWidth: 1,
         borderColor: '#ddd',
-        margin: 10,
-        padding: 10,
+        marginHorizontal: responsiveWidth(2.5),
+        marginVertical: responsiveHeight(1.25),
+        padding: responsiveWidth(2.5),
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: responsiveHeight(0.625),
         },
-        paddingBottom: 25,
+        paddingBottom: responsiveHeight(3.125),
     },
     cardKeyboard: {
         backgroundColor: '#fff',
-        borderRadius: 10,
+        borderRadius: responsiveWidth(2.5),
         borderWidth: 1,
         borderColor: '#ddd',
-        margin: 10,
-        padding: 10,
+        marginHorizontal: responsiveWidth(2.5),
+        marginVertical: responsiveHeight(1.25),
+        padding: responsiveWidth(2.5),
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: responsiveHeight(0.625),
         },
-        paddingBottom: 25,
-        marginBottom: 220
+        paddingBottom: responsiveHeight(3.125),
+        marginBottom: responsiveHeight(27.5),
     },
     imageContainer: {
-        borderRadius: 10,
+        borderRadius: responsiveWidth(2.5),
         overflow: 'hidden',
     },
     image: {
         width: '100%',
-        height: 300,
-        borderRadius: 10,
+        height: responsiveHeight(37.5),
+        borderRadius: responsiveWidth(2.5),
     },
     textContainer: {
-        marginTop: 7,
-        margin: 0,
-        padding: 0
+        marginTop: responsiveHeight(0.875),
+        marginHorizontal: 0,
+        padding: 0,
     },
     title: {
-        fontSize: 20,
+        fontSize: responsiveFontSize(2.5),
         fontWeight: 'bold',
         color: '#116969',
-        marginTop: 5,
+        marginTop: responsiveHeight(0.625),
     },
     contentText: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         color: 'gray',
-        marginVertical: 10,
+        marginVertical: responsiveHeight(1.25),
     },
     servicesContainer: {
-        marginVertical: 10,
+        marginVertical: responsiveHeight(1.25),
     },
     servicesText: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2.2),
         fontWeight: 'bold',
         color: '#11696A',
     },
     dateSection: {
-        marginVertical: 10,
+        marginVertical: responsiveHeight(1.25),
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     dateLabelText: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         fontWeight: 'bold',
-        marginBottom: 5,
+        marginBottom: responsiveHeight(0.625),
     },
     dateContainer: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     dateText: {
-        fontSize: 16,
-        marginRight: 10,
+        fontSize: responsiveFontSize(2),
+        marginRight: responsiveWidth(2.5),
     },
     price: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         fontWeight: 'bold',
-        marginBottom: 5,
-        textAlign: 'right'
+        marginBottom: responsiveHeight(0.625),
+        textAlign: 'right',
     },
-    //customer form
     customerHeading: {
-        fontSize: 20,
+        fontSize: responsiveFontSize(2.5),
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: responsiveHeight(1.25),
     },
     customerLabel: {
-        fontSize: 16,
-        marginBottom: 5,
+        fontSize: responsiveFontSize(2),
+        marginBottom: responsiveHeight(0.625),
     },
     customerLabelLoc: {
-        fontSize: 16,
-        marginBottom: 5,
-        fontWeight: '500'
+        fontSize: responsiveFontSize(2),
+        marginBottom: responsiveHeight(0.625),
+        fontWeight: '500', // Added fontWeight
     },
     customerInput: {
-        height: 40,
+        height: responsiveHeight(5),
         borderColor: 'gray',
         borderWidth: 1,
-        marginBottom: 10,
-        paddingHorizontal: 10,
+        marginBottom: responsiveHeight(1.25),
+        paddingHorizontal: responsiveWidth(2.5),
     },
     radioContainer: {
-        marginTop: 5,
+        marginTop: responsiveHeight(0.3125),
     },
     radioButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 5,
+        marginBottom: responsiveHeight(0.3125),
     },
     radioCircle: {
-        height: 20,
-        width: 20,
-        borderRadius: 10,
+        height: responsiveHeight(2.5),
+        width: responsiveHeight(2.5),
+        borderRadius: responsiveHeight(1.25),
         borderWidth: 1,
         borderColor: '#11696A',
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: 10,
+        marginRight: responsiveWidth(2.5),
     },
     selectedRadio: {
         backgroundColor: '#11696A',
     },
     radioText: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
     },
     errorMessage: {
         color: 'red',
-        paddingBottom: 4,
-        textAlign: 'center'
+        paddingBottom: responsiveHeight(0.3125),
+        textAlign: 'center',
     },
     payNow: {
-        paddingTop: 10
-    }
-    ,
+        paddingTop: responsiveHeight(0.625),
+    },
     //service modal
     modalContainer: {
         flex: 1,
@@ -669,22 +673,22 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
     },
     modalContent: {
-        width: '85%',
-        height: '70%', // Adjust the height to leave space for scrolling
+        width: responsiveWidth(85),
+        height: responsiveHeight(70),
         backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 15,
+        borderRadius: responsiveWidth(2.5),
+        padding: responsiveWidth(3.75),
         position: 'relative',
     },
     closeButton: {
         position: 'absolute',
-        top: 10,
-        right: 10,
+        top: responsiveHeight(1.25),
+        right: responsiveWidth(2.5),
     },
     modalHeading: {
-        fontSize: 20,
+        fontSize: responsiveFontSize(2.5),
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: responsiveHeight(1.25),
         textAlign: 'left',
     },
     scrollView: {
@@ -694,42 +698,41 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 15,
-        paddingVertical: 10,
+        marginBottom: responsiveHeight(1.875),
+        paddingVertical: responsiveHeight(1.25),
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
     },
     serviceItemName: {
-        flex: 1, // Ensure this takes up remaining space
-        marginRight: 10, // Add some margin between the text and the switch
+        flex: 1,
+        marginRight: responsiveWidth(2.5),
     },
     serviceName: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         fontWeight: '500',
     },
     servicePrice: {
-        fontSize: 14,
+        fontSize: responsiveFontSize(1.75),
         color: '#888',
     },
-    //quantity
     quantity: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     quantityButton: {
-        padding: 3,
+        padding: responsiveWidth(0.9375),
         borderWidth: 1,
         borderColor: '#007bff',
         borderRadius: 5,
         color: '#007bff',
         textAlign: 'center',
-        width: 30,
-        height: 30,
-        lineHeight: 30,
+        width: responsiveWidth(7.5),
+        height: responsiveWidth(7.5),
+        lineHeight: responsiveWidth(7.5),
     },
     quantityText: {
-        marginHorizontal: 10,
-        fontSize: 16,
+        marginHorizontal: responsiveWidth(2.5),
+        fontSize: responsiveFontSize(2),
     },
 });
 

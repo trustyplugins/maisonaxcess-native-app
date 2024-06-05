@@ -1,6 +1,10 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize
+} from "react-native-responsive-dimensions";
 const CustomButton = ({ title, onPress }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
@@ -12,15 +16,15 @@ const CustomButton = ({ title, onPress }) => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#11696a',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingVertical: responsiveHeight(1.875),
+    paddingHorizontal: responsiveWidth(7.5),
     borderRadius: 50,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
     fontWeight: 'bold',
-    textAlign:'center'
+    textAlign: 'center',
   },
 });
 

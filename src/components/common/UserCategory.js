@@ -2,6 +2,11 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import HTML from 'react-native-render-html';
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const UserCategory = ({ data }) => {
     const navigation = useNavigation();
     const { width: contentWidth } = useWindowDimensions();
@@ -37,47 +42,47 @@ const UserCategory = ({ data }) => {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#fff',
-        borderRadius: 10,
+        borderRadius: responsiveWidth(2.5),
         borderWidth: 1,
         borderColor: '#ddd',
-        margin: 10,
-        padding: 10,
+        margin: responsiveWidth(2.5),
+        padding: responsiveWidth(2.5),
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: responsiveHeight(0.25),
         },
     },
     imageContainer: {
-        borderRadius: 10,
+        borderRadius: responsiveWidth(2.5),
         overflow: 'hidden',
     },
     heading: {
-        fontSize: 20,
-        marginBottom: 12,
-        marginTop: 10,
-        fontWeight: 'semibold',
+        fontSize: responsiveFontSize(2.5),
+        marginBottom: responsiveHeight(1.5),
+        marginTop: responsiveHeight(1.25),
+        fontWeight: '600',  // 'semibold' is not a valid value, using '600' instead
         textAlign: "center",
-        textDecorationLine: 'underline'
+        textDecorationLine: 'underline',
     },
     image: {
         width: '100%',
-        height: 150,
-        borderRadius: 10,
+        height: responsiveHeight(18.75),
+        borderRadius: responsiveWidth(2.5),
     },
     textContainer: {
-        marginTop: 7
+        marginTop: responsiveHeight(0.875),
     },
     description: {
-        fontSize: 15,
+        fontSize: responsiveFontSize(1.875),
         fontWeight: '500',
         textAlign: 'left',
         color: '#000',
-        paddingLeft: 10
+        paddingLeft: responsiveWidth(2.5),
     },
     errorMessage: {
         color: 'red',
-        fontSize: 20
+        fontSize: responsiveFontSize(2.5),
     },
 });
 

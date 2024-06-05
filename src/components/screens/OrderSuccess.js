@@ -5,6 +5,11 @@ import { useSelector } from 'react-redux';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import Loader from "../common/Loader";
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const OrderSuccess = () => {
     const userData = useSelector(state => state.user.user);
     const route = useRoute();
@@ -100,52 +105,52 @@ const OrderSuccess = () => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        padding: responsiveWidth(5),
         backgroundColor: '#f5f5f5',
-        borderRadius: 10,
+        borderRadius: responsiveWidth(2.5),
     },
     successMessage: {
-        fontSize: 18,
+        fontSize: responsiveFontSize(2),
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 20,
+        marginBottom: responsiveHeight(2.5),
         color: '#4caf50',
     },
     detailsContainer: {
         flexDirection: 'column',
         justifyContent: 'space-between',
         backgroundColor: '#fff',
-        padding: 10,
-        borderRadius: 10,
+        padding: responsiveWidth(2.5),
+        borderRadius: responsiveWidth(2.5),
         elevation: 3,
     },
     heading: {
-        fontSize: 18,
+        fontSize: responsiveFontSize(2),
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: responsiveHeight(1.25),
     },
     detailRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 10,
+        marginBottom: responsiveHeight(1.25),
     },
     label: {
         fontWeight: 'bold',
     },
     tableHeading: {
-        fontSize: 18,
+        fontSize: responsiveFontSize(2),
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: responsiveHeight(1.25),
     },
     tableRow: {
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
-        paddingVertical: 10,
+        paddingVertical: responsiveHeight(1.25),
     },
     tableCell: {
         flex: 1,
-        padding: 5,
+        padding: responsiveWidth(1.25),
         textAlign: 'center',
     },
     tableHeader: {
