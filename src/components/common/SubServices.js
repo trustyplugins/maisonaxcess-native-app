@@ -128,6 +128,7 @@ const SubServices = ({ data, parentDetail }) => {
     </ScrollView>
     );
 };
+export default SubServices;
 
 const styles = StyleSheet.create({
     card: {
@@ -310,4 +311,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SubServices;
+

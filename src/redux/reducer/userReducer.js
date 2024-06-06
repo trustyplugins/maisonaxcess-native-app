@@ -6,8 +6,6 @@ const initialState = {
   serviceDetail: null,
   cachedServiceTypes: null,
   cachedServiceTypesTimestamp: null,
-  cachedAllOrderTimestamp: null,
-  allOrders: null
 };
 
 const userReducer = (state = initialState, action) => {
@@ -54,12 +52,6 @@ const userReducer = (state = initialState, action) => {
         ...state,
         cachedServiceTypes: action.payload,
         cachedServiceTypesTimestamp: new Date(),
-      };
-    case 'ALL_ORDERS':
-      return {
-        ...state,
-        allOrders: action.payload,
-        cachedAllOrderTimestamp: new Date(),
       };
     default:
       return state;

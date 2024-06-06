@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Image } from "react-native";
-import { useSelector } from 'react-redux';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Image, RefreshControl } from "react-native";
+import { useSelector, useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native';
 import SubServices from "./SubServices";
 import UserCategory from "./UserCategory";
@@ -8,44 +8,68 @@ import axios from "axios";
 import { useRoute } from '@react-navigation/native';
 import { API_BASE_URL } from '@env';
 import Loader from "../common/Loader";
+import { setCachedServiceTypes } from "../../redux/actions/serviceAction";
 import {
     responsiveHeight,
     responsiveWidth,
     responsiveFontSize
 } from "react-native-responsive-dimensions";
+const CACHE_DURATION = 24 * 60 * 60 * 1000;
 const ServiceTypes = ({ navigation }) => {
+    const dispatch = useDispatch();
     const userData = useSelector(state => state.user.user);
+    const { cachedServiceTypes, cachedServiceTypesTimestamp } = useSelector(state => state.services);
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const route = useRoute();
     const { data, iconData } = route.params;
-    useEffect(() => {
-        (async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get(`${API_BASE_URL}/servicetypes/${data.id}`, {
-                    headers: {
-                        Authorization: `Bearer ${userData?.token}`
-                    },
-                });
-                setServiceType(response.data.servicetypes);
-                setLoading(false);
-            } catch (error) {
-                setLoading(false);
-                setServiceType([])
-            } finally {
-                setLoading(false);
-            }
-        })();
-    }, [data?.id])
+    
+    const fetchServiceTypes = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`${API_BASE_URL}/servicetypes/${data.id}`, {
+                headers: {
+                    Authorization: `Bearer ${userData?.token}`
+                },
+            });
+            setServiceType(response.data.servicetypes);
+            dispatch(setCachedServiceTypes(data.id, response.data.servicetypes));
+        } catch (error) {
+            setServiceType([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
+        const cachedData = cachedServiceTypes[data.id];
+        const cachedTimestamp = cachedServiceTypesTimestamp[data.id];
+        const currentTime = new Date().getTime();
+
+        if (cachedData && cachedTimestamp && (currentTime - cachedTimestamp < CACHE_DURATION)) {
+            setServiceType(cachedData);
+        } else {
+            fetchServiceTypes();
+        }
+
+    }, [data?.id, dispatch, userData?.token, cachedServiceTypes, cachedServiceTypesTimestamp])
+
+    const onRefresh = () => {
+        fetchServiceTypes();
+    }
 
     if (loading) {
         return (<Loader loading={loading} />)
     }
     return (
         <SafeAreaView>
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor='#11696A' colors={['blue']}
+                        progressBackgroundColor="#fff" />
+                }
+            >
                 <View style={styles.container}>
                     {iconData ? <View style={styles.parent}>
                         <Image source={iconData.image} style={styles.image} />
@@ -57,7 +81,7 @@ const ServiceTypes = ({ navigation }) => {
                                 {
                                     serviceType.map((item, index) => (
                                         <View key={index}>
-                                            <SubServices data={item} parentDetail={data}/>
+                                            <SubServices data={item} parentDetail={data} />
                                         </View>
                                     ))
                                 }
@@ -74,34 +98,34 @@ export default ServiceTypes;
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: responsiveWidth(2),  
+        paddingVertical: responsiveWidth(2),
     },
     parent: {
         flexDirection: 'row',
-        gap: responsiveWidth(3.75),  
+        gap: responsiveWidth(3.75),
         alignItems: 'center',
-        height: responsiveHeight(11.25),  
+        height: responsiveHeight(11.25),
         backgroundColor: '#D3D3D3',
-        paddingLeft: responsiveWidth(5), 
+        paddingLeft: responsiveWidth(5),
     },
     image: {
         width: '18%',
-        height: responsiveHeight(7.5), 
+        height: responsiveHeight(7.5),
         borderRadius: 8,
     },
     parentHeading: {
-        fontSize: responsiveFontSize(2.5),  
-        marginBottom: responsiveHeight(3),  
-        marginTop: responsiveHeight(2.5),  
+        fontSize: responsiveFontSize(2.5),
+        marginBottom: responsiveHeight(3),
+        marginTop: responsiveHeight(2.5),
         fontWeight: 'bold',
         textAlign: "center",
         color: "#11696A",
     },
     heading: {
-        fontSize: responsiveFontSize(2.5),  
-        marginBottom: responsiveHeight(3), 
-        marginTop: responsiveHeight(2.5), 
-        fontWeight: '500',  
+        fontSize: responsiveFontSize(2.5),
+        marginBottom: responsiveHeight(3),
+        marginTop: responsiveHeight(2.5),
+        fontWeight: '500',
         textAlign: "center",
         textDecorationLine: 'underline',
     },

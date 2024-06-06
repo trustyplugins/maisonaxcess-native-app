@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, RefreshControl } from "react-native";
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native';
 import axios from "axios";
 import { API_BASE_URL } from '@env';
@@ -28,6 +28,9 @@ const Home = ({ navigation }) => {
     ];
     useEffect(() => {
         (async () => {
+            if (userData == null) {
+                navigation.navigate('login');
+            }
             if (cachedServiceTypes && dayjs().diff(cachedServiceTypesTimestamp, 'day') < 1) {
                 setServiceType(cachedServiceTypes);
                 return;
@@ -45,9 +48,6 @@ const Home = ({ navigation }) => {
             } catch (error) {
                 setLoading(false);
                 setServiceType([])
-                if (userData == null) {
-                    navigation.navigate('login');
-                }
             } finally {
                 setLoading(false);
             }

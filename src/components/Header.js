@@ -37,6 +37,12 @@ const Header = ({ navigation, back }) => {
             setSnackbarVisible(false);
             navigation.navigate('login');
         } catch (error) {
+            if (error.response.data.message == 'Unauthenticated.') {
+                dispatch({ type: 'REMOVE_SERVICE', payload: null });
+                dispatch({ type: 'LOGIN', payload: null });
+                dispatch({ type: 'SIGNUP', payload: null });
+                navigation.navigate('login');
+            }
             setModalMessage(error.response.data.message);
             showError();
             setSnackbarVisible(false);
