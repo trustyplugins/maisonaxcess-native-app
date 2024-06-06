@@ -16,15 +16,15 @@ const Dashboard = () => {
     const navigation = useNavigation();
     let userID = '';
     const userData = useSelector(state => state.user.user);
-    const { allOrders, cachedAllOrderTimestamp } = useSelector(state => state.user);
+    // const { allOrders, cachedAllOrderTimestamp } = useSelector(state => state.user);
     userID = userData?.user_data;
     const [orderData, setOrderData] = useState([]);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        if (allOrders && dayjs().diff(cachedAllOrderTimestamp, 'day') < 1) {
-            setOrderData(allOrders);
-            return;
-        }
+        // if (allOrders && dayjs().diff(cachedAllOrderTimestamp, 'day') < 1) {
+        //     setOrderData(allOrders);
+        //     return;
+        // }
         setLoading(true);
         const getOrders = async () => {
             try {
@@ -35,7 +35,7 @@ const Dashboard = () => {
                 });
                 if (response.data.orders?.length > 0) {
                     setOrderData(response.data.orders);
-                    dispatch({ type: 'ALL_ORDERS', payload: response.data.orders });
+                    // dispatch({ type: 'ALL_ORDERS', payload: response.data.orders });
                 }
                 setLoading(false);
 
