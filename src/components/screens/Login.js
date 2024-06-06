@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     },
     labelRem: {
         fontSize: responsiveFontSize(2),
-        color: '#555',
+        color: '#000',
         fontWeight: '500',
     },
     checkboxContainer: {

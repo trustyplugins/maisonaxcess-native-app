@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     },
     buttonsContainer: {
         flexDirection: 'row',
+        
     },
     backButton: {
         marginRight: responsiveWidth(2),
@@ -167,6 +168,7 @@ const styles = StyleSheet.create({
     },
     menuButton: {
         padding: responsiveWidth(2.5),
+        zIndex:9999
     },
 });
 
