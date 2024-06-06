@@ -4,32 +4,31 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import Snackbar from '../components/Snackbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Menu, Provider } from 'react-native-paper';
+import { Menu } from 'react-native-paper';
 import { API_BASE_URL } from '@env';
 import {
     responsiveHeight,
     responsiveWidth,
     responsiveFontSize
 } from "react-native-responsive-dimensions";
+
 const Header = ({ navigation, back }) => {
     const [modalMessage, setModalMessage] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [menuVisible, setMenuVisible] = useState(false);
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.user);
+
     const handleLogout = async () => {
-        setMenuVisible(false)
+        setMenuVisible(false);
         setSnackbarVisible(true);
         try {
-            const res = await axios.post(`${API_BASE_URL}/logout`, { ...isAuthenticated.user?.email },
-                {
-                    headers: {
-                        "Accept": "application/json",
-                        Authorization: `Bearer ${isAuthenticated.user?.token}`
-
-                    }
+            const res = await axios.post(`${API_BASE_URL}/logout`, { ...isAuthenticated.user?.email }, {
+                headers: {
+                    "Accept": "application/json",
+                    Authorization: `Bearer ${isAuthenticated.user?.token}`
                 }
-            );
+            });
             setModalMessage(res.data.message);
             dispatch({ type: 'REMOVE_SERVICE', payload: null });
             dispatch({ type: 'LOGIN', payload: null });
@@ -37,7 +36,7 @@ const Header = ({ navigation, back }) => {
             setSnackbarVisible(false);
             navigation.navigate('login');
         } catch (error) {
-            if (error.response.data.message == 'Unauthenticated.') {
+            if (error.response.data.message === 'Unauthenticated.') {
                 dispatch({ type: 'REMOVE_SERVICE', payload: null });
                 dispatch({ type: 'LOGIN', payload: null });
                 dispatch({ type: 'SIGNUP', payload: null });
@@ -47,15 +46,17 @@ const Header = ({ navigation, back }) => {
             showError();
             setSnackbarVisible(false);
         }
-    }
+    };
+
     const showError = () => {
         setSnackbarVisible(true);
-    }
+    };
+
     const openMenu = () => setMenuVisible(true);
     const closeMenu = () => setMenuVisible(false);
+
     return (
         <>
-
             <Snackbar
                 visible={snackbarVisible}
                 message={modalMessage}
@@ -64,12 +65,20 @@ const Header = ({ navigation, back }) => {
             <View style={styles.container}>
                 <View style={styles.leftHeader}>
                     {back && (
-                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                        <TouchableOpacity
+                            onPress={() => navigation.goBack()}
+                            style={styles.backButton}
+                            accessibilityLabel="Go back"
+                            accessible={true}
+                        >
                             <Icon name="arrow-left" size={20} color="#000" />
                         </TouchableOpacity>
                     )}
-                    <TouchableOpacity onPress={() => navigation.navigate('home')}>
-                        {/* <Image source={logoImage} style={styles.logo} /> */}
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('home')}
+                        accessibilityLabel="Go to Home"
+                        accessible={true}
+                    >
                         <Text style={styles.logo}>Maisonaxcess</Text>
                     </TouchableOpacity>
                 </View>
@@ -84,34 +93,45 @@ const Header = ({ navigation, back }) => {
                             </TouchableOpacity>
                         }
                     >
-                        {isAuthenticated?.user?.token ? <>
-                            <Menu.Item onPress={() => {
-                                navigation.navigate('profile')
-                                setMenuVisible(false)
-                            }} title="Profil" />
-                            <Menu.Item onPress={() => {
-                                navigation.navigate('dashboard')
-                                setMenuVisible(false)
-                            }} title="Ordres" />
-                            <Menu.Item onPress={handleLogout} title="Se déconnecter" />
-                        </> :
+                        {isAuthenticated?.user?.token ? (
                             <>
-                                <Menu.Item onPress={() => {
-                                    navigation.navigate('signup')
-                                    setMenuVisible(false)
-                                }} title="Inscription" />
-                                <Menu.Item onPress={() => {
-                                    navigation.navigate('login')
-                                    setMenuVisible(false)
-                                }} title="Se connecter" />
+                                <Menu.Item
+                                    onPress={() => {
+                                        navigation.navigate('profile');
+                                        setMenuVisible(false);
+                                    }}
+                                    title="Profil"
+                                />
+                                <Menu.Item
+                                    onPress={() => {
+                                        navigation.navigate('dashboard');
+                                        setMenuVisible(false);
+                                    }}
+                                    title="Ordres"
+                                />
+                                <Menu.Item onPress={handleLogout} title="Se déconnecter" />
                             </>
-                        }
+                        ) : (
+                            <>
+                                <Menu.Item
+                                    onPress={() => {
+                                        navigation.navigate('signup');
+                                        setMenuVisible(false);
+                                    }}
+                                    title="Inscription"
+                                />
+                                <Menu.Item
+                                    onPress={() => {
+                                        navigation.navigate('login');
+                                        setMenuVisible(false);
+                                    }}
+                                    title="Se connecter"
+                                />
+                            </>
+                        )}
                     </Menu>
-
-
                 </View>
             </View>
-
         </>
     );
 };
@@ -128,19 +148,19 @@ const styles = StyleSheet.create({
     },
     leftHeader: {
         flexDirection: 'row',
-        gap: responsiveWidth(1),
         alignItems: 'center',
     },
     logo: {
         fontSize: responsiveFontSize(2.25),
         fontWeight: 'bold',
+        color: '#000', // Ensure good contrast
     },
     buttonsContainer: {
         flexDirection: 'row',
     },
     backButton: {
-        marginRight: 0,
-        paddingLeft: responsiveWidth(0.5),
+        marginRight: responsiveWidth(2),
+        padding: responsiveWidth(2), // Increase touchable area
     },
     menu: {
         marginTop: responsiveHeight(3.125),

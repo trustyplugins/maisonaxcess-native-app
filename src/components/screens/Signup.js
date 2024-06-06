@@ -164,7 +164,7 @@ const Signup = ({ navigation }) => {
 
                                     <View style={styles.actionButton}>
                                         <Text style={styles.labelRem}>Déjà inscrit?</Text>
-                                        <TouchableOpacity onPress={() => navigation.navigate("login")}>
+                                        <TouchableOpacity onPress={() => navigation.navigate("login")} accessibilityRole="button">
                                             <Text style={styles.actionButtonText}>Se connecter</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     imgContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: responsiveHeight(15),
+        marginTop: Platform.OS === 'ios' ? responsiveHeight(5) : responsiveHeight(10),
     },
     headerLogo: {
         width: Platform.OS === 'ios' ? responsiveWidth(70) : responsiveWidth(72),
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 30,
         paddingHorizontal: responsiveWidth(5),
         paddingTop: responsiveHeight(2),
-        height: responsiveHeight(82),
+        height: Platform.OS === 'ios' ? responsiveHeight(75) : responsiveHeight(82),
     },
     formContainerKeyboard: {
         flex: 1,
@@ -252,11 +252,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: responsiveWidth(2.5),
         paddingVertical: responsiveHeight(3),
+        alignItems: 'center'
     },
     actionButtonText: {
         color: "#11696A",
         fontWeight: 'bold',
-        fontSize: responsiveFontSize(2.15),
+        fontSize: responsiveFontSize(2.5),
+
     },
 });
 
