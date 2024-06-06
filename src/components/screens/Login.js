@@ -10,7 +10,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Loader from "../common/Loader";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const Login = ({ navigation }) => {
     const dispatch = useDispatch();
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -133,7 +137,7 @@ const Login = ({ navigation }) => {
                         >
                             {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue, isSubmitting, status }) => (
                                 <View>
-                                    <Text style={styles.heading}>Se connecter</Text>
+                                    {/* <Text style={styles.heading}>Se connecter</Text> */}
                                     <Text style={styles.label}>E-mail</Text>
                                     <TextInput
                                         style={{ ...styles.input, color: values.email != '' ? '#000' : 'gray' }}
@@ -193,7 +197,7 @@ const Login = ({ navigation }) => {
                     visible={modalVisible}
                     onRequestClose={() => setModalVisible(false)}
                 >
-                    <View style={styles.modalOverlay}>
+                    <View style={Platform.OS == 'ios' && isKeyboardVisible ? styles.modalOverlayKeyboard : styles.modalOverlay}>
                         <View style={styles.modalContent}>
                             <TouchableOpacity onPress={() => {
                                 setModalVisible(false)
@@ -225,98 +229,98 @@ const Login = ({ navigation }) => {
     );
 };
 
-const screenHeight = Dimensions.get('window').height;
+// const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
     },
     imgContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 110
+        marginTop: responsiveHeight(15),
     },
     headerLogo: {
-        width: '65%',
-        height: Platform.OS == 'ios' ? 70 : 65,
+        width: Platform.OS === 'ios' ? responsiveWidth(70) : responsiveWidth(72),
+        height: Platform.OS === 'ios' ? responsiveHeight(9) : responsiveHeight(10)
     },
     formContainer: {
         flex: 1,
-        marginTop: screenHeight * 0.1,
+        marginTop: responsiveHeight(10),
         backgroundColor: '#C7C7C7',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingTop: Platform.OS == 'ios' ? 40 : 25,
-        height: Platform.OS == 'ios' ? 650 : 500,
+        paddingHorizontal: responsiveWidth(5),
+        paddingTop: responsiveHeight(3),
+        height: responsiveHeight(70),
     },
     formContainerKeyword: {
         flex: 1,
-        marginTop: screenHeight * 0.1,
+        marginTop: responsiveHeight(10),
         backgroundColor: '#C7C7C7',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingTop: 25,
-        height: 800
+        paddingHorizontal: responsiveWidth(5),
+        paddingTop: responsiveHeight(3),
+        height: responsiveHeight(85),
     },
     heading: {
-        fontSize: 24,
-        marginBottom: 20,
+        fontSize: responsiveFontSize(3),
+        marginBottom: responsiveHeight(2.5),
         textAlign: 'center',
         color: '#11696a',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     input: {
         width: "100%",
-        height: 45,
+        height: responsiveHeight(6),
         borderWidth: 1,
         borderColor: "#ccc",
         borderRadius: 50,
-        marginBottom: 15,
+        marginBottom: responsiveHeight(2),
         padding: 10,
         backgroundColor: '#fff',
-        color: 'gray'
+        color: 'gray',
     },
     errorMessage: {
         color: 'red',
-        paddingHorizontal: 5
+        paddingHorizontal: responsiveWidth(1.25),
     },
     label: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         color: '#000',
-        marginBottom: 10,
+        marginBottom: responsiveHeight(1.25),
         fontWeight: '500',
-        margin: 8
+        margin: responsiveHeight(1),
     },
     labelRem: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         color: '#000',
-        fontWeight: '500'
+        fontWeight: '500',
     },
     checkboxContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        marginBottom: 7,
-        gap: 10
+        marginBottom: responsiveHeight(1),
+        gap: responsiveWidth(2.5),
     },
     forgetPassword: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         textAlign: 'right',
-        paddingVertical: 10,
+        paddingVertical: responsiveHeight(1.25),
         color: "#11696A",
     },
     actionButton: {
-        paddingVertical: 5,
         flexDirection: 'row',
         justifyContent: 'center',
-        gap: 10,
-        paddingVertical: 25
+        gap: responsiveWidth(2.5),
+        paddingVertical: responsiveHeight(3),
     },
     actionButtonText: {
         color: "#11696A",
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
     },
     //modal
     modalOverlay: {
@@ -325,21 +329,28 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.5)',
     },
+    modalOverlayKeyboard: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        marginBottom: responsiveHeight(15)
+    },
     modalContent: {
-        width: '90%',
+        width: responsiveWidth(90),
         backgroundColor: '#fff',
         borderRadius: 10,
-        padding: 20,
+        padding: responsiveWidth(5),
         position: 'relative',
     },
     modalCloseButton: {
         position: 'absolute',
-        top: 10,
-        right: 10,
+        top: responsiveHeight(1.25),
+        right: responsiveWidth(2.5),
     },
     modalText: {
-        marginTop: 20,
-        fontSize: 16,
+        marginTop: responsiveHeight(2.5),
+        fontSize: responsiveFontSize(2),
         textAlign: 'center',
         color: "#11696A",
     },

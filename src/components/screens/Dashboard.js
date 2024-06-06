@@ -5,6 +5,11 @@ import axios from "axios";
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import Loader from "../common/Loader";
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const Dashboard = () => {
     const navigation = useNavigation();
     let userID = '';
@@ -99,62 +104,60 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        padding: 16,
+        padding: responsiveWidth(4),
     },
     heading: {
-        fontSize: 24,
+        fontSize: responsiveFontSize(3),
         fontWeight: 'bold',
-        marginBottom: 16,
+        marginBottom: responsiveHeight(2),
         textAlign: 'center'
     },
     scrollViewContent: {
-        paddingBottom: 16,
+        paddingBottom: responsiveHeight(2),
     },
     card: {
         backgroundColor: '#fff',
-        borderRadius: 8,
-        marginBottom: 16,
+        borderRadius: responsiveWidth(2),
+        marginBottom: responsiveHeight(2),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 2,
-        paddingVertical: 10
+        paddingVertical: responsiveHeight(1.25)
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: responsiveHeight(2),
     },
     logo: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 4
+        gap: responsiveWidth(1),
     },
     image: {
-        width: 60,
-        height: 60,
-        borderRadius: 40,
+        width: responsiveWidth(15),
+        height: responsiveWidth(15),
+        borderRadius: responsiveWidth(10),
     },
     titleContainer: {
         justifyContent: 'center',
         maxWidth: "100%",
     },
     title: {
-        fontSize: 18,
+        fontSize: responsiveFontSize(2.25),
         fontWeight: 'bold',
     },
     address: {
-        fontSize: 14,
+        fontSize: responsiveFontSize(1.75),
         color: '#666',
         maxWidth: "75%",
-        // backgroundColor:'gray',
-
     },
     actionButton: {
-        paddingVertical: 5,
-        borderRadius: 5,
-        paddingRight: 12
+        paddingVertical: responsiveHeight(0.625),
+        borderRadius: responsiveWidth(1.25),
+        paddingRight: responsiveWidth(3),
     },
     actionButtonText: {
         color: "#11696A",
@@ -163,22 +166,22 @@ const styles = StyleSheet.create({
     body: {
         borderTopWidth: 1,
         borderTopColor: '#eee',
-        paddingTop: 16,
-        paddingHorizontal: 10
+        paddingTop: responsiveHeight(2),
+        paddingHorizontal: responsiveWidth(2.5),
     },
     servicesData: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     services: {
         flexDirection: 'row',
-        gap: 4,
-        paddingTop: 5
+        gap: responsiveWidth(1),
+        paddingTop: responsiveHeight(0.625),
     },
     qnty: {
-        fontSize: 16,
-        marginBottom: 8,
+        fontSize: responsiveFontSize(2),
+        marginBottom: responsiveHeight(1),
         color: 'gray'
     },
     service: {
@@ -189,13 +192,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderTopWidth: 1,
         borderTopColor: '#eee',
-        paddingTop: 16,
-        marginTop: 12,
-        paddingHorizontal: 10
+        paddingTop: responsiveHeight(2),
+        marginTop: responsiveHeight(1.5),
+        paddingHorizontal: responsiveWidth(2.5),
     },
     footerText: {
-        fontSize: 16,
-        marginBottom: 8,
+        fontSize: responsiveFontSize(2),
+        marginBottom: responsiveHeight(1),
         fontWeight: '500'
     },
 });

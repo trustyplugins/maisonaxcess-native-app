@@ -6,6 +6,11 @@ import { API_BASE_URL } from '@env';
 import axios from "axios";
 import formatDate from '../../utils/formatDate';
 import Loader from "../common/Loader";
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const OrderDetails = () => {
     const userData = useSelector(state => state.user.user);
     const route = useRoute();
@@ -109,53 +114,49 @@ const OrderDetails = () => {
 export default OrderDetails;
 
 const styles = StyleSheet.create({
-    // container: {
-    //     paddingHorizontal: 20,
-    //     backgroundColor: '#f5f5f5',
-    //     flex: 1
-    // },
     detailsContainer: {
         backgroundColor: '#fff',
-        padding: 10,
-        borderRadius: 10,
+        padding: responsiveWidth(2.5),
+        borderRadius: responsiveWidth(2.5),
         elevation: 3,
-        marginVertical: 20,
-        paddingVertical: 20,
-        paddingHorizontal: 7,
-        marginHorizontal: 10,
+        marginVertical: responsiveHeight(2.5),
+        paddingVertical: responsiveHeight(2.5),
+        paddingHorizontal: responsiveWidth(1.75),
+        marginHorizontal: responsiveWidth(2.5),
     },
     details: {
-        padding: 10,
-        marginVertical: 10
+        padding: responsiveWidth(2.5),
+        marginVertical: responsiveHeight(1.25),
     },
     heading: {
-        fontSize: 18,
+        fontSize: responsiveFontSize(2.25),
         fontWeight: 'bold',
-        marginBottom: 15,
-        textAlign: 'center'
+        marginBottom: responsiveHeight(1.875),
+        textAlign: 'center',
+        color:'#11696A'
     },
     detailRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 10,
+        marginBottom: responsiveHeight(1.25),
     },
     label: {
         fontWeight: 'bold',
     },
     tableHeading: {
-        fontSize: 18,
+        fontSize: responsiveFontSize(2.25),
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: responsiveHeight(1.25),
     },
     tableRow: {
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
-        paddingVertical: 10,
+        paddingVertical: responsiveHeight(1.25),
     },
     tableCell: {
         flex: 1,
-        padding: 5,
+        padding: responsiveWidth(1.25),
         textAlign: 'center',
     },
     tableHeader: {

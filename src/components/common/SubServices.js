@@ -3,6 +3,11 @@ import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Modal, Image
 import { useNavigation } from '@react-navigation/native';
 import parseFromHtml from '../../utils/parseHtml';
 import { FontAwesome } from '@expo/vector-icons';
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const SubServices = ({ data, parentDetail }) => {
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
@@ -144,56 +149,55 @@ const styles = StyleSheet.create({
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent black overlay
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
     image: {
         width: '100%',
-        height: 100,
+        height: responsiveHeight(12.5),
         borderRadius: 10,
     },
     title: {
-        fontSize: 17,
+        fontSize: responsiveFontSize(2),
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#ffffff',
     },
-    //
     cardQuo: {
         backgroundColor: '#fff',
         shadowColor: '#000',
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        paddingHorizontal: 10,
-        paddingTop: 10
+        paddingHorizontal: responsiveWidth(2.5),
+        paddingTop: responsiveHeight(1),
     },
     textContainerQuo: {
-        paddingBottom: 10
+        paddingBottom: responsiveHeight(1),
     },
     titleQuo: {
-        fontSize: 17,
+        fontSize: responsiveFontSize(2.5),
         fontWeight: '500',
         color: 'gray',
     },
     detail: {
-        fontSize: 17,
+        fontSize: responsiveFontSize(2.3),
         fontWeight: '400',
         color: "#000",
-        paddingBottom: 8,
-        paddingTop: 8,
+        paddingBottom: responsiveHeight(0.625),
+        paddingTop: responsiveHeight(0.625),
         backgroundColor: '#f4f4f4',
         borderBottomColor: '#d9d9d9',
         borderBottomWidth: 1,
-        paddingHorizontal: 10,
+        paddingHorizontal: responsiveWidth(2.5),
     },
     btnQuo: {
-        fontSize: 17,
+        fontSize: responsiveFontSize(2.3),
         fontWeight: '500',
         color: "#11696A",
         backgroundColor: '#f4f4f4',
-        paddingBottom: 8,
-        paddingTop: 8,
-        paddingHorizontal: 10,
+        paddingBottom: responsiveHeight(0.625),
+        paddingTop: responsiveHeight(0.625),
+        paddingHorizontal: responsiveWidth(2.5),
     },
     // modal
     modalContainer: {
@@ -203,11 +207,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalView: {
-        width: '85%',
+        width: responsiveWidth(85),
         backgroundColor: 'white',
         borderRadius: 10,
-        padding: 20,
-        // alignItems: 'center',
+        padding: responsiveWidth(5),
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -222,54 +225,53 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
-        marginBottom: 15,
+        marginBottom: responsiveHeight(1.875),
     },
     modalHeaderTitle: {
-        fontSize: 20,
+        fontSize: responsiveFontSize(2.5),
         fontWeight: '500',
     },
     modalCloseButton: {
         backgroundColor: '#f00',
         borderRadius: 20,
-        padding: 5,
-        paddingHorizontal: 10,
+        padding: responsiveWidth(1.25),
+        paddingHorizontal: responsiveWidth(2.5),
     },
     modalImageContainer: {
         width: '100%',
-        height: 200,
-        marginBottom: 10,
+        height: responsiveHeight(25),
+        marginBottom: responsiveHeight(1.25),
     },
     modalImage: {
         width: '100%',
         height: '100%',
     },
     modalBottomTitle: {
-        fontSize: 18,
+        fontSize: responsiveFontSize(2.25),
         fontWeight: 'bold',
     },
     modalContentText: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         color: 'gray',
-        marginTop: 5
+        marginTop: responsiveHeight(0.625),
     },
-    // tarif
     modalContent: {
-        width: '90%',
-        height: '70%', // Adjust the height to leave space for scrolling
+        width: responsiveWidth(90),
+        height: '70%',
         backgroundColor: '#fff',
         borderRadius: 10,
-        padding: 14,
+        padding: responsiveWidth(3.5),
         position: 'relative',
     },
     closeButton: {
         position: 'absolute',
-        top: 2,
+        top: responsiveHeight(0.125),
         right: 0,
     },
     modalHeaderTarif: {
         flexDirection: 'row',
         borderBottomWidth: 1,
-        marginBottom: 10,
+        marginBottom: responsiveHeight(0.625),
         borderColor: '#0e3f407a'
     },
     modalSubHeader: {
@@ -277,13 +279,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
-        paddingVertical: 10,
-        marginBottom: 15,
+        paddingVertical: responsiveHeight(1.2),
+        marginBottom: responsiveHeight(2.2),
     },
     modalHeading: {
-        fontSize: 24,
+        fontSize: responsiveFontSize(3),
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: responsiveHeight(1.25),
         textAlign: 'center',
     },
     scrollView: {
@@ -293,17 +295,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 15,
-        paddingVertical: 10,
+        marginBottom: responsiveHeight(1.9),
+        paddingVertical: responsiveHeight(0.625),
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
     },
     serviceName: {
-        fontSize: 15,
+        fontSize: responsiveFontSize(2),
         fontWeight: '500',
     },
     servicePrice: {
-        fontSize: 14,
+        fontSize: responsiveFontSize(1.75),
         color: '#888',
     },
 });

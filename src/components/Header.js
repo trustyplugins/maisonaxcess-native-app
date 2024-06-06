@@ -6,6 +6,11 @@ import Snackbar from '../components/Snackbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Menu, Provider } from 'react-native-paper';
 import { API_BASE_URL } from '@env';
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const Header = ({ navigation, back }) => {
     const [modalMessage, setModalMessage] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -110,38 +115,32 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 10,
-        paddingVertical: 10,
+        paddingHorizontal: responsiveWidth(2.5),
+        paddingVertical: responsiveHeight(1.25),
         backgroundColor: '#f2f2f2',
-        marginTop: 30
+        marginTop: responsiveHeight(3.125),
     },
     leftHeader: {
         flexDirection: 'row',
-        gap: 8,
+        gap: responsiveWidth(1),
         alignItems: 'center',
     },
     logo: {
-        fontSize: 18,
+        fontSize: responsiveFontSize(2.25),
         fontWeight: 'bold',
     },
     buttonsContainer: {
         flexDirection: 'row',
     },
-    button: {
-        // marginHorizontal: 10,
-        // fontSize: 16,
-        color: "#11696a"
-    },
     backButton: {
         marginRight: 0,
-        paddingLeft: 4
+        paddingLeft: responsiveWidth(0.5),
     },
     menu: {
-        // padding: 10,
-        marginTop: 25,
+        marginTop: responsiveHeight(3.125),
     },
     menuButton: {
-        padding: 10,
+        padding: responsiveWidth(2.5),
     },
 });
 

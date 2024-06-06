@@ -7,14 +7,19 @@ import { API_BASE_URL } from '@env';
 import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
+import Loader from "../common/Loader";
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const Signup = ({ navigation }) => {
     const dispatch = useDispatch();
     const [modalMessage, setModalMessage] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [showError, setShowError] = useState('');
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -36,6 +41,7 @@ const Signup = ({ navigation }) => {
     }, []);
 
     const handleSignup = async (values, { setSubmitting, setErrors }) => {
+        setLoading(true);
         const data = {
             api_otp: '',
             otp: '',
@@ -50,7 +56,7 @@ const Signup = ({ navigation }) => {
             data.api_otp = req.data.api_otp;
             dispatch({ type: 'SIGNUP', payload: data });
             navigation.navigate('verify-otp');
-
+            setLoading(false)
         } catch (error) {
             if (error.response) {
                 setShowError(error.response.data.message);
@@ -58,13 +64,18 @@ const Signup = ({ navigation }) => {
             } else {
                 setErrors({ api: "An unexpected error occurred." });
             }
+            setLoading(false)
         } finally {
             setSubmitting(false);
+            setLoading(false)
         }
     };
 
     const resetError = () => {
         setShowError('');
+    }
+    if (loading) {
+        return (<Loader loading={loading} />)
     }
 
     return (
@@ -97,7 +108,6 @@ const Signup = ({ navigation }) => {
                         >
                             {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isSubmitting }) => (
                                 <View>
-                                    <Text style={styles.heading}>Inscription</Text>
                                     <Text style={styles.label}>Nom</Text>
                                     <TextInput
                                         style={styles.input}
@@ -179,80 +189,81 @@ const screenHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
     },
     imgContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 80
+        marginTop: responsiveHeight(15),
     },
     headerLogo: {
-        width: '65%',
-        height: Platform.OS == 'ios' ? 70 : 65,
+        width: Platform.OS === 'ios' ? responsiveWidth(70) : responsiveWidth(72),
+        height: Platform.OS === 'ios' ? responsiveHeight(9) : responsiveHeight(10)
     },
     formContainer: {
         flex: 1,
-        marginTop: Platform.OS == 'ios' ? screenHeight * 0.1 : screenHeight * 0.1 / 2,
+        marginTop: responsiveHeight(5),
         backgroundColor: '#C7C7C7',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingTop: Platform.OS == 'ios' ? 50 : 20,
-        height: Platform.OS == 'ios' ? 650 : 610,
+        paddingHorizontal: responsiveWidth(5),
+        paddingTop: responsiveHeight(2),
+        height: responsiveHeight(82),
     },
     formContainerKeyboard: {
         flex: 1,
-        marginTop: screenHeight * 0.1 / 2,
+        marginTop: responsiveHeight(5),
         backgroundColor: '#C7C7C7',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingTop: Platform.OS == 'ios' ? 50 : 20,
-        height: 900
+        paddingHorizontal: responsiveWidth(5),
+        paddingTop: responsiveHeight(2),
+        height: responsiveHeight(105),
     },
     heading: {
-        fontSize: 24,
-        marginBottom: 5,
+        fontSize: responsiveFontSize(3),
+        marginBottom: responsiveHeight(2.5),
         textAlign: 'center',
         color: '#11696a',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     input: {
         width: "100%",
-        height: 45,
+        height: responsiveHeight(6),
         borderWidth: 1,
         borderColor: "#ccc",
         borderRadius: 50,
-        marginBottom: 12,
+        marginBottom: responsiveHeight(2),
         padding: 10,
         backgroundColor: '#fff',
         color: 'gray',
     },
     errorMessage: {
         color: 'red',
-        paddingLeft: 5
+        paddingHorizontal: responsiveWidth(1.25),
     },
     label: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         color: '#000',
-        marginBottom: 5,
+        marginBottom: responsiveHeight(1.25),
         fontWeight: '500',
-        margin: 8
+        margin: responsiveHeight(1),
     },
     labelRem: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         color: '#000',
-        fontWeight: '500'
+        fontWeight: '500',
     },
     actionButton: {
-        paddingTop: 15,
         flexDirection: 'row',
         justifyContent: 'center',
-        gap: 10,
+        gap: responsiveWidth(2.5),
+        paddingVertical: responsiveHeight(3),
     },
     actionButtonText: {
         color: "#11696A",
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: responsiveFontSize(2.15),
     },
 });
 

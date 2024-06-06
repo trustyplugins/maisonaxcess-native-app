@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, FlatList, Image, Dimensions, StyleSheet, TouchableOpacity, Text, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 const { width } = Dimensions.get('window');
-
+import {
+    responsiveHeight,
+    responsiveWidth,
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 const images = [
     { id: '1', image: require("../../assets/image/banner 1.png") },
     { id: '2', image: require("../../assets/image/banner 2.png") },
@@ -65,30 +69,28 @@ const CarouselScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
-        // justifyContent: 'center',
-        marginTop: Platform.OS == 'ios' ? 50 : 30
+        marginTop: Platform.OS === 'ios' ? responsiveHeight(6.25) : responsiveHeight(4),
     },
     imageContainer: {
-        width,
+        width: width,
         justifyContent: 'center',
         alignItems: 'center',
     },
     image: {
-        width: '88%',
-        height: Platform.OS == 'ios' ? 430 : 400,
+        width: responsiveWidth(92),
+        height: Platform.OS === 'ios' ? responsiveHeight(53.75) : responsiveHeight(58),
     },
     indicatorContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: 25,
+        paddingTop: responsiveHeight(3.125),
     },
     indicator: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        marginHorizontal: 5,
+        width: responsiveWidth(2.5),
+        height: responsiveWidth(2.5),
+        borderRadius: responsiveWidth(1.25),
+        marginHorizontal: responsiveWidth(1.25),
     },
     activeIndicator: {
         backgroundColor: '#000',
@@ -98,16 +100,16 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#11696a',
-        paddingVertical: 15,
-        marginHorizontal: 28,
+        paddingVertical: responsiveHeight(1.875),
+        marginHorizontal: responsiveWidth(7),
         borderRadius: 5,
-        marginTop: Platform.OS == 'ios' ? 40 : 33
+        marginTop: Platform.OS === 'ios' ? responsiveHeight(5) : responsiveHeight(4.125),
     },
     buttonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: responsiveFontSize(2),
         fontWeight: 'bold',
-        textAlign: 'center'
+        textAlign: 'center',
     },
 });
 
