@@ -7,6 +7,7 @@ import { API_BASE_URL } from '@env';
 import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Loader from "../common/Loader";
 import {
     responsiveHeight,
     responsiveWidth,
@@ -18,7 +19,7 @@ const Signup = ({ navigation }) => {
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [showError, setShowError] = useState('');
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -40,6 +41,7 @@ const Signup = ({ navigation }) => {
     }, []);
 
     const handleSignup = async (values, { setSubmitting, setErrors }) => {
+        setLoading(true);
         const data = {
             api_otp: '',
             otp: '',
@@ -54,7 +56,7 @@ const Signup = ({ navigation }) => {
             data.api_otp = req.data.api_otp;
             dispatch({ type: 'SIGNUP', payload: data });
             navigation.navigate('verify-otp');
-
+            setLoading(false)
         } catch (error) {
             if (error.response) {
                 setShowError(error.response.data.message);
@@ -62,13 +64,18 @@ const Signup = ({ navigation }) => {
             } else {
                 setErrors({ api: "An unexpected error occurred." });
             }
+            setLoading(false)
         } finally {
             setSubmitting(false);
+            setLoading(false)
         }
     };
 
     const resetError = () => {
         setShowError('');
+    }
+    if (loading) {
+        return (<Loader loading={loading} />)
     }
 
     return (
