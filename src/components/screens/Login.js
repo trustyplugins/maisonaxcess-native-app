@@ -172,6 +172,9 @@ const Login = ({ navigation }) => {
                                             value={values.rememberMe}
                                             onValueChange={value => setFieldValue('rememberMe', value)}
                                             color="#11696a"
+                                            accessibilityLabel="Remember me"
+                                            accessibilityRole="checkbox"
+                                            accessibilityState={{ checked: values.rememberMe }}
                                         />
                                         <Text style={styles.labelRem}>Souviens-toi de moi</Text>
                                     </View>

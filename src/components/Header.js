@@ -34,7 +34,10 @@ const Header = ({ navigation, back }) => {
             dispatch({ type: 'LOGIN', payload: null });
             dispatch({ type: 'SIGNUP', payload: null });
             setSnackbarVisible(false);
-            navigation.navigate('login');
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'login' }],
+            });
         } catch (error) {
             if (error.response.data.message === 'Unauthenticated.') {
                 dispatch({ type: 'REMOVE_SERVICE', payload: null });
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
     },
     buttonsContainer: {
         flexDirection: 'row',
-        
+
     },
     backButton: {
         marginRight: responsiveWidth(2),
@@ -168,7 +171,7 @@ const styles = StyleSheet.create({
     },
     menuButton: {
         padding: responsiveWidth(2.5),
-        zIndex:9999
+        zIndex: 9999
     },
 });
 
