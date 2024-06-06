@@ -28,10 +28,7 @@ const Home = ({ navigation }) => {
     ];
     useEffect(() => {
         (async () => {
-            if (userData == null) {
-                navigation.navigate('login');
-            }
-            if (cachedServiceTypes && dayjs().diff(cachedServiceTypesTimestamp, 'day') < 1) {
+            if (cachedServiceTypes && dayjs().diff(cachedServiceTypesTimestamp, 'hour') < 6) {
                 setServiceType(cachedServiceTypes);
                 return;
             }

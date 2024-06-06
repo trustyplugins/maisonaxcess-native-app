@@ -14,7 +14,7 @@ import {
     responsiveWidth,
     responsiveFontSize
 } from "react-native-responsive-dimensions";
-const CACHE_DURATION = 24 * 60 * 60 * 1000;
+const CACHE_DURATION = 6 * 60 * 60 * 1000;
 const ServiceTypes = ({ navigation }) => {
     const dispatch = useDispatch();
     const userData = useSelector(state => state.user.user);
