@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Button, StyleSheet, ScrollView, ActivityIndicator, Image, RefreshControl } from "react-native";
-import { useSelector } from 'react-redux';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image, RefreshControl } from "react-native";
+import { useSelector, useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native';
 import axios from "axios";
 import { API_BASE_URL } from '@env';
@@ -10,8 +10,11 @@ import {
     responsiveWidth,
     responsiveFontSize
 } from "react-native-responsive-dimensions";
+import dayjs from 'dayjs';
 const Home = ({ navigation }) => {
+    const dispatch = useDispatch();
     const userData = useSelector(state => state.user.user);
+    const { cachedServiceTypes, cachedServiceTypesTimestamp } = useSelector(state => state.user);
     const [serviceType, setServiceType] = useState([]);
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
@@ -25,6 +28,13 @@ const Home = ({ navigation }) => {
     ];
     useEffect(() => {
         (async () => {
+            if (cachedServiceTypes && dayjs().diff(cachedServiceTypesTimestamp, 'hour') < 6) {
+                setServiceType(cachedServiceTypes);
+                return;
+            } else {
+                dispatch({ type: 'REMOVE_SERVICES', payload: null });
+            }
+
             setLoading(true);
             try {
                 const response = await axios.get(`${API_BASE_URL}/servicetypes`, {
@@ -33,13 +43,11 @@ const Home = ({ navigation }) => {
                     },
                 });
                 setServiceType(response.data.servicetypes);
+                dispatch({ type: 'SET_SERVICE_TYPES', payload: response.data.servicetypes });
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
                 setServiceType([])
-                if (userData == null) {
-                    navigation.navigate('login');
-                }
             } finally {
                 setLoading(false);
             }
@@ -118,7 +126,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     scrollView: {
-        padding: responsiveWidth(2.5),  
+        padding: responsiveWidth(2.5),
     },
     container: {
         flexDirection: 'row',
@@ -130,16 +138,16 @@ const styles = StyleSheet.create({
         marginBottom: responsiveHeight(0.75),
     },
     card: {
-        padding: responsiveWidth(2.5),  
+        padding: responsiveWidth(2.5),
     },
     image: {
         width: '100%',
-        height: responsiveHeight(18.75), 
+        height: responsiveHeight(18.75),
         borderRadius: 10,
     },
     title: {
-        marginTop: responsiveHeight(1.25), 
-        fontSize: responsiveFontSize(2), 
+        marginTop: responsiveHeight(1.25),
+        fontSize: responsiveFontSize(2),
         fontWeight: 'bold',
         textAlign: 'center',
     },

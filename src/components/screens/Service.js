@@ -495,8 +495,9 @@ const Service = () => {
                         >
                             <View style={styles.modalContainer}>
                                 <View style={styles.modalContent}>
-                                    <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
-                                        <FontAwesome name="close" size={24} color="#11696A" />
+                                    <TouchableOpacity onPress={toggleModal} style={styles.closeButton} accessible={true}
+                                        accessibilityRole="button">
+                                        <FontAwesome name="close" size={30} color="#11696A" />
                                     </TouchableOpacity>
                                     <Text style={styles.modalHeading}>Prestations de service</Text>
                                     <ScrollView style={styles.scrollView}>
@@ -682,14 +683,17 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         position: 'absolute',
-        top: responsiveHeight(1.25),
-        right: responsiveWidth(2.5),
+        right: responsiveWidth(2),
+        padding: responsiveWidth(2.5),
+        top:5,
+        zIndex:999
     },
     modalHeading: {
         fontSize: responsiveFontSize(2.5),
         fontWeight: 'bold',
         marginBottom: responsiveHeight(1.25),
         textAlign: 'left',
+        
     },
     scrollView: {
         flex: 1,

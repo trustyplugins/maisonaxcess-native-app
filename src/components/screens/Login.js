@@ -63,7 +63,10 @@ const Login = ({ navigation }) => {
             } else {
                 dispatch({ type: 'SAVE_CREDENTIALS', payload: null });
             }
-            navigation.navigate('carousel');
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'carousel' }]
+            });
         } catch (error) {
             if (error.response) {
                 setShowError(error.response.data.message);
@@ -172,17 +175,20 @@ const Login = ({ navigation }) => {
                                             value={values.rememberMe}
                                             onValueChange={value => setFieldValue('rememberMe', value)}
                                             color="#11696a"
+                                            accessibilityLabel="Remember me"
+                                            accessibilityRole="checkbox"
+                                            accessibilityState={{ checked: values.rememberMe }}
                                         />
                                         <Text style={styles.labelRem}>Souviens-toi de moi</Text>
                                     </View>
-                                    <TouchableOpacity onPress={forgetPassword}>
+                                    <TouchableOpacity onPress={forgetPassword} accessibilityRole="button">
                                         <Text style={styles.forgetPassword}>Mot de passe oublié?</Text>
                                     </TouchableOpacity>
                                     <CustomButton title="Se connecter" onPress={handleSubmit} disabled={isSubmitting} />
 
                                     <View style={styles.actionButton}>
                                         <Text style={styles.labelRem}>Vous n'avez pas encore de compte ?</Text>
-                                        <TouchableOpacity onPress={() => navigation.navigate("signup")}>
+                                        <TouchableOpacity onPress={() => navigation.navigate("signup")} accessibilityRole="button">
                                             <Text style={styles.actionButtonText}>Inscription</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -196,6 +202,8 @@ const Login = ({ navigation }) => {
                     transparent={true}
                     visible={modalVisible}
                     onRequestClose={() => setModalVisible(false)}
+                    accessibilityLabel="Details Modal"
+                    accessible={true}
                 >
                     <View style={Platform.OS == 'ios' && isKeyboardVisible ? styles.modalOverlayKeyboard : styles.modalOverlay}>
                         <View style={styles.modalContent}>
@@ -204,11 +212,11 @@ const Login = ({ navigation }) => {
                                 setResetSucc(false);
                                 setShowError('');
                                 setResetEmail('');
-                            }} style={styles.modalCloseButton}>
-                                <Icon name="close" size={24} color="#11696A" />
+                            }} style={styles.modalCloseButton} accessibilityLabel="Close Modal">
+                                <Icon name="close" size={30} color="#11696A" />
                             </TouchableOpacity>
-                            <Text style={{ ...styles.label, color: "#11696A" }}>Indiquez-nous simplement votre adresse e-mail et nous vous enverrons par e-mail un lien de réinitialisation de mot de passe qui vous permettra d'en choisir un nouveau.</Text>
-                            <Text style={styles.label}>E-mail</Text>
+                            <Text style={{ ...styles.label, color: "#11696A", paddingTop: 20 }}>Indiquez-nous simplement votre adresse e-mail et nous vous enverrons par e-mail un lien de réinitialisation de mot de passe qui vous permettra d'en choisir un nouveau.</Text>
+                            <Text style={styles.label}>Entrer votre E-mail</Text>
                             <TextInput
                                 style={{ ...styles.input, fontWeight: 'bold' }}
                                 placeholder="Entrer E-mail"
@@ -309,18 +317,22 @@ const styles = StyleSheet.create({
         fontSize: responsiveFontSize(2),
         textAlign: 'right',
         paddingVertical: responsiveHeight(1.25),
+        paddingBottom: responsiveHeight(2.55),
         color: "#11696A",
+        fontWeight: 'bold',
     },
     actionButton: {
         flexDirection: 'row',
         justifyContent: 'center',
         gap: responsiveWidth(2.5),
+        alignItems: 'center',
         paddingVertical: responsiveHeight(3),
     },
     actionButtonText: {
         color: "#11696A",
         fontWeight: 'bold',
-        fontSize: responsiveFontSize(2),
+        fontSize: responsiveFontSize(2.5),
+        lineHeight: responsiveHeight(3)
     },
     //modal
     modalOverlay: {
@@ -345,8 +357,9 @@ const styles = StyleSheet.create({
     },
     modalCloseButton: {
         position: 'absolute',
-        top: responsiveHeight(1.25),
+        top: responsiveHeight(1),
         right: responsiveWidth(2.5),
+        padding: 5
     },
     modalText: {
         marginTop: responsiveHeight(2.5),

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView,  Image } from 'react-native';
 import { API_BASE_URL } from '@env';
 import axios from "axios";
 import { useSelector } from 'react-redux';
@@ -26,7 +26,6 @@ const Dashboard = () => {
                         Authorization: `Bearer ${userData?.token}`
                     },
                 });
-                // console.log(response.data.orders);
                 if (response.data.orders?.length > 0) {
                     setOrderData(response.data.orders);
                 }

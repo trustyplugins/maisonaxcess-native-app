@@ -57,10 +57,12 @@ const SubServices = ({ data, parentDetail }) => {
 
             </View>
             :
-            <TouchableOpacity onPress={handlePress}>
+            <TouchableOpacity onPress={handlePress}
+                accessible={true}
+                accessibilityRole="button">
                 <View style={styles.card}>
                     <View style={styles.imageContainer}>
-                        <ImageBackground source={{ uri: `https://maisonaxcess.com/${data.image}` }} style={styles.image} >
+                        <ImageBackground source={{ uri: `https://maisonaxcess.com/${data.image}` }} style={styles.image} accessible={false}>
                             <View style={styles.overlay} />
                         </ImageBackground>
                     </View>
@@ -72,14 +74,20 @@ const SubServices = ({ data, parentDetail }) => {
             animationType="slide"
             transparent={true}
             onRequestClose={handleCloseModal}
+            accessibilityLabel="Details Modal"
+            accessible={true}
         >
             <View style={styles.modalContainer}>
                 {data?.article &&
                     <View style={styles.modalView}>
                         <View style={styles.modalHeader}>
                             <Text style={styles.modalHeaderTitle}>Details</Text>
-                            <TouchableOpacity onPress={handleCloseModal} >
-                                <FontAwesome name="close" size={24} color="#11696A" />
+                            <TouchableOpacity onPress={handleCloseModal}
+                                style={styles.closeButton}
+                                accessibilityLabel="Close Modal"
+                                accessible={true}
+                                accessibilityRole="button" >
+                                <FontAwesome name="close" size={30} color="#11696A" />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.modalImageContainer}>
@@ -87,6 +95,8 @@ const SubServices = ({ data, parentDetail }) => {
                                 style={styles.modalImage}
                                 source={{ uri: `https://maisonaxcess.com/${data?.article?.image}` }}
                                 resizeMode="contain"
+                                accessibilityLabel="Article Image"
+                                accessible={true}
                             />
                         </View>
                         <Text style={styles.modalBottomTitle}>{data?.article?.title}</Text>
@@ -101,12 +111,16 @@ const SubServices = ({ data, parentDetail }) => {
             animationType="slide"
             transparent={true}
             onRequestClose={handleCloseTarif}
+            accessibilityLabel="Details Modal"
+            accessible={true}
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <View style={styles.modalHeaderTarif}>
-                        <TouchableOpacity onPress={handleCloseTarif} style={styles.closeButton}>
-                            <FontAwesome name="close" size={24} color="#11696A" />
+                        <TouchableOpacity onPress={handleCloseTarif} style={styles.closeButton} accessibilityLabel="Close Modal"
+                            accessible={true}
+                            accessibilityRole="button" >
+                            <FontAwesome name="close" size={30} color="#11696A" />
                         </TouchableOpacity>
                         <Text style={styles.modalHeading}>Tarifs</Text>
                     </View>
@@ -128,6 +142,7 @@ const SubServices = ({ data, parentDetail }) => {
     </ScrollView>
     );
 };
+export default SubServices;
 
 const styles = StyleSheet.create({
     card: {
@@ -183,8 +198,8 @@ const styles = StyleSheet.create({
         fontSize: responsiveFontSize(2.3),
         fontWeight: '400',
         color: "#000",
-        paddingBottom: responsiveHeight(0.625),
-        paddingTop: responsiveHeight(0.625),
+        paddingBottom: responsiveHeight(0.9),
+        paddingTop: responsiveHeight(0.9),
         backgroundColor: '#f4f4f4',
         borderBottomColor: '#d9d9d9',
         borderBottomWidth: 1,
@@ -265,8 +280,9 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         position: 'absolute',
-        top: responsiveHeight(0.125),
+        top: responsiveHeight(-1),
         right: 0,
+        padding:responsiveWidth(2),
     },
     modalHeaderTarif: {
         flexDirection: 'row',
@@ -310,4 +326,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SubServices;
+
