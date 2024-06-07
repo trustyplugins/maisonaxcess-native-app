@@ -63,7 +63,10 @@ const Login = ({ navigation }) => {
             } else {
                 dispatch({ type: 'SAVE_CREDENTIALS', payload: null });
             }
-            navigation.navigate('carousel');
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'carousel' }]
+            });
         } catch (error) {
             if (error.response) {
                 setShowError(error.response.data.message);
