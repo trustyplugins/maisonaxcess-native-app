@@ -31,9 +31,7 @@ const Home = ({ navigation }) => {
             if (cachedServiceTypes && dayjs().diff(cachedServiceTypesTimestamp, 'hour') < 6) {
                 setServiceType(cachedServiceTypes);
                 return;
-            } else {
-                dispatch({ type: 'REMOVE_SERVICES', payload: null });
-            }
+            } 
 
             setLoading(true);
             try {
