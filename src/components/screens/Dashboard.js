@@ -61,7 +61,7 @@ const Dashboard = () => {
                                         <Text style={styles.title} ellipsizeMode="tail" numberOfLines={1}>{item?.service_provider_name}</Text>
                                     </View>
                                 </View>
-                                <TouchableOpacity style={styles.actionButton} onPress={() => { navigation.navigate("order-details", { id: item.id }) }}>
+                                <TouchableOpacity style={styles.actionButton} onPress={() => { navigation.navigate("order-details", { orderData: item }) }}>
                                     <Text style={styles.actionButtonText}>Voir</Text>
                                 </TouchableOpacity>
                             </View>
