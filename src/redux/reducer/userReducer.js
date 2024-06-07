@@ -53,6 +53,12 @@ const userReducer = (state = initialState, action) => {
         cachedServiceTypes: action.payload,
         cachedServiceTypesTimestamp: new Date(),
       };
+    case 'REMOVE_SERVICES':
+      return {
+        ...state,
+        cachedServiceTypes: {},
+        cachedServiceTypesTimestamp: {},
+      };
     default:
       return state;
   }

@@ -6,24 +6,25 @@ const initialState = {
 const serviceReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SET_CACHED_SERVICE_TYPES':
-            const existingServiceType = state.cachedServiceTypes[action.payload.id];
-            const existingTimestamp = state.cachedServiceTypesTimestamp[action.payload.id];
-            // if (!existingServiceType || action.payload.timestamp > existingTimestamp) {
-            if (!existingServiceType) {
-                return {
-                    ...state,
-                    cachedServiceTypes: {
-                        ...state.cachedServiceTypes,
-                        [action.payload.id]: action.payload.serviceTypes,
-                    },
-                    cachedServiceTypesTimestamp: {
-                        ...state.cachedServiceTypesTimestamp,
-                        [action.payload.id]: action.payload.timestamp,
-                    },
-                };
-            }
-            // If the ID exists and the timestamp is not older, return the current state
-            return state;
+            const { id, serviceTypes, timestamp } = action.payload;
+            return {
+                ...state,
+                cachedServiceTypes: {
+                    ...state.cachedServiceTypes,
+                    [id]: serviceTypes,
+                },
+                cachedServiceTypesTimestamp: {
+                    ...state.cachedServiceTypesTimestamp,
+                    [id]: timestamp,
+                },
+            };
+
+        case 'REMOVE_SERVICE_TYPES':
+            return {
+                ...state,
+                cachedServiceTypes: {},
+                cachedServiceTypesTimestamp: {},
+            };
         default:
             return state;
     }

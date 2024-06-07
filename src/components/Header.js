@@ -6,6 +6,7 @@ import Snackbar from '../components/Snackbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Menu } from 'react-native-paper';
 import { API_BASE_URL } from '@env';
+import { removeCache } from '../redux/actions/serviceAction';
 import {
     responsiveHeight,
     responsiveWidth,
@@ -33,6 +34,8 @@ const Header = ({ navigation, back }) => {
             dispatch({ type: 'REMOVE_SERVICE', payload: null });
             dispatch({ type: 'LOGIN', payload: null });
             dispatch({ type: 'SIGNUP', payload: null });
+            dispatch({ type: 'REMOVE_SERVICES', payload: null });
+            dispatch(removeCache());
             setSnackbarVisible(false);
             navigation.reset({
                 index: 0,

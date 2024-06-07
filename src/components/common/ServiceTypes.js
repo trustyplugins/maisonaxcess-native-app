@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Image, RefreshControl } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, RefreshControl } from "react-native";
 import { useSelector, useDispatch } from 'react-redux';
 import { SafeAreaView } from 'react-native';
 import SubServices from "./SubServices";
@@ -9,12 +9,13 @@ import { useRoute } from '@react-navigation/native';
 import { API_BASE_URL } from '@env';
 import Loader from "../common/Loader";
 import { setCachedServiceTypes } from "../../redux/actions/serviceAction";
+import dayjs from 'dayjs';
 import {
     responsiveHeight,
     responsiveWidth,
     responsiveFontSize
 } from "react-native-responsive-dimensions";
-const CACHE_DURATION = 6 * 60 * 60 * 1000;
+
 const ServiceTypes = ({ navigation }) => {
     const dispatch = useDispatch();
     const userData = useSelector(state => state.user.user);
@@ -24,7 +25,6 @@ const ServiceTypes = ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false);
     const route = useRoute();
     const { data, iconData } = route.params;
-    
     const fetchServiceTypes = async () => {
         setLoading(true);
         try {
@@ -36,6 +36,7 @@ const ServiceTypes = ({ navigation }) => {
             setServiceType(response.data.servicetypes);
             dispatch(setCachedServiceTypes(data.id, response.data.servicetypes));
         } catch (error) {
+            console.log('error', error);
             setServiceType([]);
         } finally {
             setLoading(false);
@@ -45,18 +46,22 @@ const ServiceTypes = ({ navigation }) => {
     useEffect(() => {
         const cachedData = cachedServiceTypes[data.id];
         const cachedTimestamp = cachedServiceTypesTimestamp[data.id];
-        const currentTime = new Date().getTime();
-
-        if (cachedData && cachedTimestamp && (currentTime - cachedTimestamp < CACHE_DURATION)) {
+        if (cachedData && cachedTimestamp && dayjs().diff(cachedTimestamp, 'hour') < 6) {
             setServiceType(cachedData);
-        } else {
+        }
+        else {
             fetchServiceTypes();
         }
 
-    }, [data?.id, dispatch, userData?.token, cachedServiceTypes, cachedServiceTypesTimestamp])
+    }, [data?.id])
 
     const onRefresh = () => {
+        setRefreshing(true)
         fetchServiceTypes();
+        setTimeout(() => {
+            setRefreshing(false);
+
+        }, 300)
     }
 
     if (loading) {
