@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: responsiveHeight(-1),
         right: 0,
-        padding:responsiveWidth(2),
+        padding: responsiveWidth(2),
     },
     modalHeaderTarif: {
         flexDirection: 'row',
@@ -319,6 +319,8 @@ const styles = StyleSheet.create({
     serviceName: {
         fontSize: responsiveFontSize(2),
         fontWeight: '500',
+        flexWrap: 'wrap',
+        flex: 1
     },
     servicePrice: {
         fontSize: responsiveFontSize(1.75),
