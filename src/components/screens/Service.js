@@ -220,7 +220,7 @@ const Service = () => {
       cancellation_comment: customerAddress.cancelComment,
       stripeToken: customerAddress.stripeToken,
     };
-    
+
     try {
       const response = await axios.post(`${API_BASE_URL}/orders`, bookData, {
         headers: {
@@ -609,7 +609,7 @@ const Service = () => {
                       accessible={true}
                       accessibilityRole="button"
                     >
-                      <FontAwesome name="close" size={30} color="#11696A" />
+                      <FontAwesome name="close" size={47} color="#11696A" />
                     </TouchableOpacity>
                     <Text style={styles.modalHeading}>
                       Prestations de service
@@ -748,7 +748,7 @@ const styles = StyleSheet.create({
     fontWeight: "500", // Added fontWeight
   },
   customerInput: {
-    height: responsiveHeight(5),
+    height: responsiveHeight(7),
     borderColor: "gray",
     borderWidth: 1,
     marginBottom: responsiveHeight(1.25),
@@ -805,7 +805,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: responsiveWidth(2),
     padding: responsiveWidth(2.5),
-    top: 5,
+    top: 0,
     zIndex: 999,
   },
   modalHeading: {

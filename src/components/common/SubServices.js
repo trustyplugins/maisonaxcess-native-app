@@ -87,7 +87,7 @@ const SubServices = ({ data, parentDetail }) => {
                                 accessibilityLabel="Close Modal"
                                 accessible={true}
                                 accessibilityRole="button" >
-                                <FontAwesome name="close" size={30} color="#11696A" />
+                                <FontAwesome name="close" size={47} color="#11696A" />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.modalImageContainer}>
@@ -120,7 +120,7 @@ const SubServices = ({ data, parentDetail }) => {
                         <TouchableOpacity onPress={handleCloseTarif} style={styles.closeButton} accessibilityLabel="Close Modal"
                             accessible={true}
                             accessibilityRole="button" >
-                            <FontAwesome name="close" size={30} color="#11696A" />
+                            <FontAwesome name="close" size={47} color="#11696A" />
                         </TouchableOpacity>
                         <Text style={styles.modalHeading}>Tarifs</Text>
                     </View>
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         position: 'absolute',
-        top: responsiveHeight(-1),
+        top: responsiveHeight(-2),
         right: 0,
         padding: responsiveWidth(2),
     },
