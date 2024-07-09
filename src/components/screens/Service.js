@@ -203,8 +203,7 @@ const Service = () => {
       return;
     }
     setLoading(true);
-
-    const bookData = {
+    let bookData = {
       service_provider_id: service_provider_id,
       main_service_id: userid.id,
       email: customerAddress.email,
@@ -221,7 +220,7 @@ const Service = () => {
       cancellation_comment: customerAddress.cancelComment,
       stripeToken: customerAddress.stripeToken,
     };
-
+    
     try {
       const response = await axios.post(`${API_BASE_URL}/orders`, bookData, {
         headers: {
@@ -247,6 +246,7 @@ const Service = () => {
       setLoading(false);
     } catch (error) {
       if (error.response) {
+        // console.log(error.response.data);
         setShowError(error.response.data.message);
         setError(true);
         setLoading(false);
