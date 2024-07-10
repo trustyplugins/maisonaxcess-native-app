@@ -23,7 +23,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.jasveer7863.maisonaxcessnativeapp",
-      "versionCode": 10
+      "versionCode": 11
     },
     "web": {
       "favicon": "./assets/favicon.png"
