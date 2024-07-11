@@ -185,11 +185,9 @@ const Login = ({ navigation }) => {
                   {/* <Text style={styles.heading}>Se connecter</Text> */}
                   <Text style={styles.label}>E-mail</Text>
                   <TextInput
-                    style={{
-                      ...styles.input,
-                      color: values.email != "" ? "#000" : "gray",
-                    }}
+                    style={styles.input}
                     placeholder="example@gmail.com"
+                    placeholderTextColor="#405D72"
                     value={values.email}
                     onChangeText={handleChange("email")}
                     onBlur={handleBlur("email")}
@@ -204,6 +202,7 @@ const Login = ({ navigation }) => {
                   <TextInput
                     style={styles.input}
                     placeholder="*********"
+                    placeholderTextColor="#405D72"
                     value={values.password}
                     onChangeText={handleChange("password")}
                     onBlur={handleBlur("password")}
@@ -218,16 +217,18 @@ const Login = ({ navigation }) => {
                     <Text style={styles.errorMessage}>{showError}</Text>
                   )}
                   <View style={styles.checkboxContainer}>
-                    <CheckBox
-                      value={values.rememberMe}
-                      onValueChange={(value) =>
-                        setFieldValue("rememberMe", value)
-                      }
-                      color="#11696a"
-                      accessibilityLabel="Remember me"
-                      accessibilityRole="checkbox"
-                      accessibilityState={{ checked: values.rememberMe }}
-                    />
+                    <View style={styles.checkboxWrapper}>
+                      <CheckBox
+                        value={values.rememberMe}
+                        onValueChange={(value) =>
+                          setFieldValue("rememberMe", value)
+                        }
+                        color="#11696a"
+                        accessibilityLabel="Remember me"
+                        accessibilityRole="checkbox"
+                        accessibilityState={{ checked: values.rememberMe }}
+                      />
+                    </View>
                     <Text style={styles.labelRem}>Souviens-toi de moi</Text>
                   </View>
                   <TouchableOpacity
@@ -248,12 +249,14 @@ const Login = ({ navigation }) => {
                     <Text style={styles.labelRem}>
                       Vous n'avez pas encore de compte ?
                     </Text>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("signup")}
-                      accessibilityRole="button"
-                    >
-                      <Text style={styles.actionButtonText}>Inscription</Text>
-                    </TouchableOpacity>
+                    <View style={styles.touchableWrapper}>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("signup")}
+                        accessibilityRole="button"
+                      >
+                        <Text style={styles.actionButtonText}>Inscription</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               )}
@@ -286,7 +289,7 @@ const Login = ({ navigation }) => {
                 style={styles.modalCloseButton}
                 accessibilityLabel="Close Modal"
               >
-                <Icon name="close" size={47} color="#11696A" />
+                <Icon name="close" size={48} color="#11696A" />
               </TouchableOpacity>
               <Text
                 style={{ ...styles.label, color: "#11696A", paddingTop: 22 }}
@@ -299,6 +302,7 @@ const Login = ({ navigation }) => {
               <TextInput
                 style={{ ...styles.input, fontWeight: "bold" }}
                 placeholder="example@gmail.com"
+                placeholderTextColor="#405D72"
                 value={resetEmail}
                 onChangeText={setResetEmail}
                 keyboardType="email-address"
@@ -384,7 +388,7 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(2),
     padding: 10,
     backgroundColor: "#fff",
-    color: "gray",
+    color: "#000",
   },
   errorMessage: {
     color: "red",
@@ -409,6 +413,12 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(1),
     gap: responsiveWidth(2.5),
   },
+  checkboxWrapper: {
+    width: responsiveWidth(12), // 12% of the screen width
+    height: responsiveHeight(6), // 6% of the screen height
+    justifyContent: "center",
+    alignItems: "center",
+  },
   forgetPassword: {
     fontSize: responsiveFontSize(2),
     textAlign: "right",
@@ -423,6 +433,12 @@ const styles = StyleSheet.create({
     gap: responsiveWidth(2.5),
     alignItems: "center",
     paddingVertical: responsiveHeight(3),
+  },
+  touchableWrapper: {
+    width: responsiveWidth(12), // Adjust this value to ensure a minimum touch target size of 48dp
+    height: responsiveHeight(6), // Adjust this value to ensure a minimum touch target size of 48dp
+    justifyContent: "center",
+    alignItems: "center",
   },
   actionButtonText: {
     color: "#11696A",

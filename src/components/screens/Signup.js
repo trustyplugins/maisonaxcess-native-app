@@ -142,6 +142,7 @@ const Signup = ({ navigation }) => {
                   <TextInput
                     style={styles.input}
                     placeholder="Jack"
+                    placeholderTextColor="#405D72"
                     value={values.name}
                     onChangeText={handleChange("name")}
                     onBlur={handleBlur("name")}
@@ -155,6 +156,7 @@ const Signup = ({ navigation }) => {
                   <TextInput
                     style={styles.input}
                     placeholder="example@gmail.com"
+                    placeholderTextColor="#405D72"
                     value={values.email}
                     onChangeText={handleChange("email")}
                     onBlur={handleBlur("email")}
@@ -169,6 +171,7 @@ const Signup = ({ navigation }) => {
                   <TextInput
                     style={styles.input}
                     placeholder="6321456325"
+                    placeholderTextColor="#405D72"
                     value={values.phone}
                     onChangeText={handleChange("phone")}
                     onBlur={handleBlur("phone")}
@@ -183,6 +186,7 @@ const Signup = ({ navigation }) => {
                   <TextInput
                     style={styles.input}
                     placeholder="********"
+                    placeholderTextColor="#405D72"
                     value={values.password}
                     onChangeText={handleChange("password")}
                     onBlur={handleBlur("password")}
@@ -207,12 +211,16 @@ const Signup = ({ navigation }) => {
 
                   <View style={styles.actionButton}>
                     <Text style={styles.labelRem}>Déjà inscrit?</Text>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("login")}
-                      accessibilityRole="button"
-                    >
-                      <Text style={styles.actionButtonText}>Se connecter</Text>
-                    </TouchableOpacity>
+                    <View style={styles.touchableWrapper}>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("login")}
+                        accessibilityRole="button"
+                      >
+                        <Text style={styles.actionButtonText}>
+                          Se connecter
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               )}
@@ -273,7 +281,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 50,
-    marginBottom: responsiveHeight(2),
+    marginBottom: responsiveHeight(1),
     padding: 10,
     backgroundColor: "#fff",
     color: "gray",
@@ -285,9 +293,9 @@ const styles = StyleSheet.create({
   label: {
     fontSize: responsiveFontSize(2),
     color: "#000",
-    marginBottom: responsiveHeight(1.25),
+    marginBottom: responsiveHeight(1),
     fontWeight: "500",
-    margin: responsiveHeight(1),
+    marginHorizontal: responsiveHeight(1),
   },
   labelRem: {
     fontSize: responsiveFontSize(2),
@@ -301,11 +309,15 @@ const styles = StyleSheet.create({
     paddingVertical: responsiveHeight(3),
     alignItems: "center",
   },
+  touchableWrapper: {
+    height: responsiveHeight(6),
+    justifyContent: "center",
+    alignItems: "center",
+  },
   actionButtonText: {
     color: "#11696A",
     fontWeight: "bold",
-    fontSize: responsiveFontSize(3),
-    paddingVertical: responsiveHeight(2),
+    fontSize: responsiveFontSize(3.5),
   },
 });
 
