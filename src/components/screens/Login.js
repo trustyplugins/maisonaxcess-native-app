@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
   forgetPassword: {
     fontSize: responsiveFontSize(2),
     textAlign: "right",
-    paddingVertical: responsiveHeight(1.25),
+    paddingVertical: responsiveHeight(1.7),
     paddingBottom: responsiveHeight(2.55),
     color: "#11696A",
     fontWeight: "bold",
