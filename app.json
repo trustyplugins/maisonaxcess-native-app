@@ -15,7 +15,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.jasveer7863.maisonaxcessnativeapp"
+      "bundleIdentifier": "com.jasveer7863.maisonaxcessnativeapp",
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {

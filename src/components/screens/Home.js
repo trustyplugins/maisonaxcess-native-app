@@ -24,7 +24,7 @@ const Home = ({ navigation }) => {
         { id: 108, title: 'AU QUOTIDIEN', image: require("../../assets/image/AU QUOTIDIEN.png") },
         { id: 98, title: 'ASSISTANT PERSONNEL', image: require("../../assets/image/ASSISTANT PERSONNEL.png") },
         { id: 107, title: 'INSTANTS GOURMANDS', image: require("../../assets/image/INSTANTS GOURMANDS.png") },
-        { id: 118, title: 'BEAUTÉ & BIEN-ÊTRE', image: require("../../assets/image/BEAUTÉ.png") },
+        { id: 118, title: 'BEAUTÉ & BIEN-ÊTRE', image: require("../../assets/image/BEAUTE.png") },
     ];
     useEffect(() => {
         (async () => {
