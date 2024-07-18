@@ -4,9 +4,9 @@
     "slug": "maisonaxcess-native-app",
     "version": "1.0.0",
     "runtimeVersion": "1.0.0",
-    "description": "Description of the app",
+    "description": "A food ordering App",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/image.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
@@ -16,7 +16,13 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.jasveer7863.maisonaxcessnativeapp",
-      "buildNumber": "3"
+      "buildNumber": "5",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Not using Camera"
+      },
+      "entitlements": {
+        "aps-environment": "development"
+      }
     },
     "android": {
       "adaptiveIcon": {
