@@ -39,6 +39,11 @@ const Login = ({ navigation }) => {
   const userCredential = useSelector((state) => state.user.credentials);
   const [resetEmail, setResetEmail] = useState("");
   const [resetSucc, setResetSucc] = useState(false);
+  const [formData, setFormData] = useState({
+    email: userCredential?.email || "",
+    password: userCredential?.password || "",
+    rememberMe: !!userCredential,
+  });
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -90,6 +95,7 @@ const Login = ({ navigation }) => {
     } finally {
       setLoading(false);
       setSubmitting(false);
+      setFormData(values);
     }
   };
 
@@ -157,11 +163,8 @@ const Login = ({ navigation }) => {
             }
           >
             <Formik
-              initialValues={{
-                email: userCredential?.email || "",
-                password: userCredential?.password || "",
-                rememberMe: !!userCredential,
-              }}
+              enableReinitialize={true}
+              initialValues={formData}
               validationSchema={Yup.object({
                 email: Yup.string()
                   .email("Invalid email address")
@@ -428,7 +431,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   actionButton: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "center",
     gap: responsiveWidth(2.5),
     alignItems: "center",
@@ -445,6 +448,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: responsiveFontSize(2.5),
     lineHeight: responsiveHeight(3),
+    width: "100%",
+    padding: 10
   },
   //modal
   modalOverlay: {

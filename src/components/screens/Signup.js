@@ -31,6 +31,12 @@ const Signup = ({ navigation }) => {
   const [showError, setShowError] = useState("");
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -69,16 +75,21 @@ const Signup = ({ navigation }) => {
       navigation.navigate("verify-otp");
       setLoading(false);
     } catch (error) {
-      if (error.response) {
-        setShowError(error.response.data.message);
-        setErrors({ api: error.response.data.message });
+      if (error.response && error.response.data.errors) {
+        // Extract specific field errors
+        const fieldErrors = {};
+        Object.keys(error.response.data.errors).forEach((field) => {
+          fieldErrors[field] = error.response.data.errors[field][0]; // First error message
+        });
+        setShowError(fieldErrors)
       } else {
-        setErrors({ api: "An unexpected error occurred." });
+        setShowError({ api: "Une erreur inattendue s'est produite." });
       }
       setLoading(false);
     } finally {
       setSubmitting(false);
       setLoading(false);
+      setFormData(values);
     }
   };
 
@@ -112,12 +123,8 @@ const Signup = ({ navigation }) => {
             }
           >
             <Formik
-              initialValues={{
-                name: "",
-                email: "",
-                phone: "",
-                password: "",
-              }}
+              enableReinitialize={true}
+              initialValues={formData}
               validationSchema={Yup.object({
                 name: Yup.string().required("Required"),
                 email: Yup.string()
@@ -151,6 +158,9 @@ const Signup = ({ navigation }) => {
                   {touched.name && errors.name ? (
                     <Text style={styles.errorMessage}>{errors.name}</Text>
                   ) : null}
+                  {showError?.name ? (
+                    <Text style={styles.errorMessage}>{showError.name}</Text>
+                  ) : null}
 
                   <Text style={styles.label}>E-mail</Text>
                   <TextInput
@@ -165,6 +175,9 @@ const Signup = ({ navigation }) => {
                   />
                   {touched.email && errors.email ? (
                     <Text style={styles.errorMessage}>{errors.email}</Text>
+                  ) : null}
+                  {showError?.email ? (
+                    <Text style={styles.errorMessage}>{showError.email}</Text>
                   ) : null}
 
                   <Text style={styles.label}>Portable</Text>
@@ -181,6 +194,9 @@ const Signup = ({ navigation }) => {
                   {touched.phone && errors.phone ? (
                     <Text style={styles.errorMessage}>{errors.phone}</Text>
                   ) : null}
+                  {showError?.phone ? (
+                    <Text style={styles.errorMessage}>{showError.phone}</Text>
+                  ) : null}
 
                   <Text style={styles.label}>Mot de passe</Text>
                   <TextInput
@@ -196,9 +212,12 @@ const Signup = ({ navigation }) => {
                   {touched.password && errors.password ? (
                     <Text style={styles.errorMessage}>{errors.password}</Text>
                   ) : null}
+                  {showError?.password ? (
+                    <Text style={styles.errorMessage}>{showError.password}</Text>
+                  ) : null}
 
-                  {errors.api && (
-                    <Text style={styles.errorMessage}>{errors.api}</Text>
+                  {showError?.api && (
+                    <Text style={styles.errorMessage}>{showError.api}</Text>
                   )}
 
                   <View style={{ marginTop: 10 }}>
@@ -284,7 +303,7 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(1),
     padding: 10,
     backgroundColor: "#fff",
-    color: "gray",
+    color: "#000",
   },
   errorMessage: {
     color: "red",
@@ -317,7 +336,8 @@ const styles = StyleSheet.create({
   actionButtonText: {
     color: "#11696A",
     fontWeight: "bold",
-    fontSize: responsiveFontSize(3.5),
+    fontSize: responsiveFontSize(2.5),
+    padding: 10
   },
 });
 

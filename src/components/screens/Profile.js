@@ -166,10 +166,7 @@ const Profile = ({ navigation }) => {
                 </Text>
                 <Text style={styles.label}>Nom</Text>
                 <TextInput
-                  style={{
-                    ...styles.input,
-                    color: values.name != "" ? "#000" : "gray",
-                  }}
+                  style={styles.input}
                   placeholder="Jack"
                   onChangeText={handleChange("name")}
                   onBlur={handleBlur("name")}
@@ -180,17 +177,14 @@ const Profile = ({ navigation }) => {
                 )}
                 <Text style={styles.label}>E-mail</Text>
                 <TextInput
-                  style={{ ...styles.input, color: "#000" }}
+                  style={styles.input}
                   placeholder=""
                   value={userDetails?.email}
                   editable={false}
                 />
                 <Text style={styles.label}>Numéro de téléphone</Text>
                 <TextInput
-                  style={{
-                    ...styles.input,
-                    color: values.phone != "" ? "#000" : "gray",
-                  }}
+                  style={styles.input}
                   placeholder="6321456325"
                   onChangeText={handleChange("phone")}
                   onBlur={handleBlur("phone")}
@@ -319,7 +313,7 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(1.75),
     padding: responsiveWidth(2.5),
     backgroundColor: "#fff",
-    color: "gray",
+    color: "#000",
   },
   errorMessage: {
     color: "red",
