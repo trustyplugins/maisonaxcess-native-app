@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     errorMessage: {
         color: 'red',
         fontSize: responsiveFontSize(2.5),
+        paddingHorizontal: responsiveWidth(4)
     },
 });
 
