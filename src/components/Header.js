@@ -20,6 +20,7 @@ const Header = ({ navigation, back }) => {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.user);
 
+
     const handleLogout = async () => {
         setMenuVisible(false);
         setSnackbarVisible(true);
@@ -53,6 +54,44 @@ const Header = ({ navigation, back }) => {
             setSnackbarVisible(false);
         }
     };
+
+    const handleAccountDeletion = async () => {
+        if (!isAuthenticated.user?.user_data?.id) {
+            return;
+        }
+        setMenuVisible(false);
+        setSnackbarVisible(true);
+        try {
+            const res = await axios.post(`${API_BASE_URL}/users/${isAuthenticated.user.user_data.id}`, {}, {
+                headers: {
+                    "Accept": "application/json",
+                    Authorization: `Bearer ${isAuthenticated.user?.token}`
+                }
+            });
+            setModalMessage(res.data.message);
+            dispatch({ type: 'REMOVE_SERVICE', payload: null });
+            dispatch({ type: 'LOGIN', payload: null });
+            dispatch({ type: 'SIGNUP', payload: null });
+            dispatch({ type: 'REMOVE_SERVICES', payload: null });
+            dispatch({ type: "SAVE_CREDENTIALS", payload: null });
+            dispatch(removeCache());
+            setSnackbarVisible(false);
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'signup' }],
+            });
+        } catch (error) {
+            if (error.response.data.message === 'Unauthenticated.') {
+                dispatch({ type: 'REMOVE_SERVICE', payload: null });
+                dispatch({ type: 'LOGIN', payload: null });
+                dispatch({ type: 'SIGNUP', payload: null });
+                navigation.navigate('signup');
+            }
+            setModalMessage(error.response.data.message);
+            showError();
+            setSnackbarVisible(false);
+        }
+    }
 
     const showError = () => {
         setSnackbarVisible(true);
@@ -116,6 +155,7 @@ const Header = ({ navigation, back }) => {
                                     title="Ordres"
                                 />
                                 <Menu.Item onPress={handleLogout} title="Se déconnecter" />
+                                <Menu.Item onPress={handleAccountDeletion} title="Suppression de compte" />
                             </>
                         ) : (
                             <>
