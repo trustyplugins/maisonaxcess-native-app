@@ -100,6 +100,12 @@ const Header = ({ navigation, back }) => {
     const openMenu = () => setMenuVisible(true);
     const closeMenu = () => setMenuVisible(false);
 
+    const handleLogo =()=>{
+        if(isAuthenticated.user?.token){
+            navigation.navigate('home');
+        }
+    }
+
     return (
         <>
             <Snackbar
@@ -109,7 +115,7 @@ const Header = ({ navigation, back }) => {
             />
             <View style={styles.container}>
                 <View style={styles.leftHeader}>
-                    {back && (
+                    {(back && isAuthenticated.user?.token) && (
                         <TouchableOpacity
                             onPress={() => navigation.goBack()}
                             style={styles.backButton}
@@ -120,7 +126,7 @@ const Header = ({ navigation, back }) => {
                         </TouchableOpacity>
                     )}
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('home')}
+                        onPress={() => handleLogo()}
                         accessibilityLabel="Go to Home"
                         accessible={true}
                     >

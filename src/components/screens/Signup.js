@@ -81,7 +81,7 @@ const Signup = ({ navigation }) => {
         Object.keys(error.response.data.errors).forEach((field) => {
           fieldErrors[field] = error.response.data.errors[field][0]; // First error message
         });
-        setShowError(fieldErrors)
+        setShowError(fieldErrors);
       } else {
         setShowError({ api: "Une erreur inattendue s'est produite." });
       }
@@ -110,10 +110,12 @@ const Signup = ({ navigation }) => {
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.imgContainer}>
-            <Image
-              source={require("../../assets/image/AXCESS_Logo.png")}
-              style={styles.headerLogo}
-            />
+            <TouchableOpacity onPress={() => navigation.navigate("carousel")}>
+              <Image
+                source={require("../../assets/image/AXCESS_Logo.png")}
+                style={styles.headerLogo}
+              />
+            </TouchableOpacity>
           </View>
           <View
             style={
@@ -213,7 +215,9 @@ const Signup = ({ navigation }) => {
                     <Text style={styles.errorMessage}>{errors.password}</Text>
                   ) : null}
                   {showError?.password ? (
-                    <Text style={styles.errorMessage}>{showError.password}</Text>
+                    <Text style={styles.errorMessage}>
+                      {showError.password}
+                    </Text>
                   ) : null}
 
                   {showError?.api && (
@@ -337,7 +341,7 @@ const styles = StyleSheet.create({
     color: "#11696A",
     fontWeight: "bold",
     fontSize: responsiveFontSize(2.5),
-    padding: 10
+    padding: 10,
   },
 });
 

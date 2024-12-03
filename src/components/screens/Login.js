@@ -150,10 +150,12 @@ const Login = ({ navigation }) => {
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.imgContainer}>
-            <Image
-              source={require("../../assets/image/AXCESS_Logo.png")}
-              style={styles.headerLogo}
-            />
+            <TouchableOpacity onPress={()=> navigation.navigate("carousel")}>
+              <Image
+                source={require("../../assets/image/AXCESS_Logo.png")}
+                style={styles.headerLogo}
+              />
+            </TouchableOpacity>
           </View>
           <View
             style={
@@ -449,7 +451,7 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(2.5),
     lineHeight: responsiveHeight(3),
     width: "100%",
-    padding: 10
+    padding: 10,
   },
   //modal
   modalOverlay: {
