@@ -26,7 +26,7 @@ const images = [
 const CarouselScreen = () => {
   const userData = useSelector((state) => state.user.user);
   // useEffect(() => {
-  //     if (!userData?.token) {
+  //     if (!userData?.token  ) {
   //         navigation.reset({
   //             index: 0,
   //             routes: [{ name: 'login' }],
